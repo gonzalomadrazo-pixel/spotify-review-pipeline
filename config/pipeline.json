@@ -1,0 +1,72 @@
+{
+  "provider": "anthropic",
+  "rates_file": "config/rates.csv",
+  "enrich": {
+    "model": "claude-haiku-4-5",
+    "prompt_file": "prompts/enrich_v1.md",
+    "prompt_version": "enrich-v1",
+    "schema_version": "schema-v1",
+    "temperature": 0,
+    "batch_size": 50,
+    "max_tokens_base": 200,
+    "max_tokens_per_item": 60,
+    "max_tokens_per_quote_item": 45,
+    "quote_char_threshold": 160,
+    "request_timeout_s": 120
+  },
+  "fallback": {
+    "enabled": true,
+    "model": "claude-sonnet-5-5",
+    "effort": "low",
+    "max_fraction": 0.002,
+    "max_tokens": 2000,
+    "request_timeout_s": 180
+  },
+  "verify": {
+    "model": "claude-haiku-4-5",
+    "prompt_file": "prompts/verify_v1.md",
+    "prompt_version": "verify-v1",
+    "schema_version": "vschema-v1",
+    "temperature": 0,
+    "batch_size": 50,
+    "sample_fraction": 0.01,
+    "min_sample": 20,
+    "max_sample": 5000,
+    "seed": "verify-sample-v1",
+    "max_tokens_base": 150,
+    "max_tokens_per_item": 30,
+    "request_timeout_s": 120
+  },
+  "group": {
+    "model": "claude-haiku-4-5",
+    "prompt_file": "prompts/group_v1.md",
+    "prompt_version": "group-v1",
+    "temperature": 0,
+    "examples_per_issue": 12,
+    "seed": "group-evidence-v1",
+    "max_tokens": 600,
+    "request_timeout_s": 120
+  },
+  "memo": {
+    "model": "claude-haiku-4-5",
+    "prompt_file": "prompts/memo_v1.md",
+    "prompt_version": "memo-v1",
+    "temperature": 0,
+    "top_issues": 10,
+    "quotes_per_issue": 3,
+    "max_tokens": 2500,
+    "max_revisions": 1,
+    "request_timeout_s": 180
+  },
+  "limits": {
+    "budget_usd": 2.0,
+    "max_workers": 1,
+    "max_output_tokens_per_call": 4096,
+    "max_invalid_retries": 1,
+    "max_transient_retries": 4,
+    "backoff_base_s": 2.0,
+    "backoff_max_s": 60.0,
+    "requests_per_minute": 200,
+    "max_minutes": 0
+  }
+}

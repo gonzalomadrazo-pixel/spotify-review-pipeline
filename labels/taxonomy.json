@@ -1,0 +1,99 @@
+{
+  "version": "taxonomy-v1",
+  "topics": {
+    "access": {
+      "definition": "Login, signup, password or account access",
+      "subtopics": {
+        "access.login": "Cannot log in or sign in, login errors, verification codes or emails not arriving, login loops",
+        "access.logout": "Unexpectedly logged out, app keeps signing the user out",
+        "access.account": "Account recovery, lost/locked/deleted/suspended account, signup or registration, switching or linking accounts (Facebook, Google, phone number), changing email or password",
+        "access.security": "Hacked or compromised account, unknown devices or people using the account, privacy concerns about account data",
+        "access.other": "Any other access problem"
+      }
+    },
+    "usability": {
+      "definition": "Navigation, controls, layout, queue/playlist management, ad interruptions",
+      "subtopics": {
+        "usability.ads": "Too many, too long, too loud or repeated ads; ads interrupting listening; the free ad-free-minutes promise not honored (for free users)",
+        "usability.interface": "Layout, redesign, navigation, home feed, cluttered or confusing screens, hard to find things, disliked UI changes (with no premium paywall involved)",
+        "usability.library_queue": "Managing playlists, the queue, liked songs or the library: adding/removing/sorting songs, playlist editing, playlist covers",
+        "usability.controls": "Playback controls and surfaces: shuffle or repeat behaving badly (not a paywall), seek bar, lock screen, notification, widget, sleep timer, car-mode UI, sharing",
+        "usability.other": "Any other usability problem"
+      }
+    },
+    "playback": {
+      "definition": "Playback failure, crashes, lag, connection failures, audio quality, resource use",
+      "subtopics": {
+        "playback.crash": "App crashes, force-closes, will not open, black or blank screen",
+        "playback.interruptions": "Music stops or pauses on its own, skips by itself, songs will not play, playback error messages",
+        "playback.performance": "Lag, slow loading, freezing, buffering, unresponsive app",
+        "playback.devices_connectivity": "Bluetooth, car/Android Auto, smart speakers, Spotify Connect, casting, smartwatch/Wear OS, false 'no internet connection' errors",
+        "playback.audio_quality": "Sound quality, volume levels, equalizer, audio glitches or distortion",
+        "playback.resource_use": "Battery drain, overheating, storage, mobile data use, app size",
+        "playback.other": "Any other playback problem"
+      }
+    },
+    "downloads": {
+      "definition": "Downloading, saved music, offline listening, disappearing downloads",
+      "subtopics": {
+        "downloads.failure": "Downloads fail, get stuck, are slow or will not start",
+        "downloads.lost": "Downloaded music disappears, gets deleted or must be downloaded again",
+        "downloads.offline": "Offline mode or offline playback not working, offline limits",
+        "downloads.other": "Any other downloads problem"
+      }
+    },
+    "catalog": {
+      "definition": "Missing songs/artists, search/discovery, recommendations, lyrics availability",
+      "subtopics": {
+        "catalog.unavailable": "Songs, artists or albums missing, removed, greyed out, region-locked or wrong version",
+        "catalog.search": "Search does not find content or gives poor results",
+        "catalog.recommendations": "Recommendations, autoplay or radio picks, songs suggested or inserted into playlists, the algorithm, smart shuffle, DJ, Wrapped",
+        "catalog.lyrics": "Lyrics missing, wrong, out of sync or not loading (lyrics locked behind Premium is billing)",
+        "catalog.podcasts_audiobooks": "Podcast or audiobook content and availability, too much podcast/audiobook promotion",
+        "catalog.other": "Any other catalog or content problem"
+      }
+    },
+    "billing": {
+      "definition": "Price, charges, subscriptions, paywalls, premium entitlement; explicitly premium-only controls go here",
+      "subtopics": {
+        "billing.free_tier_limits": "Features locked behind Premium for free users: cannot choose specific songs, forced shuffle, skip limits, no repeat or seeking, lyrics or downloads only for Premium, 'everything needs premium'",
+        "billing.price": "Price too high, price increases, regional pricing, poor value for money",
+        "billing.charges": "Unexpected, unauthorized or double charges, charged after cancelling, refunds, cannot cancel a subscription",
+        "billing.entitlement": "Paid Premium not activating or not working, still getting ads or limits while paying, Family/Duo/Student plan problems, payment method failures, trial problems",
+        "billing.other": "Any other billing problem"
+      }
+    },
+    "support": {
+      "definition": "Contacting support and the support response",
+      "subtopics": {
+        "support.contact": "No way to reach support, no response, slow response",
+        "support.resolution": "Unhelpful answers, bots, support did not resolve the issue",
+        "support.other": "Any other support problem"
+      }
+    },
+    "other": {
+      "definition": "General praise/criticism, unrelated content, or no supported specific topic",
+      "subtopics": {
+        "other.general": "General praise or general criticism with no specific feature or problem (for example 'good app', 'worst app', 'love it', 'new update is bad')",
+        "other.unclear": "Meaningless, unrelated to the app, unintelligible, bare boycott or political slogans, spam"
+      }
+    }
+  },
+  "intents": {
+    "cancellation": "Explicitly leaving, uninstalling, cancelling, switching to another app, or threatening to do so",
+    "complaint": "A negative experience, including mixed praise and criticism",
+    "request": "A desired change or feature, without a reported failure",
+    "praise": "Positive experience with no complaint",
+    "unclear": "Neutral, unrelated, meaningless or uninterpretable text; bare boycott slogans"
+  },
+  "intent_precedence": ["cancellation", "complaint", "request", "praise", "unclear"],
+  "severity": {
+    "1": "No reported problem: praise, neutral/unclear content, or a pure feature request",
+    "2": "Dislike, generic criticism, minor annoyance, or a cosmetic issue; no supported functional loss",
+    "3": "A degraded or restricted function; some use or workaround remains",
+    "4": "A clearly blocked core task, such as inability to log in or play music",
+    "5": "Explicit serious financial, privacy, or data harm; an expensive plan, a crash, or angry language alone is insufficient"
+  },
+  "sentiment_levels": {"-2": -1.0, "-1": -0.5, "0": 0.0, "1": 0.5, "2": 1.0},
+  "needs_review_reasons": ["none", "ambiguous_topic", "ambiguous_intent", "missing_context", "language_unclear", "sarcasm_or_irony", "multiple_problems", "other"]
+}

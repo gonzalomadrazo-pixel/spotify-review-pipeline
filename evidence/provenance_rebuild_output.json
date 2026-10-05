@@ -1,0 +1,36 @@
+{
+  "profile": {
+    "records": 660622,
+    "duplicate_review_ids": 0,
+    "empty_review_text": 13,
+    "missing_app_version": 159701
+  },
+  "window": {
+    "start_inclusive": "2022-05-17",
+    "end_exclusive": "2023-11-17",
+    "first_review": "2022-05-17 00:01:07",
+    "last_review": "2023-11-15 23:16:10"
+  },
+  "files": {
+    "spotify_reviews_18months.csv": {
+      "bytes": 97400616,
+      "sha256": "1fc85de68a304dd8978b537cfa58793d5f41cbaf417fa32cb53899f83a2fcef6"
+    },
+    "cost_100.csv": {
+      "bytes": 15466,
+      "sha256": "c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e"
+    },
+    "checkpoint_500.csv": {
+      "bytes": 76170,
+      "sha256": "a94e31663ee7b7eaa77e23b7a8425b530cc0c866ed5e714953172a0afef6a12f"
+    },
+    "golden_50_to_label.csv": {
+      "bytes": 7905,
+      "sha256": "1a125c3e509f58b0246ba16d0ea332675a53ffadb1928be4338a0bd7053a11c7"
+    },
+    "analysis_10000.csv": {
+      "bytes": 1477793,
+      "sha256": "eaa62ca6d44d717302904a9c922e99b0b4584d174309cb45295ecbc2ba2a91b5"
+    }
+  }
+}
