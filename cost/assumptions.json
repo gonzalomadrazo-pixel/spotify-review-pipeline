@@ -1,0 +1,100 @@
+{
+  "_note": "Editable projection inputs. Measured pilot values come from pilot_calls.jsonl; everything here is an assumption or a corpus count from the ingestion report.",
+  "enrich_model": "claude-haiku-4-5",
+  "fallback_model": "claude-sonnet-5-5",
+  "fallback_output_multiplier": 4.0,
+  "batch_size": 50,
+  "exact_text_reuse": true,
+  "prefix_cacheable": true,
+  "length_adjust": true,
+  "corpus_mean_chars_distinct": 98.57,
+  "pilot_mean_chars": 80.42,
+  "quote_share_corpus": 0.194,
+  "quote_share_pilot": 0.14,
+  "expected_issue_count": 37,
+  "verify_min": 20,
+  "verify_max": 5000,
+  "volume": {
+    "rows": 660622,
+    "nonempty_to_classify": 660609,
+    "empty_text_quarantines": 13,
+    "distinct_nonempty_texts": 484189
+  },
+  "scenarios": {
+    "base_sync": {
+      "tier": "standard",
+      "cache_hit_rate": "measured",
+      "retry_rate": 0.02,
+      "verify_fraction": 0.01,
+      "fallback_fraction": 0.0005,
+      "memo_revisions": 1
+    },
+    "base_batch_api": {
+      "tier": "batch",
+      "cache_hit_rate": "measured",
+      "retry_rate": 0.02,
+      "verify_fraction": 0.01,
+      "fallback_fraction": 0.0005,
+      "memo_revisions": 1
+    },
+    "conservative_sync": {
+      "tier": "standard",
+      "cache_hit_rate": 0.0,
+      "retry_rate": 0.1,
+      "verify_fraction": 0.01,
+      "fallback_fraction": 0.002,
+      "memo_revisions": 1
+    },
+    "conservative_batch_api": {
+      "tier": "batch",
+      "cache_hit_rate": 0.0,
+      "retry_rate": 0.1,
+      "verify_fraction": 0.01,
+      "fallback_fraction": 0.002,
+      "memo_revisions": 1
+    }
+  },
+  "rate_limits": {
+    "rpm": 1000,
+    "otpm": 400000,
+    "source": "Start tier, Claude Haiku 4.5, https://platform.claude.com/docs/en/api/rate-limits (checked 2026-10-04)"
+  },
+  "controls": {
+    "budget_usd": 150.0,
+    "output_token_cap": 4096,
+    "max_workers": 8,
+    "max_fallback_fraction": 0.002
+  },
+  "stage_settings": {
+    "enrich": {
+      "model": "claude-haiku-4-5",
+      "tier": "standard",
+      "effort": "n/a (no thinking; Haiku 4.5 has no effort parameter)",
+      "version": "enrich-v1+schema-v1",
+      "batch_size": 50
+    },
+    "verify": {
+      "model": "claude-haiku-4-5",
+      "tier": "standard",
+      "effort": "n/a (no thinking)",
+      "version": "verify-v1+vschema-v1",
+      "batch_size": 50
+    },
+    "group": {
+      "model": "claude-haiku-4-5",
+      "tier": "standard",
+      "effort": "n/a (no thinking)",
+      "version": "group-v1",
+      "batch_size": "1 issue"
+    },
+    "memo": {
+      "model": "claude-haiku-4-5",
+      "tier": "standard",
+      "effort": "n/a (no thinking)",
+      "version": "memo-v1",
+      "batch_size": "1 memo"
+    }
+  },
+  "local_compute_note": "API spend above is computed from provider-reported usage. Local compute (ingestion, SQLite, ranking on an 8 GB Apple-silicon laptop) is not metered: its electricity/hardware cost is UNKNOWN, not zero. Measured local stage times appear in the stage-seconds rows. Provider account dashboards may bill with delay; reconcile against https://platform.claude.com/usage.",
+  "_length_source": "pilot: cost_100.csv distinct texts mean 80.42 chars, 14% > 160 chars; corpus: 484,189 distinct nonempty texts mean 98.57 chars, 19.4% > 160 chars (computed from the CSVs)"
+}

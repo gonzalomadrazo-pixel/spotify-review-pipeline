@@ -340,7 +340,7 @@ class Dispatcher:
         if not attempt.ok:
             with self.store.tx():
                 self.store.update_call(request_id, outcome="failed", error=attempt.error, **fields)
-            ctx.log("call_failed", role=self.role, request_id=request_id, error=attempt.error, kind=attempt.error_kind)
+            ctx.log("call_failed", role=self.role, request_id=request_id, error=attempt.error, error_kind=attempt.error_kind)
             if attempt.error_kind == "budget":
                 self.stop_reason = "provider_spend_limit"
                 return [work]

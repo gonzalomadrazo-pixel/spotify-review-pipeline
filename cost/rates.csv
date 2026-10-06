@@ -1,0 +1,17 @@
+provider,model,tier,billing_item,unit,price_usd_per_unit,price_quote,source_url,checked_on
+anthropic,claude-haiku-4-5,standard,input_uncached,token,0.000001,$1 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-haiku-4-5,standard,input_cache_write_5m,token,0.00000125,$1.25 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-haiku-4-5,standard,input_cache_read,token,0.0000001,$0.10 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-haiku-4-5,standard,output,token,0.000005,$5 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-haiku-4-5,batch,input_uncached,token,0.0000005,$0.50 / MTok (Batch API 50%),https://platform.claude.com/docs/en/about-claude/pricing#batch-processing,2026-10-04
+anthropic,claude-haiku-4-5,batch,input_cache_write_5m,token,0.000000625,1.25x batch input (multipliers stack),https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
+anthropic,claude-haiku-4-5,batch,input_cache_read,token,0.00000005,0.1x batch input (multipliers stack),https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
+anthropic,claude-haiku-4-5,batch,output,token,0.0000025,$2.50 / MTok (Batch API 50%),https://platform.claude.com/docs/en/about-claude/pricing#batch-processing,2026-10-04
+anthropic,claude-sonnet-5-5,standard,input_uncached,token,0.000002,$2 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-sonnet-5-5,standard,input_cache_write_5m,token,0.0000025,$2.50 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-sonnet-5-5,standard,input_cache_read,token,0.0000002,$0.20 / MTok,https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-sonnet-5-5,standard,output,token,0.00001,$10 / MTok (includes thinking tokens),https://platform.claude.com/docs/en/about-claude/pricing,2026-10-04
+anthropic,claude-sonnet-5-5,batch,input_uncached,token,0.000001,$1 / MTok (Batch API 50%),https://platform.claude.com/docs/en/about-claude/pricing#batch-processing,2026-10-04
+anthropic,claude-sonnet-5-5,batch,input_cache_write_5m,token,0.00000125,1.25x batch input,https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
+anthropic,claude-sonnet-5-5,batch,input_cache_read,token,0.0000001,0.1x batch input,https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
+anthropic,claude-sonnet-5-5,batch,output,token,0.000005,$5 / MTok (Batch API 50%),https://platform.claude.com/docs/en/about-claude/pricing#batch-processing,2026-10-04

@@ -1,240 +1,145 @@
-# Spotify Review Analysis Pipeline
+# Spotify review insight pipeline
 
-Classify, group and rank 660,622 Google Play reviews of the Spotify Android app to guide product investment decisions. The pipeline is structured as offline-first stages that exchange saved artifacts, with optional model calls for enrichment, verification and memo writing.
+This pipeline turns 660,622 Google Play reviews of the Spotify Android app (May 2022 – November 2023) into a traceable product recommendation: should next quarter's effort go to **access, usability, playback, or billing/support**?
 
-## Overview
+Code owns record accounting, validation, caching, budgets and arithmetic. Four separate model roles (enrichment, verification, grouping and memo writing) handle the language work, and they hand off to each other only through saved, inspectable artifacts.
 
-**Six stages:**
+> **Status:** the code, prompts, labels, calculator, labeling tool and offline tests are complete. The paid runs (100-review pilot, 500, 10,000, golden set, full corpus) have **not** been executed yet. Every results section below is marked *pending* until real outputs exist. Nothing here is simulated evidence.
 
-1. **Ingest** (code): Read the 97.4 MB CSV, profile it, create state database.
-2. **Enrich** (model): Classify each review's topic, intent, sentiment and severity using structured labels. Cache exact-text reuse.
-3. **Verify** (model): Independent re-labelling of a random sample to measure agreement.
-4. **Group** (code): Aggregate complaints by subtopic; code assigns membership. Model suggests names and coherence.
-5. **Rank** (code): Sort issues by complaint_count × mean_severity.
-6. **Recommend** (model): Write decision memo citing issue IDs and numbers.
-
-**Why this order:** Inexpensive preparation (read, deduplicate, cache lookup) before classification, fixed labels for repeatable decisions, aggregation before memo. Supports resume after interruption, with saved checkpoints and no re-labelling of completed IDs.
+## Contents
+1. [Setup](#setup) · 2. [Run it](#run-it) · 3. [Architecture](#architecture) · 4. [Labels and schema](#labels-and-schema) · 5. [Design choices](#design-choices) · 6. [Evidence map (rubric)](#evidence-map-rubric) · 7. [Limitations](#limitations)
 
 ## Setup
 
-### 1. Environment
+Requirements: [uv](https://docs.astral.sh/uv/), Python 3.12 or newer (uv installs it), and about 1 GB of free disk for the local SQLite state.
 
 ```bash
-# Clone or navigate to the repo
-cd ~/Claude/spotify-review-pipeline
-
-# Install dependencies (uses uv)
 uv sync
-
-# Copy .env.example to .env and add your API key
-cp .env.example .env
-# Edit .env and set ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### 2. Prepare the dataset
+**Data.** Download the course ZIP (link in bCourses) and unzip it into `data/raw/`. The raw CSV is not committed. Expected files and SHA-256 checksums:
 
-Download the Spotify dataset from [Google Drive](https://drive.google.com/file/d/1P0rUoAS_wVjp3BYKqXMEyD4u0uJP1Bvf/view) or use the Kaggle source and the provided `prepare_dataset.py`:
+| file | bytes | sha256 |
+|---|---|---|
+| `spotify_reviews_18months.csv` | 97,400,616 | `1fc85de68a304dd8978b537cfa58793d5f41cbaf417fa32cb53899f83a2fcef6` |
+| `cost_100.csv` | 15,466 | `c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e` |
+| `checkpoint_500.csv` | 76,170 | `a94e31663ee7b7eaa77e23b7a8425b530cc0c866ed5e714953172a0afef6a12f` |
+| `analysis_10000.csv` | 1,477,793 | `eaa62ca6d44d717302904a9c922e99b0b4584d174309cb45295ecbc2ba2a91b5` |
+| `golden_50_to_label.csv` | 7,905 | `1a125c3e509f58b0246ba16d0ea332675a53ffadb1928be4338a0bd7053a11c7` |
+
+Source: BwandoWando, [3.4 Million Spotify Google Store Reviews](https://www.kaggle.com/datasets/bwandowando/3-4-million-spotify-google-store-reviews), version 2, CC0. Provenance check: running the supplied `prepare_dataset.py` on the Kaggle archive (sha256 `7b351f41…bc3cbc`) reproduced all five files and the manifest profile byte for byte. See [`evidence/provenance_rebuild_output.json`](evidence/provenance_rebuild_output.json).
+
+**API key (paid commands only).** Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY`. `.env` is git-ignored. Offline commands never read it.
+
+## Run it
+
+Offline commands (no key, no model calls):
 
 ```bash
-# If using the raw Kaggle archive
-python data/raw/prepare_dataset.py /path/to/archive.zip --output data
+uv run pytest -q
 ```
-
-The course dataset files (`cost_100.csv`, `checkpoint_500.csv`, `analysis_10000.csv`, `golden_50_to_label.csv`, and the full `spotify_reviews_18months.csv`) are already provided in `data/raw/`.
-
-### 3. Ingest the dataset
 
 ```bash
-# Ingest the full 660k review CSV (required for the full run)
-uv run python main.py ingest data/raw/spotify_reviews_18months.csv
-
-# Or start with a smaller development file
-uv run python main.py ingest data/raw/cost_100.csv --db data/test.db
+python3 cost/calculator.py
 ```
-
-This creates a DuckDB database with tables for ingestion, enrichment, verification, membership and API call logging.
-
-## Workflow
-
-### 100-Review Pilot (Measured Cost & Runtime)
-
-Required before scaling. Measures actual API throughput and token usage on the first 100 reviews, with projections for the full run.
 
 ```bash
-# Ingest the 100-review pilot
-uv run python main.py ingest data/raw/cost_100.csv --db data/pilot_100.db
-
-# Run enrichment (this calls the API)
-export ANTHROPIC_API_KEY=sk-ant-...
-uv run python main.py enrich --db data/pilot_100.db --model claude-haiku-4-5-20251001
-
-# Verify a sample (independent re-labelling)
-uv run python main.py verify --db data/pilot_100.db --sample-size 10
-
-# Compute ranking from completed enrichment
-uv run python main.py rank --db data/pilot_100.db
+uv run python -m pipeline status
 ```
-
-Check `cost/report.md` for measured costs and time, and `cost/pilot_records.jsonl` for all 100 results with IDs.
-
-### Projected Full Run
-
-After the 100-review pilot:
 
 ```bash
-# Ingest the full 660k CSV
-uv run python main.py ingest data/raw/spotify_reviews_18months.csv
-
-# Run enrichment in batches (resume on timeout or budget limit)
-# This runs asynchronously and saves progress after each batch
-uv run python main.py enrich --db data/pipeline.db --batch-size 50
-
-# Verify a fresh sample (no cost to ingestion, minimal verification cost)
-uv run python main.py verify --db data/pipeline.db --sample-size 50
-
-# Rank issues by complaint severity
-uv run python main.py rank --db data/pipeline.db
-
-# (TODO) Write memo
-# uv run python main.py memo --db data/pipeline.db
+uv run python -m pipeline rerank --records runs/full/records.jsonl --membership runs/full/membership.csv --out runs/full/ranking_rerun.csv --compare runs/full/ranking.csv
 ```
 
-## Labels and Schema
-
-See [`labels/LABEL_GUIDE.md`](labels/LABEL_GUIDE.md) for the full labeling rubric. 
-
-**Common labels** (from the assignment's GRADING_CONTRACT):
-
-- **topic**: access, usability, playback, downloads, catalog, billing, support, other
-- **intent**: cancellation, complaint, request, praise, unclear
-- **severity**: 1–5 scale (1 = no problem, 5 = explicit serious harm)
-- **subtopic**: specific category under the topic (e.g., `playback.crash_or_wont_open`, `billing.free_tier_restrictions`)
-
-**Output schema** for enriched records: `{review_id, source_sha256, status, topic, subtopic, intent, sentiment, severity, entities, evidence_quote, needs_review, label_config, cache_source_id}`
-
-## Stages and Code
-
-- **`src/ingest.py`** — Read CSV, create database, profile.
-- **`src/state.py`** — DuckDB state store with enrichment, verification, membership, API call logging.
-- **`src/stages.py`** — Stage base class and stubs for Enricher, Verifier, Grouper, Ranker, Recommender. (Model implementations added when API integration is ready.)
-- **`src/orchestrate.py`** — Pipeline orchestrator: ingest, enrich, verify, rank.
-- **`cost/calculator.py`** — Cost calculator: record API calls, measure throughput, project full run, save report.
-- **`prompts/enrich_v1.md`** — Enrichment prompt (security notes, label definitions, examples).
-- **`prompts/verify_v1.md`** — Verification prompt (independent re-labelling).
-- **`prompts/group_v1.md`** — Grouping prompt (issue names and coherence).
-- **`prompts/memo_v1.md`** — Recommendation memo prompt.
-
-## Resume After Interruption
-
-Saved checkpoints allow the pipeline to resume where it stopped, without re-enriching completed reviews.
+Paid commands (explicit; each enforces `--budget` in USD before admitting work):
 
 ```bash
-# Get completed IDs before interrupt
-python -c "
-from src.state import StateStore
-store = StateStore('data/pipeline.db')
-ids = store.get_completed_ids()
-print(json.dumps({'completed_ids': sorted(ids)}))" > grading/checkpoint_before.json
-
-# ... (interrupt or wait)
-
-# Resume enrichment
-uv run python main.py enrich --db data/pipeline.db
-
-# Get completed IDs after resume
-python -c "..." > grading/checkpoint_after.json
+uv run python -m pipeline smoke
 ```
-
-## Verification and Evaluation
-
-See [`labels/LABEL_GUIDE.md`](labels/LABEL_GUIDE.md) for worked examples and decision rules. Golden-set labels (the hand-labeled 50) are kept separate from the development files and model inputs.
-
-- **Per-field evaluation**: topic, intent, severity agreement on a held-out sample.
-- **Confusion matrix**: where predictions diverge from hand labels.
-- **Injection tests**: verify the model rejects instruction injection in review text.
-
-Run the provided checker:
 
 ```bash
-python data/raw/check_submission.py profile --full data/raw/spotify_reviews_18months.csv --out grading/ingestion.json
-python data/raw/check_submission.py check --reference grading/reference.json --submission grading --out grading/self-check.json
+uv run python cost/calculator.py run-pilot --budget 1.00
 ```
 
-## Cost and Runtime
+```bash
+uv run python -m pipeline run --run-id dev500 --input data/raw/checkpoint_500.csv --budget 2 --workers 2
+```
 
-### Measured Pilot (100 reviews)
+```bash
+uv run python -m pipeline run --run-id full --input data/raw/spotify_reviews_18months.csv --budget 150 --workers 8
+```
 
-The calculator records every API call and measures wall-clock time. Results in `cost/`:
-
-- **`pilot_records.jsonl`**: One line per review with enriched labels and cache status.
-- **`pilot_calls.jsonl`**: Every API call: model, tokens, outcome, timing.
-- **`rates.csv`**: Editable pricing (Anthropic, OpenAI, etc.) with source links.
-- **`usage.csv`**: Aggregated token usage by model and stage.
-- **`report.md`**: Cost summary, throughput, full-run projection.
-- **`replay.sh`**: Offline command to recompute costs from saved usage without API calls.
-
-### Illustration (Oct 2026 rates)
-
-660,609 nonempty reviews, 484,189 distinct texts (exact-text caching):
-
-| Model | Tier | Input $/1M | Output $/1M | Est. tokens/review | Est. cost |
-|---|---|---|---|---|---|
-| Claude Haiku 4.5 | Standard API | $1.00 | $5.00 | 100 in, 150 out | ~$82 |
-| Claude Haiku 4.5 | Batch API (50% off) | $0.50 | $2.50 | (same) | ~$41 |
-
-Actual costs depend on prompt size, model choice, batch vs. standard API, retry rates, and whether your account runs on a subscription with fixed fees (reported as $0 marginal cost) or pay-as-you-go (billed by token).
+`run` accepts any CSV with the six source columns and executes ingest → enrich → verify → rank → group → memo → export. Re-running the same command resumes it: completed IDs are never sent again under unchanged settings. To stop gracefully, press Ctrl-C or create `runs/<run_id>/STOP`; in-flight calls finish and are saved. Add `--mode batch` to send enrichment through the Message Batches API at half price.
 
 ## Architecture
 
-```
-CSV (660,622 rows)
-    ↓
-Ingest (code) → DuckDB database
-    ↓
-Enrich (model + code)
-    ├─ Call model on batches ≤ 50 reviews
-    ├─ Cache exact-text reuse
-    ├─ Validate output schema
-    └─ Save enriched.jsonl / quarantine.jsonl
-    ↓
-Verify (model, independent sample)
-    ├─ Sample random reviews
-    ├─ Re-label without seeing prior labels
-    └─ Compare agreement (topic, intent, severity)
-    ↓
-Group (code + optional model)
-    ├─ Aggregate by topic.subtopic
-    ├─ Code counts and sums severity
-    └─ Model names issues (optional)
-    ↓
-Rank (code)
-    ├─ Filter: complaint + cancellation only
-    ├─ Score: complaint_count × mean_severity
-    └─ Sort by score, then issue ID
-    ↓
-Recommend (model)
-    ├─ Read saved aggregates only
-    ├─ Write memo citing issue IDs and numbers
-    └─ memo.md
+```mermaid
+flowchart LR
+  CSV[(input CSV)] --> I[1 Ingest<br/>code]
+  I -->|rows + row hashes<br/>ingestion_report.json| E[2 Enrich<br/>ENRICHMENT agent<br/>Haiku 4.5, ≤50 reviews/request]
+  E -->|validated labels<br/>records + result cache| V[3 Verify<br/>VERIFICATION agent<br/>blind re-label of seeded sample]
+  E --> R[4a Membership + 5 Rank<br/>code]
+  V -->|verifier_predictions<br/>disagreements.csv| R
+  R -->|membership.csv<br/>ranking.csv| G[4b Group naming<br/>GROUPING agent<br/>bounded evidence packs]
+  G -->|issues.json| F[Facts<br/>code]
+  F -->|facts.json| M[6 Memo<br/>MEMO agent]
+  M -->|memo.md| C{code checks<br/>numbers, IDs}
+  C -->|fail: 1 revision| M
+  C -->|claims.csv| X[Export<br/>records, calls, grading/]
+  E -. invalid output .-> RT[retry once, split in halves] -.-> FB[capped Sonnet fallback] -.-> Q[(quarantine + reason)]
+  E -. 429/5xx/timeout .-> BO[backoff + jitter, ≤4 retries]
+  E -. budget/time/STOP .-> S[(save progress + checkpoint)]
 ```
 
-## Testing
+| stage | owner | input | output | failure behavior | stop condition |
+|---|---|---|---|---|---|
+| 1 Ingest | code | input CSV | SQLite rows (exact strings and contract row SHA-256), `ingestion_report.json`, `ingestion.json` | malformed CSV aborts; empty text → `quarantined: empty_review_text` | all rows read |
+| 2 Enrich | Enrichment agent + code validator | pending distinct texts, ≤50 per request | `records` (completed/quarantined), `enrich_cache`, `calls` | invalid output retried once (whole-batch errors split into halves), then capped fallback, then quarantine with reason; transient errors back off up to 4 times; provider spend-limit or auth errors stop the run | no pending records, or budget/time cap, STOP file, or Ctrl-C |
+| 3 Verify | Verification agent + code comparison | seeded sample of directly labeled texts (text only) | `verify/verifier_predictions.jsonl`, `disagreements.csv`, `verify_summary.json` | invalid items retried once, then recorded as verifier errors | sample done or a cap is reached |
+| 4a/5 Rank | code | completed records | `membership.csv`, `ranking.csv`, `aggregates.csv`, `area_rollup.csv`, `trend_monthly.csv` | none (deterministic) | always completes |
+| 4b Group naming | Grouping agent + code | one issue's 12-quote evidence pack with review IDs | `issues.json` (title, summary, coherence, misfit IDs) | IDs not in the pack are rejected; titles that are too long or summaries containing numbers trigger one retry, then the issue falls back to its taxonomy definition | one call per issue |
+| 6 Memo | Memo agent + code checker | `facts.json`, top issues, ≤3 quotes per issue | `memo.md`, `claims.csv`, `claims_extra.csv`, `memo_checks.json` | unknown IDs, uncited numbers or mismatched numbers trigger one revision; persistent failure is saved as `checks_failed` for human review | checks pass or revision limit reached |
 
-Run the ingestion test:
+**Why a model at each model step, and what code does instead.** Topic, intent, severity and sentiment require reading messy, multilingual customer language, so the enrichment agent does that. Code does everything else: it deduplicates exact texts (484,189 of 660,609), extracts entities with an explicit feature lexicon (every entity is an exact substring, so none can be invented), uses the whole text as the quote for short reviews, and validates and repairs quotes so every `evidence_quote` is an exact source substring. The verifier exists to measure the enricher independently; it never sees the first answer. Grouping membership is pure code (`issue_id` = subtopic code); the grouping agent only names issues and flags misfits from bounded packs. The memo agent writes prose from saved aggregates and may only use numbers it cites from the facts table, and code checks every one.
 
-```bash
-cd /Users/gonzalomadrazo/Claude/spotify-review-pipeline
-uv run python -m src.ingest data/raw/cost_100.csv data/test.db
-# Expected output: {"ingested": 100, "duplicate_ids": 0, ...}
+## Labels and schema
+
+The exact contract labels are `topic` ∈ {access, usability, playback, downloads, catalog, billing, support, other} and `intent` ∈ {cancellation, complaint, request, praise, unclear} (precedence order), with `severity` 1–5 on the shared scale. Definitions, 37 optional subtopics and the needs-review reasons live in [`labels/taxonomy.json`](labels/taxonomy.json). The enrichment prompt [`prompts/enrich_v1.md`](prompts/enrich_v1.md) adds 30 worked examples that apply the shared definitions; they are illustrative and none comes from the golden set.
+
+A completed record follows the grading contract exactly:
+
+```json
+{"review_id":"…","source_sha256":"…","status":"completed","topic":"billing","intent":"complaint","sentiment":-1.0,"severity":3,"entities":["shuffle","premium"],"evidence_quote":"…exact substring…","needs_review":false,"label_config":"claude-haiku-4-5+enrich-v1+schema-v1+<prompt-hash>"}
 ```
 
-## References
+`label_config` includes a hash of the rendered prompt, schema, model and sampling settings, so any change invalidates the result cache automatically. The richer internal record (`runs/<id>/enriched.jsonl`) also stores `subtopic`, `review_reason`, `quote_method`, rule adjustments, `result_source`, `source_request_id` and attempts.
 
-- **GRADING_CONTRACT.md** — Label definitions, common errors, export format.
-- **COST_CALCULATOR.md** — Cost calculator requirements and specifications.
-- **labels/LABEL_GUIDE.md** — Detailed labeling rules with examples.
-- **Kaggle dataset**: [BwandoWando / 3.4 Million Spotify Google Store Reviews](https://www.kaggle.com/datasets/bwandowando/3-4-million-spotify-google-store-reviews)
+## Design choices
 
-## Due Date
+- **Model:** `claude-haiku-4-5` for all four roles, at temperature 0 with no thinking, using structured outputs (JSON schema with enums). The fallback is `claude-sonnet-5-5` at effort `low`, used only for items that fail validation twice and capped at 0.2% of distinct texts. Prices are in [`config/rates.csv`](config/rates.csv), checked 2026-10-04 against the official pricing page.
+- **Batching:** CSV parsing streams the file into SQLite; each request carries at most 50 reviews keyed `k=1..n`. Code maps keys back to source IDs and rejects missing, duplicate or foreign keys. The large instruction prefix is marked for prompt caching. The optional Message Batches transport halves the price and records job IDs, so an interrupted run collects the same jobs instead of resubmitting them.
+- **Exact-text result cache:** keyed by `(sha256(text), label_config)`. One representative per distinct text is sent; every other ID keeps its own record with a direct `cache_source_id` and is counted separately in aggregates.
+- **Severity guards in code:** complaint and cancellation records are at least 2; praise, request and unclear records are set to 1 and flagged `needs_review` (`rule_adjusted`). Every adjustment is logged in the record.
+- **Spending controls:** before dispatch, the ledger reserves worst-case cost (uncached input estimate plus `max_tokens` output). Work is admitted only while spent + reserved + the next reservation stays within `--budget`. Provider spend-limit errors stop the run immediately. Timeouts are flagged `unknown_charge` for reconciliation.
+- **Issues:** one issue per complaint or cancellation, with `issue_id` = subtopic (for example `billing.free_tier_limits`) and `allow_multi_issue=false`. Area rollups combine billing and support, as the business question does.
 
-October 13, 2026, 11:59 pm Pacific Time.
+## Evidence map (rubric)
+
+*Pending the paid runs; each row will link the saved artifact.*
+
+| criterion | evidence |
+|---|---|
+| D1 accessible code/setup/artifacts | this README, `uv.lock`, `.env.example`, offline commands above |
+| D2 architecture, shared schema, provenance | [Architecture](#architecture), `labels/taxonomy.json`, `label_config` hashes, `runs/*/run_summary.json`, provenance rebuild |
+| D3 memo numbers ↔ calculations ↔ evidence | `runs/full/memo.md`, `claims.csv`, `claims_extra.csv`, `facts.json`, `memo_checks.json` — *pending* |
+| D4 recommendation, alternatives, limitations | `runs/full/memo.md` — *pending* |
+| T1 golden 50, per-field comparison, error analysis | `evals/golden_labeler.html` → `evals/golden_50_labeled.csv`; `evals/golden/` — *pending human labels* |
+| T2 independent verification, planted errors, injection | `runs/full/verify/`, `evals/planted_errors.json`, `evals/injection/` — *pending* |
+| T3 real cold/warm pilot, calculator, controls | `cost/` (offline calculator ready; pilot *pending*), `tests/test_pipeline.py` (offline failure injection: 11 passing) |
+| W1 full ingestion, coverage, classification | `runs/full/ingestion_report.json`, `grading/`, self-check — *pending* |
+| W2 staged program, bounded calls, resume | `pipeline/`, `runs/full/checkpoints/`, `grading/checkpoint_*.json`, recording — *pending* |
+| W3 reproducible ranking, grounded output | `rerank` command, `runs/full/ranking.csv` — *pending* |
+
+## Limitations
+
+The data is self-selected public reviews: it has no revenue, plan tier or confirmed churn, cancellation language is stated intent rather than observed churn, timestamps have no timezone, and the first and last months are partial. Labels come from a small model and will be measured against 50 human labels and an independent verifier, so they are not ground truth. Exact-text reuse assumes identical text deserves an identical label. Results sections will report unresolved records and their effect on conclusions.

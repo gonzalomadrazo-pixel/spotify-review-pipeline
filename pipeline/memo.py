@@ -80,7 +80,7 @@ def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) ->
             continue
         tail = scrub[m.end():m.end() + 60]
         fm = FACT_RE.search(tail)
-        if not fm or "." in tail[:fm.start()].replace(".", "", 0) and tail[:fm.start()].count(". ") > 0:
+        if not fm or re.search(r"[.!?;]\s|\n", tail[:fm.start()]):
             errors.append(f"number without an adjacent fact citation: {num}")
             continue
         fact = by_id.get(fm.group(1))

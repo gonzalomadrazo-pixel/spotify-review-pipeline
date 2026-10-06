@@ -6,3 +6,12 @@ __pycache__/
 *.pyc
 .DS_Store
 data/raw/
+# local state and large intermediate outputs (final evidence is exported to runs/, cost/, evals/, grading/)
+state/
+cost/pilot_state/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+runs/*/STOP
+local-reference.json
+self-check.json

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golden Set Labeler</title>
+<style>
+:root{--bg:#f7f7f5;--panel:#fff;--ink:#1b1b1b;--muted:#666;--line:#ddd;--accent:#1d6f42;--warn:#a15c00;--sel:#e7f3ec}
+@media (prefers-color-scheme: dark){:root{--bg:#141414;--panel:#1e1e1e;--ink:#eee;--muted:#9a9a9a;--line:#333;--accent:#5cc28a;--warn:#e0a24a;--sel:#203a2b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}
+header{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:16px;margin:0 8px 0 0}
+.progress{color:var(--muted);font-size:13px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;padding:16px;max-width:1300px;margin:0 auto}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.review{white-space:pre-wrap;font-size:17px;line-height:1.55;padding:12px;border-left:3px solid var(--accent);background:var(--sel);border-radius:4px;user-select:text}
+.meta{color:var(--muted);font-size:12px;margin:6px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+select,input[type=text],textarea{width:100%;padding:7px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.radios{display:flex;gap:6px;flex-wrap:wrap}
+.radios label{border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer;font-size:14px}
+.radios input{margin-right:4px}
+.ok{color:var(--accent)}.bad{color:var(--warn)}
+.nav{display:flex;gap:8px;justify-content:space-between;margin-top:14px;flex-wrap:wrap}
+.defs{font-size:13px;max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:70px}
+.defs h3{font-size:13px;margin:12px 0 4px}
+.defs p,.defs li{margin:2px 0;color:var(--ink)}
+.defs ul{padding-left:18px;margin:0}
+.dots{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.dot{width:22px;height:22px;border-radius:4px;border:1px solid var(--line);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.dot.done{background:var(--accent);color:#fff;border-color:var(--accent)}
+.dot.cur{outline:2px solid var(--ink)}
+.small{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Golden set labeler</h1>
+  <span class="progress" id="progress"></span>
+  <input id="labeler" type="text" placeholder="Your name (labeler)" style="width:180px">
+  <label class="small"><input type="checkbox" id="showMeta"> show stars/metadata</label>
+  <button class="primary" id="export">Export CSV</button>
+  <label class="small">Import CSV <input type="file" id="import" accept=".csv"></label>
+</header>
+<main>
+  <section class="card" id="card"></section>
+  <aside class="card defs" id="defs"></aside>
+</main>
+<script>
+const DATA = /*__DATA__*/[];
+const TAX = /*__TAX__*/{};
+const KEY = "golden-labels-v1";
+const TOPICS = Object.keys(TAX.topics);
+const INTENTS = TAX.intent_precedence;
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { state = {}; }
+let cur = 0;
+try { cur = +(localStorage.getItem(KEY + ":cur") || 0); } catch (e) {}
+try { document.getElementById("labeler").value = localStorage.getItem(KEY + ":who") || ""; } catch (e) {}
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); localStorage.setItem(KEY + ":cur", cur); } catch (e) {} render(); }
+function lab(id) { return state[id] || (state[id] = {topic:"",intent:"",severity:"",sentiment:"",entities:"",evidence_quote:"",needs_review:false,ambiguous:false,alt_topic:"",alt_intent:"",alt_severity:"",notes:""}); }
+function complete(l) { return l && l.topic && l.intent && l.severity && l.sentiment !== "" && l.evidence_quote; }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function radios(name, opts, value) {
+  return `<div class="radios">` + opts.map(o => `<label><input type="radio" name="${name}" value="${o[0]}" ${String(value)===String(o[0])?"checked":""}>${o[1]}</label>`).join("") + `</div>`;
+}
+
+function render() {
+  const r = DATA[cur], l = lab(r.review_id);
+  const done = DATA.filter(d => complete(state[d.review_id])).length;
+  document.getElementById("progress").textContent = `${done}/50 complete · review ${cur + 1} of 50`;
+  const quoteOk = !l.evidence_quote || r.review_text.includes(l.evidence_quote);
+  const showMeta = document.getElementById("showMeta").checked;
+  document.getElementById("card").innerHTML = `
+    <div class="review" id="text">${esc(r.review_text)}</div>
+    <div class="meta">ID ${r.review_id}${showMeta ? ` · ${r.review_rating}★ · likes ${r.review_likes} · v${r.app_version || "—"} · ${r.review_timestamp}` : " · label from the text only"}</div>
+    <div class="grid">
+      <div><label class="f">Topic</label><select id="topic"><option value=""></option>${TOPICS.map(t => `<option ${l.topic===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label class="f">Intent</label><select id="intent"><option value=""></option>${INTENTS.map(t => `<option ${l.intent===t?"selected":""}>${t}</option>`).join("")}</select></div>
+    </div>
+    <div style="margin-top:12px"><label class="f">Severity</label>${radios("severity", [1,2,3,4,5].map(n => [n, n]), l.severity)}</div>
+    <div style="margin-top:12px"><label class="f">Sentiment</label>${radios("sentiment", [[-1,"−1 very neg"],[-0.5,"−0.5"],[0,"0"],[0.5,"+0.5"],[1,"+1 very pos"]], l.sentiment)}</div>
+    <div style="margin-top:12px"><label class="f">Evidence quote (exact substring) <span class="${quoteOk ? "ok" : "bad"}">${l.evidence_quote ? (quoteOk ? "✓ exact substring" : "✗ not an exact substring") : ""}</span></label>
+      <textarea id="quote" rows="2">${esc(l.evidence_quote)}</textarea>
+      <div class="nav" style="justify-content:flex-start;margin-top:6px"><button id="useSel">Use highlighted text</button><button id="useAll">Use whole review</button></div></div>
+    <div style="margin-top:12px"><label class="f">Entities (explicit features, separated by ;)</label><input type="text" id="entities" value="${esc(l.entities)}"></div>
+    <div class="grid" style="margin-top:12px">
+      <label><input type="checkbox" id="needs_review" ${l.needs_review?"checked":""}> needs_review (unclear / missing context)</label>
+      <label><input type="checkbox" id="ambiguous" ${l.ambiguous?"checked":""}> ambiguous (other labels also acceptable)</label>
+    </div>
+    <div class="grid" style="margin-top:8px">
+      <div><label class="f">Also-acceptable topics</label><input type="text" id="alt_topic" placeholder="e.g. usability;other" value="${esc(l.alt_topic)}"></div>
+      <div><label class="f">Also-acceptable intents</label><input type="text" id="alt_intent" value="${esc(l.alt_intent)}"></div>
+      <div><label class="f">Also-acceptable severities</label><input type="text" id="alt_severity" placeholder="e.g. 2;3" value="${esc(l.alt_severity)}"></div>
+    </div>
+    <div style="margin-top:12px"><label class="f">Notes (why, edge cases)</label><textarea id="notes" rows="2">${esc(l.notes)}</textarea></div>
+    <div class="nav"><button id="prev">← Previous</button><span class="small">${complete(l) ? '<span class="ok">complete</span>' : 'topic, intent, severity, sentiment and quote required'}</span><button id="next" class="primary">Next →</button></div>
+    <div class="dots">${DATA.map((d, i) => `<div class="dot ${complete(state[d.review_id]) ? "done" : ""} ${i===cur?"cur":""}" data-i="${i}">${i+1}</div>`).join("")}</div>`;
+  const bind = (id, key, fn) => { const el = document.getElementById(id); el.addEventListener("change", () => { l[key] = fn ? fn(el) : el.value; save(); }); };
+  bind("topic", "topic"); bind("intent", "intent"); bind("quote", "evidence_quote"); bind("entities", "entities");
+  bind("alt_topic", "alt_topic"); bind("alt_intent", "alt_intent"); bind("alt_severity", "alt_severity"); bind("notes", "notes");
+  bind("needs_review", "needs_review", el => el.checked); bind("ambiguous", "ambiguous", el => el.checked);
+  document.querySelectorAll('input[name=severity]').forEach(el => el.addEventListener("change", () => { l.severity = el.value; save(); }));
+  document.querySelectorAll('input[name=sentiment]').forEach(el => el.addEventListener("change", () => { l.sentiment = el.value; save(); }));
+  document.getElementById("useSel").onclick = () => { const s = String(window.getSelection()).trim(); if (s) { l.evidence_quote = s; save(); } };
+  document.getElementById("useAll").onclick = () => { l.evidence_quote = r.review_text.trim(); save(); };
+  document.getElementById("prev").onclick = () => { cur = Math.max(0, cur - 1); save(); };
+  document.getElementById("next").onclick = () => { cur = Math.min(DATA.length - 1, cur + 1); save(); };
+  document.querySelectorAll(".dot").forEach(el => el.onclick = () => { cur = +el.dataset.i; save(); });
+}
+
+function defs() {
+  let h = `<h3>Topics (pick the highest-severity specific problem; tie → first mentioned; praise → first praised feature; general → other)</h3>`;
+  for (const [t, s] of Object.entries(TAX.topics)) h += `<p><b>${t}</b>: ${esc(s.definition)}</p>`;
+  h += `<h3>Intent (precedence order)</h3><ul>` + INTENTS.map(i => `<li><b>${i}</b>: ${esc(TAX.intents[i])}</li>`).join("") + `</ul>`;
+  h += `<h3>Severity</h3><ul>` + Object.entries(TAX.severity).map(([k, v]) => `<li><b>${k}</b>: ${esc(v)}</li>`).join("") + `</ul>`;
+  h += `<h3>Reminders</h3><ul><li>Label the text, not the stars.</li><li>A paid-plan mention alone is not billing; premium-only controls for free users (forced shuffle, skip limits, can't pick songs) are billing.</li><li>Cancellation intent does not raise severity. Complaints are ≥ 2.</li><li>Bare boycott slogans / meaningless text → unclear.</li><li>Missing context → needs_review; don't invent impact.</li></ul>`;
+  document.getElementById("defs").innerHTML = h;
+}
+
+function csvCell(v) { v = v == null ? "" : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+document.getElementById("export").onclick = () => {
+  const who = document.getElementById("labeler").value.trim();
+  const cols = ["review_id","review_text","review_rating","review_likes","app_version","review_timestamp","topic","intent","sentiment","severity","entities","evidence_quote","needs_review","ambiguous","alt_topic","alt_intent","alt_severity","notes","labeler"];
+  const lines = [cols.join(",")];
+  for (const r of DATA) {
+    const l = lab(r.review_id);
+    const row = {...r, ...l, needs_review: l.needs_review ? "true" : "false", ambiguous: l.ambiguous ? "true" : "false", labeler: who};
+    lines.push(cols.map(c => csvCell(row[c])).join(","));
+  }
+  const blob = new Blob([lines.join("\n") + "\n"], {type: "text/csv"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "golden_50_labeled.csv"; a.click();
+};
+document.getElementById("labeler").addEventListener("change", e => { try { localStorage.setItem(KEY + ":who", e.target.value); } catch (x) {} });
+document.getElementById("showMeta").addEventListener("change", render);
+document.getElementById("import").addEventListener("change", async e => {
+  const text = await e.target.files[0].text();
+  const rows = parseCSV(text); const head = rows.shift();
+  for (const r of rows) { const o = Object.fromEntries(head.map((h, i) => [h, r[i] ?? ""])); if (!o.review_id) continue;
+    const l = lab(o.review_id); for (const k of Object.keys(l)) if (k in o) l[k] = (k === "needs_review" || k === "ambiguous") ? o[k] === "true" : o[k]; }
+  save();
+});
+function parseCSV(t) { const out = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < t.length; i++) { const c = t[i];
+    if (q) { if (c === '"' && t[i+1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; }
+    else if (c === '"') q = true; else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n") { row.push(cell); out.push(row); row = []; cell = ""; } else if (c !== "\r") cell += c; }
+  if (cell || row.length) { row.push(cell); out.push(row); } return out; }
+defs(); render();
+</script>
+</body>
+</html>

@@ -343,7 +343,8 @@ def run_enrich(ctx, client, mode: str = "sync", retry_quarantined: bool = False,
     t0 = time.perf_counter()
     items, stats = plan(ctx, ecfg, retry_quarantined)
     batches = chunk(items, ecfg.batch_size)
-    if limit_requests is not None:
+    capped = limit_requests is not None and len(batches) > limit_requests
+    if capped:
         batches = batches[:limit_requests]
     stats["requests_planned"] = len(batches)
     ctx.log("progress", stage="enrich", **stats)
@@ -358,6 +359,8 @@ def run_enrich(ctx, client, mode: str = "sync", retry_quarantined: bool = False,
         work = [Work(key=f"b{n:06d}", payload=b, review_ids=[i.rep_id for i in b]) for n, b in enumerate(batches)]
         stop = disp.run(work, ctx.workers)
         disp_stats = disp.stats
+    if capped and stop == "completed":
+        stop = "request_limit"
     counts = {r[0]: r[1] for r in ctx.store.q("SELECT status, COUNT(*) FROM records WHERE run_id=? GROUP BY status",
                                                (ctx.run_id,))}
     out = {"stop_reason": stop, "seconds": round(time.perf_counter() - t0, 3), "label_config": ecfg.label_config,
