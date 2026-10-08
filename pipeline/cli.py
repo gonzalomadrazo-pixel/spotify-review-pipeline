@@ -153,6 +153,16 @@ def cmd_trace(args):
     print(f"wrote {args.out}")
 
 
+def cmd_results(args):
+    from .results import build_results, update_readme
+    block = build_results(Path(args.runs_dir) / args.run_id)
+    if args.readme:
+        update_readme(Path(args.readme), block)
+        print(f"updated the results block in {args.readme}")
+    else:
+        print(block)
+
+
 def cmd_smoke(args):
     """One tiny paid call to confirm the key, model ID and structured output work."""
     from .enrich import SCHEMA, EnrichConfig, Item, validate_output
@@ -239,6 +249,11 @@ def main(argv=None):
     sp.add_argument("--expected", default=str(ROOT / "evals" / "injection" / "expected.json"))
     sp.add_argument("--out", default=str(ROOT / "evals" / "injection" / "results.json"))
     sp.set_defaults(func=cmd_injection)
+
+    sp = sub.add_parser("results", help="offline: compact results summary from saved files (optionally into README)")
+    sp.add_argument("--run-id", required=True)
+    sp.add_argument("--readme", default=None)
+    sp.set_defaults(func=cmd_results)
 
     sp = sub.add_parser("trace", help="offline: trace real reviews through every stage from saved artifacts")
     run_args(sp, need_input=False)

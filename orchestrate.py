@@ -206,6 +206,7 @@ def cmd_finalize(args) -> int:
     r = r[0] if isinstance(r, list) else r
     say(f"self-check: status={r.get('status')} issues={r.get('issue_counts')} "
         f"coverage_point_candidate={r.get('working_coverage_point_candidate')}")
+    step("README results block", [PY, "-m", "pipeline", "results", "--run-id", run_id, "--readme", "README.md"])
     step("load dashboard database", ["uv", "run", "--group", "dashboard", "python", "dashboard/load_db.py",
                                      "--run-id", run_id, "--input", inp])
     if args.deploy:
