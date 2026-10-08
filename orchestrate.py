@@ -163,6 +163,56 @@ def cmd_stop(_args) -> int:
     return 0
 
 
+def step(title: str, cmd: list[str], cwd: Path = ROOT, check: bool = True) -> int:
+    say(f"{title}: {' '.join(cmd)}")
+    rc = subprocess.run(cmd, cwd=cwd).returncode
+    if rc and check:
+        raise SystemExit(f"{title} failed (exit {rc})")
+    return rc
+
+
+def cmd_finalize(args) -> int:
+    """After final100k completes: evaluations, grading export + self-check, dashboard data (code only, $0)."""
+    run_id, inp, raw = "final100k", "data/subset_100k.csv", ROOT / "data" / "raw"
+    if not finished(run_id):
+        say(f"{run_id} is not complete yet; run `python3 orchestrate.py status`.")
+        return 1
+    ckpts = sorted((ROOT / "runs" / run_id / "checkpoints").glob("inv*.json"))
+    before = next((p for p in ckpts if json.loads(p.read_text())["phase"] == "initial"), None)
+    after = next((p for p in ckpts if json.loads(p.read_text())["phase"] == "resume"
+                  and json.loads(p.read_text())["reason"] == "completed"), None)
+    if not before or not after:
+        say(f"missing interruption/resume checkpoints in runs/{run_id}/checkpoints: {[p.name for p in ckpts]}")
+        return 1
+    memo = json.loads((ROOT / "runs" / run_id / "memo_checks.json").read_text())
+    if memo.get("status") != "checks_passed":
+        # Re-running a completed run makes no model calls for cached work; the memo check is recomputed by code.
+        step("re-check memo with the current checker", [PY, "-m", "pipeline", "run", "--run-id", run_id, "--input", inp,
+                                                       "--full-input", FULL])
+    step("planted-error test", [PY, "-m", "pipeline", "planted-errors", "--run-id", run_id, "--n", "12"])
+    if (ROOT / "evals" / "golden_50_labeled.csv").exists():
+        step("golden-set evaluation", [PY, "-m", "pipeline", "eval-golden", "--run-id", run_id])
+    else:
+        say("golden labels not found at evals/golden_50_labeled.csv; skipping golden evaluation")
+    step("grading export", [PY, "-m", "pipeline", "export-grading", "--run-id", run_id, "--input", inp,
+                            "--out", "grading", "--before", str(before), "--after", str(after)])
+    ref, report = LOGS / "local-reference.json", LOGS / "self-check.json"
+    step("checker reference", [PY, str(raw / "check_submission.py"), "reference", "--full", FULL, "--analysis", inp,
+                               "--out", str(ref)])
+    step("checker self-check", [PY, str(raw / "check_submission.py"), "check", "--reference", str(ref),
+                                "--submission", "grading", "--out", str(report)], check=False)
+    r = json.loads(report.read_text())
+    r = r[0] if isinstance(r, list) else r
+    say(f"self-check: status={r.get('status')} issues={r.get('issue_counts')} "
+        f"coverage_point_candidate={r.get('working_coverage_point_candidate')}")
+    step("load dashboard database", ["uv", "run", "--group", "dashboard", "python", "dashboard/load_db.py",
+                                     "--run-id", run_id, "--input", inp])
+    if args.deploy:
+        step("deploy dashboard (Vercel, free plan)", ["vercel", "deploy", "--prod", "--yes"], cwd=ROOT / "dashboard")
+    say("finalize done")
+    return 0
+
+
 def cmd_dashboard(args) -> int:
     LOGS.mkdir(parents=True, exist_ok=True)
     if args.run_id:
@@ -255,6 +305,9 @@ def main() -> int:
     r.add_argument("--detach", action="store_true", help="keep running after this terminal or the app closes")
     r.set_defaults(func=cmd_runs)
     sub.add_parser("stop", help="graceful stop of the detached sequence").set_defaults(func=cmd_stop)
+    f = sub.add_parser("finalize", help="after final100k: evaluations, grading/ + self-check, dashboard data")
+    f.add_argument("--deploy", action="store_true", help="also redeploy the dashboard to Vercel (free plan)")
+    f.set_defaults(func=cmd_finalize)
     d = sub.add_parser("dashboard")
     d.add_argument("--run-id")
     d.add_argument("--input", default="data/subset_100k.csv")
