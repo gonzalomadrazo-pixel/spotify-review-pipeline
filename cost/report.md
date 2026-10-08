@@ -82,6 +82,16 @@ Comparison only: all of spotify_reviews_18months.csv. 660,622 rows accounted for
 
 Basis: local_base: 9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies; local_conservative: 9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies; modeled_alt_haiku_batch_api: not measured for this provider (modeled alternative) (MODELED, not run: applies Haiku 4.5 Batch rates to the local pilot's token profile (tokenizers differ). Cache hit 0 because Batch prompt caching is best-effort.); modeled_alt_haiku_standard: not measured for this provider (modeled alternative) (MODELED, not run: Haiku 4.5 standard rates on the local pilot's token profile, no prompt-cache savings assumed.)
 
+## Estimates refreshed at 500 and 10,000 reviews
+
+Each row re-runs the same projection for the declared scope (100,063 rows, 78,137 distinct texts) from that run's own saved call log, so larger runs replace the 100-review guess with measured latency and token use. The final run's row appears once it completes, and shows how close the estimates were. These refreshes are computed from saved logs. The sequence 500 → 10,000 → final ran unattended, so the rows document the scaling path; they did not gate it.
+
+| checkpoint | source | rows | texts labeled by model | enrich requests | failed/unknown calls | mean s per enrich request | output tokens per text | API spend | projected local hours (base) | modeled Haiku Batch API |
+|---|---|---|---|---|---|---|---|---|---|---|
+| pilot (100) | cost/pilot_calls.jsonl, cold run | 100 | 100 | 2 | 0 | 66.9 | 24.2 | $0.0000 | 30.1 | $9.9273 |
+| dev500 | runs/dev500/calls.jsonl (checkpoint_500.csv) | 500 | 479 | 10 | 0 | 50.9 | 24.0 | $0.0000 | 22.9 | $9.3351 |
+| dev10k | runs/dev10k/calls.jsonl (analysis_10000.csv) | 10,000 | 7,969 | 161 | 1 | 65.3 | 24.3 | $0.0000 | 29.4 | $9.3262 |
+
 ## Controls
 
 Budget cap $5.00 (pipeline `--budget`, enforced by reservations before dispatch) · output-token cap 4096 per call · max workers 1 · max fallback fraction 0.01 · invalid-output retries 1 · transient retries 4 with exponential backoff and jitter.

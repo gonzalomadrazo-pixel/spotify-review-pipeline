@@ -121,6 +121,47 @@
       "records_per_second": 330.03300330033005
     }
   },
+  "refreshed_estimates": [
+    {
+      "checkpoint": "pilot (100)",
+      "source": "cost/pilot_calls.jsonl, cold run",
+      "records": 100,
+      "texts_labeled_by_model": 100,
+      "enrich_requests": 2,
+      "failed_or_unknown_calls": 0,
+      "mean_enrich_latency_s": 66.901,
+      "output_tokens_per_text": 24.19,
+      "api_usd": 0.0,
+      "projected_local_hours": 30.0525266997076,
+      "projected_haiku_batch_usd": 9.927275636786321
+    },
+    {
+      "checkpoint": "dev500",
+      "source": "runs/dev500/calls.jsonl (checkpoint_500.csv)",
+      "records": 500,
+      "texts_labeled_by_model": 479,
+      "enrich_requests": 10,
+      "failed_or_unknown_calls": 0,
+      "mean_enrich_latency_s": 50.908100000000005,
+      "output_tokens_per_text": 24.045929018789145,
+      "api_usd": 0.0,
+      "projected_local_hours": 22.92617210785714,
+      "projected_haiku_batch_usd": 9.33508727457575
+    },
+    {
+      "checkpoint": "dev10k",
+      "source": "runs/dev10k/calls.jsonl (analysis_10000.csv)",
+      "records": 10000,
+      "texts_labeled_by_model": 7969,
+      "enrich_requests": 161,
+      "failed_or_unknown_calls": 1,
+      "mean_enrich_latency_s": 65.30552173913044,
+      "output_tokens_per_text": 24.298155351988957,
+      "api_usd": 0.0,
+      "projected_local_hours": 29.437312205782895,
+      "projected_haiku_batch_usd": 9.326216346330853
+    }
+  ],
   "projections": {
     "declared_100k_subset": {
       "volume": {
@@ -353,11 +394,11 @@
             "total_api": 0.0
           },
           "usd_per_1000_rows": 0.0,
-          "local_hours": 202.2493799052632,
+          "local_hours": 202.24937990526317,
           "local_compute": {
-            "hours": 202.2493799052632,
-            "kwh": 5.05623449763158,
-            "usd_estimate": 1.769682074171053
+            "hours": 202.24937990526317,
+            "kwh": 5.056234497631579,
+            "usd_estimate": 1.7696820741710526
           },
           "time_basis": "9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
           "exceeds_budget": false,

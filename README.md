@@ -202,6 +202,16 @@ Projections from the cold pilot, which are estimates:
 
 The Haiku rows apply Haiku rates to the local pilot's token counts; tokenizers differ, so they are approximations and were not run.
 
+**Estimates refreshed at 500 and 10,000 reviews** (the brief asks for this before scaling; see the table at the end of [`cost/report.md`](cost/report.md)). The same projection was re-run from each run's own saved call log:
+
+| checkpoint | s per batch | output tokens per review | projected local hours (100K) | modeled Haiku Batch API (100K) |
+|---|---|---|---|---|
+| pilot (100) | 66.9 | 24.2 | 30.1 | $9.93 |
+| dev500 | 50.9 | 24.0 | 22.9 | $9.34 |
+| dev10k | 65.3 | 24.3 | 29.4 | $9.33 |
+
+Token use per review is stable across scales, so the cost conclusion (local model at $0; Haiku about $9–10, above the $5 cap) did not change. The final run's own row is added automatically when it completes. The sequence ran unattended, so these rows document the scaling path rather than gating it.
+
 ## Evaluation
 
 - **Golden set (T1):** *pending.* A human labels the 50 reviews in [`evals/golden_labeler.html`](evals/golden_labeler.html); the labels are never shown to a model. `uv run python -m pipeline eval-golden --run-id final100k` writes per-field agreement, severity MAE, confusion tables and disagreements to `evals/golden/`.
