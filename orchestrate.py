@@ -190,6 +190,7 @@ def cmd_finalize(args) -> int:
         step("re-check memo with the current checker", [PY, "-m", "pipeline", "run", "--run-id", run_id, "--input", inp,
                                                        "--full-input", FULL])
     step("planted-error test", [PY, "-m", "pipeline", "planted-errors", "--run-id", run_id, "--n", "12"])
+    step("end-to-end trace", [PY, "-m", "pipeline", "trace", "--run-id", run_id, "--out", "evals/trace.md"])
     if (ROOT / "evals" / "golden_50_labeled.csv").exists():
         step("golden-set evaluation", [PY, "-m", "pipeline", "eval-golden", "--run-id", run_id])
     else:

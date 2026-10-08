@@ -145,6 +145,14 @@ def cmd_planted(args):
     print(f"planted {out['planted']} synthetic label errors; flagged by verifier comparison: {out['flagged']}")
 
 
+def cmd_trace(args):
+    from .common import atomic_write_text
+    from .trace import build_trace
+    ctx = make_ctx(args, "trace")
+    atomic_write_text(Path(args.out), build_trace(ctx))
+    print(f"wrote {args.out}")
+
+
 def cmd_smoke(args):
     """One tiny paid call to confirm the key, model ID and structured output work."""
     from .enrich import SCHEMA, EnrichConfig, Item, validate_output
@@ -231,6 +239,11 @@ def main(argv=None):
     sp.add_argument("--expected", default=str(ROOT / "evals" / "injection" / "expected.json"))
     sp.add_argument("--out", default=str(ROOT / "evals" / "injection" / "results.json"))
     sp.set_defaults(func=cmd_injection)
+
+    sp = sub.add_parser("trace", help="offline: trace real reviews through every stage from saved artifacts")
+    run_args(sp, need_input=False)
+    sp.add_argument("--out", default=str(ROOT / "evals" / "trace.md"))
+    sp.set_defaults(func=cmd_trace)
 
     sp = sub.add_parser("planted-errors", help="offline: planted-error test on saved verifier outputs")
     sp.add_argument("--run-id", required=True)
