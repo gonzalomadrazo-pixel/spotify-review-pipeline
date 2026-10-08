@@ -22,3 +22,4 @@ dashboard/frontend/dist/
 dashboard/.vercel/
 runs/_orchestrator/
 state_evals/
+dashboard/frontend/tsconfig.tsbuildinfo
