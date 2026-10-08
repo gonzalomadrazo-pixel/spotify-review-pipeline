@@ -131,18 +131,20 @@ def cmd_runs(args) -> int:
     return 0
 
 
-def detach(log_name: str) -> None:
+def detach(log_name: str, pid_name: str = "orchestrator.pid") -> None:
     """Re-run this command in a new session, detached from the terminal/app, so closing either won't stop it."""
     LOGS.mkdir(parents=True, exist_ok=True)
     if os.fork():
-        say(f"running detached; follow with: tail -f {LOGS / log_name}   stop with: python3 orchestrate.py stop")
+        how = ("python3 orchestrate.py stop" if pid_name == "orchestrator.pid"
+               else f"kill $(cat {LOGS / pid_name})")
+        say(f"running detached; follow with: tail -f {LOGS / log_name}   stop with: {how}")
         os._exit(0)
     os.setsid()
     out = os.open(LOGS / log_name, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
     os.dup2(out, 1)
     os.dup2(out, 2)
     os.dup2(os.open(os.devnull, os.O_RDONLY), 0)
-    (LOGS / "orchestrator.pid").write_text(str(os.getpid()))
+    (LOGS / pid_name).write_text(str(os.getpid()))
 
 
 def cmd_stop(_args) -> int:
@@ -174,6 +176,8 @@ def step(title: str, cmd: list[str], cwd: Path = ROOT, check: bool = True) -> in
 def cmd_finalize(args) -> int:
     """After final100k completes: evaluations, grading export + self-check, dashboard data (code only, $0)."""
     run_id, inp, raw = "final100k", "data/subset_100k.csv", ROOT / "data" / "raw"
+    if args.detach:
+        detach("finalize.log", "finalize.pid")
     while args.wait and not finished(run_id):
         say(f"{run_id} still running; checking again in 5 minutes (Ctrl-C to stop waiting; the run is unaffected)")
         time.sleep(300)
@@ -314,6 +318,7 @@ def main() -> int:
     f = sub.add_parser("finalize", help="after final100k: evaluations, grading/ + self-check, dashboard data")
     f.add_argument("--deploy", action="store_true", help="also redeploy the dashboard to Vercel (free plan)")
     f.add_argument("--wait", action="store_true", help="wait for final100k to finish, then run")
+    f.add_argument("--detach", action="store_true", help="wait in the background; survives closing the app")
     f.set_defaults(func=cmd_finalize)
     d = sub.add_parser("dashboard")
     d.add_argument("--run-id")
