@@ -174,8 +174,11 @@ def step(title: str, cmd: list[str], cwd: Path = ROOT, check: bool = True) -> in
 def cmd_finalize(args) -> int:
     """After final100k completes: evaluations, grading export + self-check, dashboard data (code only, $0)."""
     run_id, inp, raw = "final100k", "data/subset_100k.csv", ROOT / "data" / "raw"
+    while args.wait and not finished(run_id):
+        say(f"{run_id} still running; checking again in 5 minutes (Ctrl-C to stop waiting; the run is unaffected)")
+        time.sleep(300)
     if not finished(run_id):
-        say(f"{run_id} is not complete yet; run `python3 orchestrate.py status`.")
+        say(f"{run_id} is not complete yet; run `python3 orchestrate.py status`, or add --wait.")
         return 1
     ckpts = sorted((ROOT / "runs" / run_id / "checkpoints").glob("inv*.json"))
     before = next((p for p in ckpts if json.loads(p.read_text())["phase"] == "initial"), None)
@@ -309,6 +312,7 @@ def main() -> int:
     sub.add_parser("stop", help="graceful stop of the detached sequence").set_defaults(func=cmd_stop)
     f = sub.add_parser("finalize", help="after final100k: evaluations, grading/ + self-check, dashboard data")
     f.add_argument("--deploy", action="store_true", help="also redeploy the dashboard to Vercel (free plan)")
+    f.add_argument("--wait", action="store_true", help="wait for final100k to finish, then run")
     f.set_defaults(func=cmd_finalize)
     d = sub.add_parser("dashboard")
     d.add_argument("--run-id")
