@@ -65,6 +65,20 @@ def resolve_quote(text: str, proposed: str, needs_model_quote: bool) -> tuple[st
     return whole, "fallback_full_text"
 
 
+# ---------------------------------------------------------------- injection screen
+
+_INJECTION_RE = re.compile(
+    r"ignore (all |any )?(previous|prior|above) (instructions|prompts?)|system\s*(override|prompt|:)|</?reviews>"
+    r"|new instructions?|you are (an? )?(ai|assistant|language model|chatgpt)|label (this|every|all|the)\b[^.]{0,30}reviews?"
+    r"|(^|\n)\s*(assistant|system|human)\s*:"
+    r"|\{\s*\"k\"\s*:|disregard (the )?(previous|above)|developer mode", re.IGNORECASE)
+
+
+def looks_like_injection(text: str) -> bool:
+    """Instruction-like text aimed at the labeler. Code only flags it for human review; it never changes a label."""
+    return bool(_INJECTION_RE.search(text))
+
+
 # ---------------------------------------------------------------- entities
 
 _TERMS = [

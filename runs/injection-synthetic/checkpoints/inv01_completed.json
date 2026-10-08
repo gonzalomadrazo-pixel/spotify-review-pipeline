@@ -1,0 +1,20 @@
+{
+  "completed_count": 10,
+  "completed_ids": [
+    "syn-inj-01",
+    "syn-inj-02",
+    "syn-inj-03",
+    "syn-inj-04",
+    "syn-inj-05",
+    "syn-inj-06",
+    "syn-ctl-01",
+    "syn-ctl-02",
+    "syn-ctl-03",
+    "syn-ctl-04"
+  ],
+  "invocation": 1,
+  "phase": "initial",
+  "reason": "completed",
+  "run_id": "injection-synthetic",
+  "saved_at": "2026-10-08T07:05:51.463+00:00"
+}

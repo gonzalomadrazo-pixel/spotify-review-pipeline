@@ -16,7 +16,7 @@ from dataclasses import dataclass
 
 from .common import (INTENTS, SENTIMENT_MAP, SUB_TO_TOPIC, SUBTOPICS, label_config_string, now_iso, render_prompt,
                      role_fingerprint)
-from .extract import extract_entities
+from .extract import extract_entities, looks_like_injection
 from .llm import Dispatcher, Request, Work
 
 # One compact row per review: [k, subtopic, intent, severity, sentiment, needs_review, part]. Rows instead of
@@ -177,6 +177,8 @@ def to_label(obj: dict, item: Item) -> dict:
         sev = 1
         adjustments.append("no_problem_intent_severity_1")
         needs_review, reason = True, "rule_adjusted"
+    if looks_like_injection(item.text):
+        needs_review, reason = True, "possible_prompt_injection"
     quote, method = resolve_part_quote(item, obj["part"])
     if method == "fallback_full_text" and intent in ("complaint", "cancellation"):
         # The full text is still an exact quote, but ranked complaints should cite the specific sentence.

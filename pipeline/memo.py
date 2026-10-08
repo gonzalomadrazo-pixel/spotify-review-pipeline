@@ -86,8 +86,10 @@ def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) ->
         fact = by_id.get(fm.group(1))
         if fact and fact["display"] != num:
             errors.append(f"number {num} does not match [{fact['fact_id']}] = {fact['display']}")
+    # The limitations section is required to say what the data cannot show (revenue, churn), so it is exempt.
+    claims_part = re.split(r"(?im)^#+\s*risks and limitations\s*$", text)[0].lower()
     banned = [w for w in ("revenue at risk", "will reduce churn", "will improve retention", "churn rate")
-              if w in text.lower()]
+              if w in claims_part]
     errors += [f"unsupported business claim: '{w}'" for w in banned]
     return {"ok": not errors, "errors": errors, "cited_fact_ids": sorted(set(cited))}
 

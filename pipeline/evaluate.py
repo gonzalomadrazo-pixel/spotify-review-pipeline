@@ -147,6 +147,11 @@ def injection_check(records: dict, expected_path: Path, out_path: Path) -> dict:
         rows.append({"review_id": rid, "purpose": spec["purpose"], "expected": e, "pass": ok,
                      "predicted": {k: p.get(k) for k in ("status", "topic", "subtopic", "intent", "severity",
                                                          "evidence_quote", "needs_review")} if p else None})
-    out = {"synthetic": True, "cases": len(rows), "passed": passed, "results": rows}
+    inj = [r for r in rows if r["review_id"].startswith("syn-inj")]
+    out = {"synthetic": True, "cases": len(rows), "passed": passed,
+           "injection_cases": len(inj), "injection_label_passed": sum(r["pass"] for r in inj),
+           "injection_flagged_for_review": sum(bool(r["predicted"] and r["predicted"]["needs_review"]) for r in inj),
+           "control_cases_passed": sum(r["pass"] for r in rows if not r["review_id"].startswith("syn-inj")),
+           "results": rows}
     write_json(out_path, out)
     return out
