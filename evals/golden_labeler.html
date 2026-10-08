@@ -36,6 +36,10 @@ select,input[type=text],textarea{width:100%;padding:7px;border:1px solid var(--l
 .dot{width:22px;height:22px;border-radius:4px;border:1px solid var(--line);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .dot.done{background:var(--accent);color:#fff;border-color:var(--accent)}
 .dot.cur{outline:2px solid var(--ink)}
+.dot.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+.warnbox{border:1px solid var(--warn);color:var(--warn);border-radius:6px;padding:8px 10px;margin:10px 0}
+.radios label.off{opacity:.35;pointer-events:none}
+kbd{border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:11px}
 .small{font-size:12px;color:var(--muted)}
 </style>
 </head>
@@ -67,6 +71,18 @@ try { document.getElementById("labeler").value = localStorage.getItem(KEY + ":wh
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); localStorage.setItem(KEY + ":cur", cur); } catch (e) {} render(); }
 function lab(id) { return state[id] || (state[id] = {topic:"",intent:"",severity:"",sentiment:"",entities:"",evidence_quote:"",needs_review:false,ambiguous:false,alt_topic:"",alt_intent:"",alt_severity:"",notes:""}); }
 function complete(l) { return l && l.topic && l.intent && l.severity && l.sentiment !== "" && l.evidence_quote; }
+const NO_PROBLEM = ["praise", "request", "unclear"];
+const TOPIC_KEYS = {a: "access", u: "usability", p: "playback", d: "downloads", c: "catalog", b: "billing", s: "support", o: "other"};
+const INTENT_KEYS = {q: "cancellation", w: "complaint", e: "request", r: "praise", t: "unclear"};
+const SENT_KEYS = ["-1", "-0.5", "0", "0.5", "1"];
+function ruleIssues(l) {
+  const out = [];
+  if (!l || !l.intent || !l.severity) return out;
+  if (NO_PROBLEM.includes(l.intent) && l.severity !== "1") out.push(`Shared scale: ${l.intent} is always severity 1 ("no reported problem").`);
+  if (!NO_PROBLEM.includes(l.intent) && l.severity === "1") out.push("Shared scale: complaints and cancellations are at least severity 2.");
+  if (l.severity === "5") out.push("Severity 5 is only for explicit serious financial, privacy or data harm; anger or a crash alone is not enough.");
+  return out;
+}
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 function radios(name, opts, value) {
@@ -75,6 +91,11 @@ function radios(name, opts, value) {
 
 function render() {
   const r = DATA[cur], l = lab(r.review_id);
+  if (!l.evidence_quote && r.review_text.trim().length <= 160) {
+    l.evidence_quote = r.review_text.trim();  // contract: a short review's whole text may be its quote (editable)
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  const issues = ruleIssues(l);
   const done = DATA.filter(d => complete(state[d.review_id])).length;
   document.getElementById("progress").textContent = `${done}/50 complete · review ${cur + 1} of 50`;
   const quoteOk = !l.evidence_quote || r.review_text.includes(l.evidence_quote);
@@ -83,11 +104,12 @@ function render() {
     <div class="review" id="text">${esc(r.review_text)}</div>
     <div class="meta">ID ${r.review_id}${showMeta ? ` · ${r.review_rating}★ · likes ${r.review_likes} · v${r.app_version || "—"} · ${r.review_timestamp}` : " · label from the text only"}</div>
     <div class="grid">
-      <div><label class="f">Topic</label><select id="topic"><option value=""></option>${TOPICS.map(t => `<option ${l.topic===t?"selected":""}>${t}</option>`).join("")}</select></div>
-      <div><label class="f">Intent</label><select id="intent"><option value=""></option>${INTENTS.map(t => `<option ${l.intent===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label class="f">Topic <span class="small">(a u p d c b s o)</span></label><select id="topic"><option value=""></option>${TOPICS.map(t => `<option ${l.topic===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label class="f">Intent <span class="small">(q w e r t)</span></label><select id="intent"><option value=""></option>${INTENTS.map(t => `<option ${l.intent===t?"selected":""}>${t}</option>`).join("")}</select></div>
     </div>
-    <div style="margin-top:12px"><label class="f">Severity</label>${radios("severity", [1,2,3,4,5].map(n => [n, n]), l.severity)}</div>
-    <div style="margin-top:12px"><label class="f">Sentiment</label>${radios("sentiment", [[-1,"−1 very neg"],[-0.5,"−0.5"],[0,"0"],[0.5,"+0.5"],[1,"+1 very pos"]], l.sentiment)}</div>
+    <div style="margin-top:12px"><label class="f">Severity <span class="small">(keys 1–5)</span></label>${radios("severity", [1,2,3,4,5].map(n => [n, n]), l.severity)}</div>
+    ${issues.length ? `<div class="warnbox">${issues.map(esc).join("<br>")}${NO_PROBLEM.includes(l.intent) && l.severity !== "1" ? ' <button id="fixSev">Set severity to 1</button>' : ""}</div>` : ""}
+    <div style="margin-top:12px"><label class="f">Sentiment <span class="small">(Shift+1–5)</span></label>${radios("sentiment", [[-1,"−1 very neg"],[-0.5,"−0.5"],[0,"0"],[0.5,"+0.5"],[1,"+1 very pos"]], l.sentiment)}</div>
     <div style="margin-top:12px"><label class="f">Evidence quote (exact substring) <span class="${quoteOk ? "ok" : "bad"}">${l.evidence_quote ? (quoteOk ? "✓ exact substring" : "✗ not an exact substring") : ""}</span></label>
       <textarea id="quote" rows="2">${esc(l.evidence_quote)}</textarea>
       <div class="nav" style="justify-content:flex-start;margin-top:6px"><button id="useSel">Use highlighted text</button><button id="useAll">Use whole review</button></div></div>
@@ -103,9 +125,15 @@ function render() {
     </div>
     <div style="margin-top:12px"><label class="f">Notes (why, edge cases)</label><textarea id="notes" rows="2">${esc(l.notes)}</textarea></div>
     <div class="nav"><button id="prev">← Previous</button><span class="small">${complete(l) ? '<span class="ok">complete</span>' : 'topic, intent, severity, sentiment and quote required'}</span><button id="next" class="primary">Next →</button></div>
-    <div class="dots">${DATA.map((d, i) => `<div class="dot ${complete(state[d.review_id]) ? "done" : ""} ${i===cur?"cur":""}" data-i="${i}">${i+1}</div>`).join("")}</div>`;
+    <div class="dots">${DATA.map((d, i) => `<div class="dot ${ruleIssues(state[d.review_id]).length ? "warn" : complete(state[d.review_id]) ? "done" : ""} ${i===cur?"cur":""}" data-i="${i}">${i+1}</div>`).join("")}</div>`;
   const bind = (id, key, fn) => { const el = document.getElementById(id); el.addEventListener("change", () => { l[key] = fn ? fn(el) : el.value; save(); }); };
-  bind("topic", "topic"); bind("intent", "intent"); bind("quote", "evidence_quote"); bind("entities", "entities");
+  bind("topic", "topic");
+  document.getElementById("intent").addEventListener("change", e => setIntent(l, e.target.value));
+  document.querySelectorAll('input[name=severity]').forEach(el => {
+    const v = el.value, off = l.intent && (NO_PROBLEM.includes(l.intent) ? v !== "1" : v === "1");
+    if (off && l.severity !== v) el.parentElement.classList.add("off");
+  });
+  const fix = document.getElementById("fixSev"); if (fix) fix.onclick = () => { l.severity = "1"; save(); }; bind("quote", "evidence_quote"); bind("entities", "entities");
   bind("alt_topic", "alt_topic"); bind("alt_intent", "alt_intent"); bind("alt_severity", "alt_severity"); bind("notes", "notes");
   bind("needs_review", "needs_review", el => el.checked); bind("ambiguous", "ambiguous", el => el.checked);
   document.querySelectorAll('input[name=severity]').forEach(el => el.addEventListener("change", () => { l.severity = el.value; save(); }));
@@ -117,11 +145,32 @@ function render() {
   document.querySelectorAll(".dot").forEach(el => el.onclick = () => { cur = +el.dataset.i; save(); });
 }
 
+function setIntent(l, intent) {
+  l.intent = intent;
+  if (NO_PROBLEM.includes(intent)) l.severity = "1";           // the shared scale fixes these at 1
+  else if (l.severity === "1") l.severity = "";                 // complaints/cancellations need >= 2: choose
+  save();
+}
+document.addEventListener("keydown", e => {
+  const tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "textarea" || (tag === "input" && e.target.type === "text") || e.metaKey || e.ctrlKey || e.altKey) return;
+  const l = lab(DATA[cur].review_id), k = e.key.toLowerCase();
+  const digit = /^Digit[1-5]$/.test(e.code) ? +e.code.slice(5) : null;
+  if (digit && e.shiftKey) { l.sentiment = SENT_KEYS[digit - 1]; save(); }
+  else if (digit) { l.severity = String(digit); save(); }
+  else if (TOPIC_KEYS[k]) { l.topic = TOPIC_KEYS[k]; save(); }
+  else if (INTENT_KEYS[k]) setIntent(l, INTENT_KEYS[k]);
+  else if (e.key === "Enter" || e.key === "ArrowRight") { cur = Math.min(DATA.length - 1, cur + 1); save(); }
+  else if (e.key === "ArrowLeft") { cur = Math.max(0, cur - 1); save(); }
+  else return;
+  e.preventDefault();
+});
 function defs() {
   let h = `<h3>Topics (pick the highest-severity specific problem; tie → first mentioned; praise → first praised feature; general → other)</h3>`;
   for (const [t, s] of Object.entries(TAX.topics)) h += `<p><b>${t}</b>: ${esc(s.definition)}</p>`;
   h += `<h3>Intent (precedence order)</h3><ul>` + INTENTS.map(i => `<li><b>${i}</b>: ${esc(TAX.intents[i])}</li>`).join("") + `</ul>`;
   h += `<h3>Severity</h3><ul>` + Object.entries(TAX.severity).map(([k, v]) => `<li><b>${k}</b>: ${esc(v)}</li>`).join("") + `</ul>`;
+  h += `<h3>Keyboard</h3><p>Topic <kbd>a</kbd>ccess <kbd>u</kbd>sability <kbd>p</kbd>layback <kbd>d</kbd>ownloads <kbd>c</kbd>atalog <kbd>b</kbd>illing <kbd>s</kbd>upport <kbd>o</kbd>ther · Intent <kbd>q</kbd> cancellation <kbd>w</kbd> complaint <kbd>e</kbd> request <kbd>r</kbd> praise <kbd>t</kbd> unclear · Severity <kbd>1</kbd>–<kbd>5</kbd> · Sentiment <kbd>Shift</kbd>+<kbd>1</kbd>–<kbd>5</kbd> (−1 … +1) · <kbd>Enter</kbd>/<kbd>→</kbd> next, <kbd>←</kbd> previous. Short reviews start with the whole text as the quote; edit it if a shorter phrase is better. Orange dots break a shared rule.</p>`;
   h += `<h3>Reminders</h3><ul><li>Label the text, not the stars.</li><li>A paid-plan mention alone is not billing; premium-only controls for free users (forced shuffle, skip limits, can't pick songs) are billing.</li><li>Cancellation intent does not raise severity. Complaints are ≥ 2.</li><li>Bare boycott slogans / meaningless text → unclear.</li><li>Missing context → needs_review; don't invent impact.</li></ul>`;
   document.getElementById("defs").innerHTML = h;
 }
