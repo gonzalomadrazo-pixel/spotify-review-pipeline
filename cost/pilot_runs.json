@@ -1,0 +1,112 @@
+{
+  "input": "data/raw/cost_100.csv",
+  "input_sha256": "c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e",
+  "manifest_match": true,
+  "workers": 1,
+  "config": {
+    "provider": "ollama",
+    "rates_file": "config/rates.csv",
+    "enrich": {
+      "model": "gemma4:e2b-it-qat",
+      "prompt_file": "prompts/enrich_v2.md",
+      "prompt_version": "enrich-v2",
+      "schema_version": "schema-v2",
+      "temperature": 0,
+      "batch_size": 50,
+      "max_tokens_base": 100,
+      "max_tokens_per_item": 40,
+      "max_tokens_per_quote_item": 0,
+      "quote_char_threshold": 160,
+      "request_timeout_s": 900,
+      "provider": "ollama"
+    },
+    "fallback": {
+      "enabled": true,
+      "provider": "ollama",
+      "model": "gemma4:e2b-it-qat",
+      "effort": null,
+      "max_fraction": 0.01,
+      "max_tokens": 300,
+      "request_timeout_s": 300
+    },
+    "verify": {
+      "model": "gemma4:e2b-it-qat",
+      "prompt_file": "prompts/verify_v1.md",
+      "prompt_version": "verify-v1",
+      "schema_version": "vschema-v1",
+      "temperature": 0,
+      "batch_size": 50,
+      "sample_fraction": 0.01,
+      "min_sample": 50,
+      "max_sample": 2000,
+      "seed": "verify-sample-v1",
+      "max_tokens_base": 150,
+      "max_tokens_per_item": 30,
+      "request_timeout_s": 900,
+      "provider": "ollama"
+    },
+    "group": {
+      "model": "gemma4:e2b-it-qat",
+      "prompt_file": "prompts/group_v1.md",
+      "prompt_version": "group-v1",
+      "temperature": 0,
+      "examples_per_issue": 12,
+      "seed": "group-evidence-v1",
+      "max_tokens": 600,
+      "request_timeout_s": 600,
+      "provider": "ollama"
+    },
+    "memo": {
+      "model": "gemma4:e2b-it-qat",
+      "prompt_file": "prompts/memo_v1.md",
+      "prompt_version": "memo-v1",
+      "temperature": 0,
+      "top_issues": 10,
+      "quotes_per_issue": 3,
+      "max_tokens": 2500,
+      "max_revisions": 1,
+      "request_timeout_s": 1200,
+      "provider": "ollama"
+    },
+    "limits": {
+      "budget_usd": 5.0,
+      "max_workers": 1,
+      "max_output_tokens_per_call": 4096,
+      "max_invalid_retries": 1,
+      "max_transient_retries": 4,
+      "backoff_base_s": 2.0,
+      "backoff_max_s": 60.0,
+      "requests_per_minute": 200,
+      "max_minutes": 0
+    }
+  },
+  "pilot_started_at": "2026-10-07T00:16:11-0700",
+  "runs": {
+    "cold": {
+      "run_id": "pilot-cold",
+      "wall_clock_s": 291.567,
+      "stage_seconds": {
+        "ingest": 0,
+        "enrich": 133.877,
+        "verify": 57.223,
+        "rank": 0.01,
+        "group": 71.061,
+        "memo": 29.016
+      },
+      "command": "-m pipeline --state-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_state --runs-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_runs run --run-id pilot-cold --input /Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/cost_100.csv --workers 1 --budget 1.0"
+    },
+    "warm": {
+      "run_id": "pilot-warm",
+      "wall_clock_s": 0.303,
+      "stage_seconds": {
+        "ingest": 0,
+        "enrich": 0.002,
+        "verify": 0.001,
+        "rank": 0.002,
+        "group": 0.001,
+        "memo": 0.001
+      },
+      "command": "-m pipeline --state-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_state --runs-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_runs run --run-id pilot-warm --input /Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/cost_100.csv --workers 1 --budget 1.0"
+    }
+  }
+}

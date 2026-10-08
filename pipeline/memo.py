@@ -67,7 +67,7 @@ def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) ->
                 errors.append(f"issue id not supplied: {tok}")
     # Numbers: remove backticked IDs and fact tags, then every number must equal the display value of
     # the first fact tag that follows it within the same sentence fragment.
-    scrub = TICK_RE.sub(" ", text)
+    scrub = re.sub(r"\bper\s+100\b", "per hundred", TICK_RE.sub(" ", text))  # unit phrase, not a claim
     for m in NUM_RE.finditer(scrub):
         num = m.group(1).rstrip(",")
         line_start = scrub.rfind("\n", 0, m.start()) + 1
@@ -149,7 +149,9 @@ def run_memo(ctx, client, facts, issues, coverage_note) -> dict:
                            (key, "memo", json.dumps({**final, "attempts": attempts}, ensure_ascii=False),
                             final.get("request_id"), ctx.run_id, now_iso()))
     text = final.get("text", "")
-    chk = final.get("check") or check_memo(text, facts, issue_ids, review_ids)
+    chk = check_memo(text, facts, issue_ids, review_ids)  # code-owned check, re-run on every load of the text
+    if text:
+        final["status"] = "checks_passed" if chk["ok"] else "checks_failed"
     by_id = {f["fact_id"]: f for f in facts}
     claims, extra = [], []
     for fid in chk["cited_fact_ids"]:

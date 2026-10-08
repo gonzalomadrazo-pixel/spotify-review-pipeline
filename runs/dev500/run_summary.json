@@ -1,0 +1,144 @@
+{
+  "budget_usd": 5.0,
+  "calls_by_role_model_tier": {
+    "enrich|gemma4:e2b-it-qat|standard": {
+      "attempts": 10,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 52926,
+      "output_tokens": 11518,
+      "retries": 0,
+      "review_ids_sent": 479,
+      "succeeded": 10,
+      "unknown_charge_calls": 0
+    },
+    "group|gemma4:e2b-it-qat|standard": {
+      "attempts": 28,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 3759,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 16688,
+      "output_tokens": 3002,
+      "retries": 0,
+      "review_ids_sent": 153,
+      "succeeded": 28,
+      "unknown_charge_calls": 0
+    },
+    "memo|gemma4:e2b-it-qat|standard": {
+      "attempts": 2,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 5113,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 5637,
+      "output_tokens": 944,
+      "retries": 0,
+      "review_ids_sent": 60,
+      "succeeded": 2,
+      "unknown_charge_calls": 0
+    },
+    "verify|gemma4:e2b-it-qat|standard": {
+      "attempts": 1,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 2245,
+      "output_tokens": 1548,
+      "retries": 0,
+      "review_ids_sent": 50,
+      "succeeded": 1,
+      "unknown_charge_calls": 0
+    }
+  },
+  "config_file": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/config/pipeline.json",
+  "coverage": {
+    "cancellations": 6,
+    "complaints": 236,
+    "completed": 500,
+    "pending": 0,
+    "quarantine_reasons": {},
+    "quarantined": 0,
+    "rows": 500
+  },
+  "generated_at": "2026-10-07T07:33:25.467+00:00",
+  "input": {
+    "path": "data/raw/checkpoint_500.csv",
+    "sha256": "a94e31663ee7b7eaa77e23b7a8425b530cc0c866ed5e714953172a0afef6a12f"
+  },
+  "invocations": [
+    {
+      "command": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/pipeline/__main__.py run --run-id dev500 --input data/raw/checkpoint_500.csv",
+      "completed_after": 500,
+      "completed_before": 0,
+      "ended_at": "2026-10-07T07:33:25.438+00:00",
+      "n": 1,
+      "phase": "initial",
+      "run_id": "dev500",
+      "started_at": "2026-10-07T07:21:04.082+00:00",
+      "stop_reason": "completed"
+    }
+  ],
+  "needs_review": 85,
+  "notes": "cost_usd is computed from provider-reported usage x config/rates.csv. Calls with unknown_charge (timeouts) have no usage and must be reconciled with the provider dashboard.",
+  "result_sources": {
+    "exact_text_reuse": 21,
+    "model_call": 479
+  },
+  "run_id": "dev500",
+  "spend_usd_actual": 0,
+  "stages": [
+    {
+      "ended_at": "2026-10-07T07:21:04.082+00:00",
+      "invocation": null,
+      "stage": "ingest",
+      "started_at": "2026-10-07T07:21:04.069+00:00"
+    },
+    {
+      "ended_at": "2026-10-07T07:29:33.355+00:00",
+      "invocation": 1,
+      "seconds": 509.243,
+      "stage": "enrich",
+      "started_at": "2026-10-07T07:21:04.106+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:30:25.305+00:00",
+      "invocation": 1,
+      "seconds": 51.929,
+      "stage": "verify",
+      "started_at": "2026-10-07T07:29:33.369+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:30:25.325+00:00",
+      "invocation": 1,
+      "seconds": 0.018,
+      "stage": "rank",
+      "started_at": "2026-10-07T07:30:25.306+00:00"
+    },
+    {
+      "ended_at": "2026-10-07T07:32:39.839+00:00",
+      "invocation": 1,
+      "seconds": 134.509,
+      "stage": "group",
+      "started_at": "2026-10-07T07:30:25.335+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:33:25.437+00:00",
+      "invocation": 1,
+      "seconds": 45.591,
+      "stage": "memo",
+      "started_at": "2026-10-07T07:32:39.848+00:00",
+      "status": "checks_failed"
+    }
+  ]
+}

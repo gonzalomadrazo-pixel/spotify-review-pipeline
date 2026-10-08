@@ -1,0 +1,999 @@
+{
+  "facts": [
+    {
+      "display": "10,000",
+      "fact_id": "F01",
+      "formula": "rows in input CSV",
+      "metric": "source_rows",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "10000"
+    },
+    {
+      "display": "10,000",
+      "fact_id": "F02",
+      "formula": "records with status=completed",
+      "metric": "completed_classifications",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "10000"
+    },
+    {
+      "display": "0",
+      "fact_id": "F03",
+      "formula": "records with status=quarantined (all reasons)",
+      "metric": "quarantined_records",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "0"
+    },
+    {
+      "display": "0",
+      "fact_id": "F04",
+      "formula": "records still pending",
+      "metric": "pending_records",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "0"
+    },
+    {
+      "display": "4,335",
+      "fact_id": "F05",
+      "formula": "completed records with intent in {complaint, cancellation}",
+      "metric": "complaint_or_cancellation_records",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "4335"
+    },
+    {
+      "display": "50",
+      "fact_id": "F06",
+      "formula": "completed records with intent = cancellation",
+      "metric": "cancellation_records",
+      "scope": "corpus",
+      "subject": "all",
+      "value": "50"
+    },
+    {
+      "display": "195",
+      "fact_id": "F07",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "access",
+      "value": "195"
+    },
+    {
+      "display": "4.5%",
+      "fact_id": "F08",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "access",
+      "value": "4.5%"
+    },
+    {
+      "display": "3.48",
+      "fact_id": "F09",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "access",
+      "value": "3.482051"
+    },
+    {
+      "display": "679",
+      "fact_id": "F10",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "access",
+      "value": "679"
+    },
+    {
+      "display": "119",
+      "fact_id": "F11",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "access",
+      "value": "119"
+    },
+    {
+      "display": "21",
+      "fact_id": "F12",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "access",
+      "value": "21"
+    },
+    {
+      "display": "1,348",
+      "fact_id": "F13",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "usability",
+      "value": "1348"
+    },
+    {
+      "display": "31.1%",
+      "fact_id": "F14",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "usability",
+      "value": "31.1%"
+    },
+    {
+      "display": "2.32",
+      "fact_id": "F15",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "usability",
+      "value": "2.323442"
+    },
+    {
+      "display": "3,132",
+      "fact_id": "F16",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "usability",
+      "value": "3132"
+    },
+    {
+      "display": "1",
+      "fact_id": "F17",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "usability",
+      "value": "1"
+    },
+    {
+      "display": "0",
+      "fact_id": "F18",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "usability",
+      "value": "0"
+    },
+    {
+      "display": "710",
+      "fact_id": "F19",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "playback",
+      "value": "710"
+    },
+    {
+      "display": "16.4%",
+      "fact_id": "F20",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "playback",
+      "value": "16.4%"
+    },
+    {
+      "display": "3.20",
+      "fact_id": "F21",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "playback",
+      "value": "3.202817"
+    },
+    {
+      "display": "2,274",
+      "fact_id": "F22",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "playback",
+      "value": "2274"
+    },
+    {
+      "display": "184",
+      "fact_id": "F23",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "playback",
+      "value": "184"
+    },
+    {
+      "display": "1",
+      "fact_id": "F24",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "playback",
+      "value": "1"
+    },
+    {
+      "display": "809",
+      "fact_id": "F25",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "809"
+    },
+    {
+      "display": "18.7%",
+      "fact_id": "F26",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "18.7%"
+    },
+    {
+      "display": "2.95",
+      "fact_id": "F27",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "2.945612"
+    },
+    {
+      "display": "2,383",
+      "fact_id": "F28",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "2383"
+    },
+    {
+      "display": "20",
+      "fact_id": "F29",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "20"
+    },
+    {
+      "display": "7",
+      "fact_id": "F30",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "billing_support",
+      "value": "7"
+    },
+    {
+      "display": "36",
+      "fact_id": "F31",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "36"
+    },
+    {
+      "display": "0.8%",
+      "fact_id": "F32",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "0.8%"
+    },
+    {
+      "display": "2.97",
+      "fact_id": "F33",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "2.972222"
+    },
+    {
+      "display": "107",
+      "fact_id": "F34",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "107"
+    },
+    {
+      "display": "3",
+      "fact_id": "F35",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "3"
+    },
+    {
+      "display": "0",
+      "fact_id": "F36",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "downloads",
+      "value": "0"
+    },
+    {
+      "display": "258",
+      "fact_id": "F37",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "258"
+    },
+    {
+      "display": "6.0%",
+      "fact_id": "F38",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "6.0%"
+    },
+    {
+      "display": "2.67",
+      "fact_id": "F39",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "2.666667"
+    },
+    {
+      "display": "688",
+      "fact_id": "F40",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "688"
+    },
+    {
+      "display": "2",
+      "fact_id": "F41",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "2"
+    },
+    {
+      "display": "0",
+      "fact_id": "F42",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "catalog",
+      "value": "0"
+    },
+    {
+      "display": "979",
+      "fact_id": "F43",
+      "formula": "complaint+cancellation records whose topic maps to area",
+      "metric": "complaint_count",
+      "scope": "area",
+      "subject": "other",
+      "value": "979"
+    },
+    {
+      "display": "22.6%",
+      "fact_id": "F44",
+      "formula": "area complaint_count / all complaint+cancellation records, 1 dp half-up",
+      "metric": "share_of_complaints",
+      "scope": "area",
+      "subject": "other",
+      "value": "22.6%"
+    },
+    {
+      "display": "2.00",
+      "fact_id": "F45",
+      "formula": "area severity_sum / complaint_count (display 2 dp half-up)",
+      "metric": "mean_severity",
+      "scope": "area",
+      "subject": "other",
+      "value": "2.002043"
+    },
+    {
+      "display": "1,960",
+      "fact_id": "F46",
+      "formula": "sum of member severities",
+      "metric": "severity_sum",
+      "scope": "area",
+      "subject": "other",
+      "value": "1960"
+    },
+    {
+      "display": "0",
+      "fact_id": "F47",
+      "formula": "complaints with severity >= 4",
+      "metric": "severe_count_sev4plus",
+      "scope": "area",
+      "subject": "other",
+      "value": "0"
+    },
+    {
+      "display": "21",
+      "fact_id": "F48",
+      "formula": "records with intent = cancellation",
+      "metric": "cancellation_count",
+      "scope": "area",
+      "subject": "other",
+      "value": "21"
+    },
+    {
+      "display": "1",
+      "fact_id": "F49",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "other.general",
+      "value": "1"
+    },
+    {
+      "display": "955",
+      "fact_id": "F50",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "other.general",
+      "value": "955"
+    },
+    {
+      "display": "1,912",
+      "fact_id": "F51",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "other.general",
+      "value": "1912"
+    },
+    {
+      "display": "2.00",
+      "fact_id": "F52",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "other.general",
+      "value": "2.002094"
+    },
+    {
+      "display": "1,912",
+      "fact_id": "F53",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "other.general",
+      "value": "1912"
+    },
+    {
+      "display": "2",
+      "fact_id": "F54",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "billing.free_tier_limits",
+      "value": "2"
+    },
+    {
+      "display": "630",
+      "fact_id": "F55",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "billing.free_tier_limits",
+      "value": "630"
+    },
+    {
+      "display": "1,878",
+      "fact_id": "F56",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "billing.free_tier_limits",
+      "value": "1878"
+    },
+    {
+      "display": "2.98",
+      "fact_id": "F57",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "billing.free_tier_limits",
+      "value": "2.980952"
+    },
+    {
+      "display": "1,878",
+      "fact_id": "F58",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "billing.free_tier_limits",
+      "value": "1878"
+    },
+    {
+      "display": "3",
+      "fact_id": "F59",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "usability.ads",
+      "value": "3"
+    },
+    {
+      "display": "595",
+      "fact_id": "F60",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "usability.ads",
+      "value": "595"
+    },
+    {
+      "display": "1,296",
+      "fact_id": "F61",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "usability.ads",
+      "value": "1296"
+    },
+    {
+      "display": "2.18",
+      "fact_id": "F62",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "usability.ads",
+      "value": "2.178151"
+    },
+    {
+      "display": "1,296",
+      "fact_id": "F63",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "usability.ads",
+      "value": "1296"
+    },
+    {
+      "display": "4",
+      "fact_id": "F64",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "usability.interface",
+      "value": "4"
+    },
+    {
+      "display": "388",
+      "fact_id": "F65",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "usability.interface",
+      "value": "388"
+    },
+    {
+      "display": "831",
+      "fact_id": "F66",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "usability.interface",
+      "value": "831"
+    },
+    {
+      "display": "2.14",
+      "fact_id": "F67",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "usability.interface",
+      "value": "2.141753"
+    },
+    {
+      "display": "831",
+      "fact_id": "F68",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "usability.interface",
+      "value": "831"
+    },
+    {
+      "display": "5",
+      "fact_id": "F69",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "playback.interruptions",
+      "value": "5"
+    },
+    {
+      "display": "240",
+      "fact_id": "F70",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "playback.interruptions",
+      "value": "240"
+    },
+    {
+      "display": "719",
+      "fact_id": "F71",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "playback.interruptions",
+      "value": "719"
+    },
+    {
+      "display": "3.00",
+      "fact_id": "F72",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "playback.interruptions",
+      "value": "2.995833"
+    },
+    {
+      "display": "719",
+      "fact_id": "F73",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "playback.interruptions",
+      "value": "719"
+    },
+    {
+      "display": "6",
+      "fact_id": "F74",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "playback.crash",
+      "value": "6"
+    },
+    {
+      "display": "158",
+      "fact_id": "F75",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "playback.crash",
+      "value": "158"
+    },
+    {
+      "display": "626",
+      "fact_id": "F76",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "playback.crash",
+      "value": "626"
+    },
+    {
+      "display": "3.96",
+      "fact_id": "F77",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "playback.crash",
+      "value": "3.962025"
+    },
+    {
+      "display": "626",
+      "fact_id": "F78",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "playback.crash",
+      "value": "626"
+    },
+    {
+      "display": "7",
+      "fact_id": "F79",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "usability.controls",
+      "value": "7"
+    },
+    {
+      "display": "189",
+      "fact_id": "F80",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "usability.controls",
+      "value": "189"
+    },
+    {
+      "display": "525",
+      "fact_id": "F81",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "usability.controls",
+      "value": "525"
+    },
+    {
+      "display": "2.78",
+      "fact_id": "F82",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "usability.controls",
+      "value": "2.777778"
+    },
+    {
+      "display": "525",
+      "fact_id": "F83",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "usability.controls",
+      "value": "525"
+    },
+    {
+      "display": "8",
+      "fact_id": "F84",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "usability.library_queue",
+      "value": "8"
+    },
+    {
+      "display": "169",
+      "fact_id": "F85",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "usability.library_queue",
+      "value": "169"
+    },
+    {
+      "display": "465",
+      "fact_id": "F86",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "usability.library_queue",
+      "value": "465"
+    },
+    {
+      "display": "2.75",
+      "fact_id": "F87",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "usability.library_queue",
+      "value": "2.751479"
+    },
+    {
+      "display": "465",
+      "fact_id": "F88",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "usability.library_queue",
+      "value": "465"
+    },
+    {
+      "display": "9",
+      "fact_id": "F89",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "playback.performance",
+      "value": "9"
+    },
+    {
+      "display": "133",
+      "fact_id": "F90",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "playback.performance",
+      "value": "133"
+    },
+    {
+      "display": "405",
+      "fact_id": "F91",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "playback.performance",
+      "value": "405"
+    },
+    {
+      "display": "3.05",
+      "fact_id": "F92",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "playback.performance",
+      "value": "3.045113"
+    },
+    {
+      "display": "405",
+      "fact_id": "F93",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "playback.performance",
+      "value": "405"
+    },
+    {
+      "display": "10",
+      "fact_id": "F94",
+      "formula": "baseline rank (desc priority_score, asc issue_id)",
+      "metric": "rank",
+      "scope": "issue",
+      "subject": "access.login",
+      "value": "10"
+    },
+    {
+      "display": "100",
+      "fact_id": "F95",
+      "formula": "contract baseline: complaint_count",
+      "metric": "complaint_count",
+      "scope": "issue",
+      "subject": "access.login",
+      "value": "100"
+    },
+    {
+      "display": "388",
+      "fact_id": "F96",
+      "formula": "contract baseline: severity_sum",
+      "metric": "severity_sum",
+      "scope": "issue",
+      "subject": "access.login",
+      "value": "388"
+    },
+    {
+      "display": "3.88",
+      "fact_id": "F97",
+      "formula": "contract baseline: mean_severity",
+      "metric": "mean_severity",
+      "scope": "issue",
+      "subject": "access.login",
+      "value": "3.880000"
+    },
+    {
+      "display": "388",
+      "fact_id": "F98",
+      "formula": "contract baseline: priority_score",
+      "metric": "priority_score",
+      "scope": "issue",
+      "subject": "access.login",
+      "value": "388"
+    },
+    {
+      "display": "2,243",
+      "fact_id": "F99",
+      "formula": "all reviews in jun_oct_2022 (denominator)",
+      "metric": "reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2022",
+      "value": "2243"
+    },
+    {
+      "display": "1.2%",
+      "fact_id": "F100",
+      "formula": "access complaint records / all reviews in jun_oct_2022, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2022:access",
+      "value": "1.2%"
+    },
+    {
+      "display": "11.4%",
+      "fact_id": "F101",
+      "formula": "usability complaint records / all reviews in jun_oct_2022, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2022:usability",
+      "value": "11.4%"
+    },
+    {
+      "display": "8.2%",
+      "fact_id": "F102",
+      "formula": "playback complaint records / all reviews in jun_oct_2022, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2022:playback",
+      "value": "8.2%"
+    },
+    {
+      "display": "3.6%",
+      "fact_id": "F103",
+      "formula": "billing_support complaint records / all reviews in jun_oct_2022, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2022:billing_support",
+      "value": "3.6%"
+    },
+    {
+      "display": "4,102",
+      "fact_id": "F104",
+      "formula": "all reviews in jun_oct_2023 (denominator)",
+      "metric": "reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2023",
+      "value": "4102"
+    },
+    {
+      "display": "2.4%",
+      "fact_id": "F105",
+      "formula": "access complaint records / all reviews in jun_oct_2023, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2023:access",
+      "value": "2.4%"
+    },
+    {
+      "display": "14.0%",
+      "fact_id": "F106",
+      "formula": "usability complaint records / all reviews in jun_oct_2023, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2023:usability",
+      "value": "14.0%"
+    },
+    {
+      "display": "5.7%",
+      "fact_id": "F107",
+      "formula": "playback complaint records / all reviews in jun_oct_2023, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2023:playback",
+      "value": "5.7%"
+    },
+    {
+      "display": "12.7%",
+      "fact_id": "F108",
+      "formula": "billing_support complaint records / all reviews in jun_oct_2023, as %",
+      "metric": "complaints_per_100_reviews",
+      "scope": "trend",
+      "subject": "jun_oct_2023:billing_support",
+      "value": "12.7%"
+    }
+  ],
+  "periods": {
+    "jun_oct_2022": {
+      "access": 28,
+      "billing_support": 81,
+      "catalog": 52,
+      "downloads": 10,
+      "other": 38,
+      "playback": 184,
+      "reviews": 2243,
+      "usability": 255
+    },
+    "jun_oct_2023": {
+      "access": 99,
+      "billing_support": 522,
+      "catalog": 106,
+      "downloads": 12,
+      "other": 781,
+      "playback": 234,
+      "reviews": 4102,
+      "usability": 573
+    }
+  },
+  "recompute_errors": []
+}

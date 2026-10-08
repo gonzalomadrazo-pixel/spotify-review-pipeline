@@ -1,0 +1,7 @@
+claim_id,issue_id,metric,value
+F65,usability.interface,complaint_count,388
+F66,usability.interface,severity_sum,831
+F70,playback.interruptions,complaint_count,240
+F80,usability.controls,complaint_count,189
+F81,usability.controls,severity_sum,525
+F95,access.login,complaint_count,100

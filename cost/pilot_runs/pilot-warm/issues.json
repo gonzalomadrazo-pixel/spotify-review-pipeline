@@ -1,0 +1,608 @@
+{
+  "grouping_rule": "issue_id = enrichment subtopic code; one issue per complaint/cancellation record (allow_multi_issue=false)",
+  "issues": [
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 10,
+      "definition": "Features locked behind Premium for free users: cannot choose specific songs, forced shuffle, skip limits, no repeat or seeking, lyrics or downloads only for Premium, 'everything needs premium'",
+      "evidence_pack": [
+        {
+          "quote": "Recent update really sucks. The ability to skip a song or go to previous song has been removed from non subscribed users.",
+          "review_id": "a3605554-5c3a-441d-836e-e9fdea83eb2e"
+        },
+        {
+          "quote": "Why it requires premium just to play next music / to choose music ?? And why the specific part of song cannot be played ?",
+          "review_id": "ad730d1a-829a-4dc4-9561-7e1cd07e2c30"
+        },
+        {
+          "quote": "Too much restrictions",
+          "review_id": "89a8e180-7846-4421-a2b6-fa7787e9d0d2"
+        },
+        {
+          "quote": "What kind of stupidity is this? Na queue m lgte h gaane, na skip kr skte h, na random chla skte h, kya bkchodi h ye??? Jaruri h premium lena? Nhi lena bhai thodi to sharam kro saare paise tumhi kma loge kya💀💀 alag hi pagapan h",
+          "review_id": "89ea2c30-db8b-459d-8ab7-bbcb7f92c774"
+        },
+        {
+          "quote": "This has become premium just for the creator of spotify to earn money anyways it is a very bad app usless since this new update!",
+          "review_id": "21915fcd-9a35-48ba-b277-6296c4154603"
+        },
+        {
+          "quote": "Very good app enna advertisement verudu premium best",
+          "review_id": "ed15bb17-865a-492b-ba1b-268f4cab78f6"
+        },
+        {
+          "quote": "I am not interested in new music based on my preferences.",
+          "review_id": "618d1dbb-0186-4537-923a-7b4dabf19afb"
+        },
+        {
+          "quote": "I would request to remove all the new features .what's the point if we dont get to go back to the same song or skip songs..or choose .its not fair ..to restrict all the features jst so people would purchase premium ..its like forcing ..to do it ..and day by day it's getting more annoying..I g I'll s",
+          "review_id": "88439ec2-7c49-4c57-bedb-c5e098692aff"
+        },
+        {
+          "quote": "This was fine till the last update, now you can't even pick a certain song without Spotify premium, and now you can only skip 6 songs, like please just let the songs fit my mood!",
+          "review_id": "d146397f-4a94-4980-be00-ae9212eca3a7"
+        },
+        {
+          "quote": "You can't even listen to music you want it just shuffles it, like what the hell? This app is killing it self and forcing you to pay premium for basic things like just listening to music.",
+          "review_id": "a78d831a-69f4-428a-9235-cfdd9775c509"
+        }
+      ],
+      "issue_id": "billing.free_tier_limits",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "ed15bb17-865a-492b-ba1b-268f4cab78f6"
+      ],
+      "naming_status": "model",
+      "priority_score": 30,
+      "rank": 1,
+      "request_id": "pilot-cold-group-i1-000004",
+      "severity_sum": 30,
+      "summary": "Customers report that features like skipping songs, choosing specific music, and shuffle options are locked behind premium subscriptions, leading to frustration over restrictions.",
+      "title": "Premium Features Restrict Basic Music Playback and Control",
+      "topic": "billing"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 8,
+      "definition": "Too many, too long, too loud or repeated ads; ads interrupting listening; the free ad-free-minutes promise not honored (for free users)",
+      "evidence_pack": [
+        {
+          "quote": "Soo trash wayy to many ads I don't want premium but too much ads",
+          "review_id": "c2738a4f-e57c-46bc-a4ad-8ec5a4b5d5cd"
+        },
+        {
+          "quote": "Too many ads.... it's literally useless if u hv not taken premium",
+          "review_id": "e5e6c55f-3069-4b7c-9807-f8b5d5bf2726"
+        },
+        {
+          "quote": "DON'T DOWNLOAD THIS:Such a worst app ... that always plays adds instead of songs ...if want to enjoy music free without adds don't download this app ..",
+          "review_id": "cf6166ae-d71a-4839-9add-088645ad3b78"
+        },
+        {
+          "quote": "The ads are so loud :'(",
+          "review_id": "ab67a772-c3b7-42ba-9b80-8d21d3857018"
+        },
+        {
+          "quote": "This app is nice but adds are too much",
+          "review_id": "85383985-844d-4f9b-bcd9-d6016ac35f6b"
+        },
+        {
+          "quote": "I m using this app from 5 to 6 year but now m uninstald this app cz his premium adds are everywhere now .",
+          "review_id": "035213ba-b1b9-411c-b028-70296e5f0e73"
+        },
+        {
+          "quote": "Decent,just let me have a solid 4-5 songs without an ad bro, it's always every 1 or 2 song then instant ads, that's all thanks",
+          "review_id": "3e8bdc92-4934-457e-85cc-8b9d14bf51c0"
+        },
+        {
+          "quote": "Recent update 👎",
+          "review_id": "ca16e65d-d2ff-4453-a495-b8c422809330"
+        }
+      ],
+      "issue_id": "usability.ads",
+      "mean_severity": "2.125000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 17,
+      "rank": 2,
+      "request_id": "pilot-cold-group-i1-000005",
+      "severity_sum": 17,
+      "summary": "Customers report too many, too long, and loud ads interrupting listening, with some feeling the free ad-free promise is not honored.",
+      "title": "Excessive and disruptive advertisements in the app",
+      "topic": "usability"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 8,
+      "definition": "General praise or general criticism with no specific feature or problem (for example 'good app', 'worst app', 'love it', 'new update is bad')",
+      "evidence_pack": [
+        {
+          "quote": "It was a good app . But now it's a trash 🗑️",
+          "review_id": "c1ab120a-f91f-4ee3-87f5-66f352e2d47f"
+        },
+        {
+          "quote": "Used to love the app but recent update is very disappointing bye Spotify",
+          "review_id": "b47c203f-366e-4409-922d-cd52aa8bbef6"
+        },
+        {
+          "quote": "Aakhir kar spotify ne bhi apni bhikaariyo vali aukaat dikha di \"Gadar karbe\" Chanda mangna got real Bhikaariyo ko training dena bhi shuru kardo haramiyo",
+          "review_id": "3e82cf28-6b0a-4980-902c-b6aa154d353a"
+        },
+        {
+          "quote": "Worst app.",
+          "review_id": "178c3b49-b689-4fe4-92a2-2257a58e6d95"
+        },
+        {
+          "quote": "You deserve 0 star",
+          "review_id": "b92a7381-b5cd-4c77-9176-e5c4b4818c8a"
+        },
+        {
+          "quote": "Very bad app",
+          "review_id": "8b6e028a-5f63-4011-9841-cbbade4830eb"
+        },
+        {
+          "quote": "Worst app",
+          "review_id": "06a45bd5-3ed9-43af-b7f2-8b9487e2ffff"
+        },
+        {
+          "quote": "Disappointing",
+          "review_id": "51bfd887-24a0-4741-8b59-68e0a726dd7a"
+        }
+      ],
+      "issue_id": "other.general",
+      "mean_severity": "2.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 16,
+      "rank": 3,
+      "request_id": "pilot-cold-group-i1-000006",
+      "severity_sum": 16,
+      "summary": "Customers express general praise and criticism regarding the app, with some noting recent updates are disappointing and others calling it the worst app.",
+      "title": "General mixed sentiment about app quality",
+      "topic": "other"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "medium",
+      "complaint_count": 3,
+      "definition": "Songs, artists or albums missing, removed, greyed out, region-locked or wrong version",
+      "evidence_pack": [
+        {
+          "quote": "Nice app! But many songs are not present here!",
+          "review_id": "0658feaa-5bec-416e-b6b0-3de2a4c14580"
+        },
+        {
+          "quote": "It's nice but gospel music isn't much",
+          "review_id": "a1a28752-3256-4f81-b888-3e943343529f"
+        },
+        {
+          "quote": "Very kool",
+          "review_id": "8cb9d355-e14c-4f55-b026-c6abd7bbce0d"
+        }
+      ],
+      "issue_id": "catalog.unavailable",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "8cb9d355-e14c-4f55-b026-c6abd7bbce0d"
+      ],
+      "naming_status": "model",
+      "priority_score": 9,
+      "rank": 4,
+      "request_id": "pilot-cold-group-i1-000007",
+      "severity_sum": 9,
+      "summary": "Customers are reporting that many songs are not present in the app, and gospel music content is limited.",
+      "title": "Missing or unavailable songs and music content",
+      "topic": "catalog"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 3,
+      "definition": "Playback controls and surfaces: shuffle or repeat behaving badly (not a paywall), seek bar, lock screen, notification, widget, sleep timer, car-mode UI, sharing",
+      "evidence_pack": [
+        {
+          "quote": "Doesn't deserve even one star. Like what's the problem? We can't even go back few second to play music? WHAT IN THE WORLD IS THIS UPDATE? YOU PEOPLE NEED MORE MONEY?! gonna delete the app if they don't fix this",
+          "review_id": "9e5f9745-f8be-48d3-b9de-4d118507d94a"
+        },
+        {
+          "quote": "I just want to listen to one song but nooo I have to go through A HOLE PLAYLIST AND I CAN ONLY SKIP 6 OF THEM 6!!!",
+          "review_id": "ebc64fe2-9553-4528-87d5-cb4bb9783be6"
+        },
+        {
+          "quote": "I am using Spotify from past two years From last update they removed basic features of music player",
+          "review_id": "7084ced1-0428-4093-9328-442f74719b4f"
+        }
+      ],
+      "issue_id": "usability.controls",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 9,
+      "rank": 5,
+      "request_id": "pilot-cold-group-i1-000008",
+      "severity_sum": 9,
+      "summary": "Customers report issues with playback controls, such as the inability to go back in time and limitations on skipping songs within playlists.",
+      "title": "Playback controls and basic music player features are broken",
+      "topic": "usability"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 2,
+      "definition": "App crashes, force-closes, will not open, black or blank screen",
+      "evidence_pack": [
+        {
+          "quote": "The latest update has caused my app to crash I cant open the app please fix.",
+          "review_id": "55cc3abf-c295-4591-8c3a-78085cfdefaa"
+        },
+        {
+          "quote": "The update made the app useless .... Uninstall krdia ye app ab bekar hai ... Wynk hi theek h",
+          "review_id": "45c561b9-cc47-4d80-95d3-f0d20bc84af3"
+        }
+      ],
+      "issue_id": "playback.crash",
+      "mean_severity": "4.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 8,
+      "rank": 6,
+      "request_id": "pilot-cold-group-i1-000009",
+      "severity_sum": 8,
+      "summary": "Customers report that the latest update has caused the application to crash and become unusable.",
+      "title": "App crashes and fails to open after update",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 2,
+      "definition": "Lyrics missing, wrong, out of sync or not loading (lyrics locked behind Premium is billing)",
+      "evidence_pack": [
+        {
+          "quote": "It is good but there is a problem that in some songs there is no lyrics and in some songs there is lyrics it's so confusing. However it is good 😊😊.",
+          "review_id": "47becad0-8ae5-4a10-9731-fde8f2091862"
+        },
+        {
+          "quote": "sometime the lyrics don't show",
+          "review_id": "e0127547-4edd-44a0-8d5e-e8398bc07086"
+        }
+      ],
+      "issue_id": "catalog.lyrics",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 6,
+      "rank": 7,
+      "request_id": "pilot-cold-group-i1-000010",
+      "severity_sum": 6,
+      "summary": "Customers report that lyrics are sometimes missing or inconsistent across different songs.",
+      "title": "Inconsistent or missing song lyrics display",
+      "topic": "catalog"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "medium",
+      "complaint_count": 2,
+      "definition": "Bluetooth, car/Android Auto, smart speakers, Spotify Connect, casting, smartwatch/Wear OS, false 'no internet connection' errors",
+      "evidence_pack": [
+        {
+          "quote": "But if using mobile data it will work.",
+          "review_id": "4ab2089a-ffa8-49e7-a8a3-aeb583a96796"
+        },
+        {
+          "quote": "I am unable to use my Google assistant on the app.it says playing your Spotify playlist but do not play the songs",
+          "review_id": "46ff0c74-5e86-4e5b-b4cd-36201aab0f9e"
+        }
+      ],
+      "issue_id": "playback.devices_connectivity",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "4ab2089a-ffa8-49e7-a8a3-aeb583a96796"
+      ],
+      "naming_status": "model",
+      "priority_score": 6,
+      "rank": 8,
+      "request_id": "pilot-cold-group-i1-000011",
+      "severity_sum": 6,
+      "summary": "Customers report issues with using mobile data for playback and problems with the Google Assistant not playing Spotify playlists in the app.",
+      "title": "Playback and Connectivity Issues with Mobile Data and App Functionality",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 2,
+      "definition": "Music stops or pauses on its own, skips by itself, songs will not play, playback error messages",
+      "evidence_pack": [
+        {
+          "quote": "Keep stopping halfway while playing music and it dun go back to where they stop and start playing a new song for you.",
+          "review_id": "6c257eba-3dca-49f6-b7f0-4c4484d81e26"
+        },
+        {
+          "quote": "Am very sad about the new spotfy update. i can't play song happly . Can't repeat and play specific part.please solve this matter. I'm leaving spotfy",
+          "review_id": "e16a4550-43e7-4ae1-b538-a65cc652c31b"
+        }
+      ],
+      "issue_id": "playback.interruptions",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 6,
+      "rank": 9,
+      "request_id": "pilot-cold-group-i1-000012",
+      "severity_sum": 6,
+      "summary": "Customers report music stopping halfway, skipping, and being unable to play specific parts of songs, leading to playback errors.",
+      "title": "Music playback stops, skips, or fails to play",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "medium",
+      "complaint_count": 1,
+      "definition": "Cannot log in or sign in, login errors, verification codes or emails not arriving, login loops",
+      "evidence_pack": [
+        {
+          "quote": "It not letting me into my account and there are to many ads",
+          "review_id": "32fb340f-4f9f-4551-8dae-755221e58d6a"
+        }
+      ],
+      "issue_id": "access.login",
+      "mean_severity": "4.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "32fb340f-4f9f-4551-8dae-755221e58d6a"
+      ],
+      "naming_status": "model",
+      "priority_score": 4,
+      "rank": 10,
+      "request_id": "pilot-cold-group-i1-000013",
+      "severity_sum": 4,
+      "summary": "Customers are experiencing problems logging into their accounts and encountering too many advertisements.",
+      "title": "Login issues and excessive advertisements",
+      "topic": "access"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 2,
+      "definition": "Meaningless, unrelated to the app, unintelligible, bare boycott or political slogans, spam",
+      "evidence_pack": [
+        {
+          "quote": "Useless aap boycott sweden",
+          "review_id": "9e3a706c-f502-4664-a23f-33f3480eca64"
+        },
+        {
+          "quote": "Vary bad experience.i am uninstalling this app they burn quran and i will bycot this app as it is launched by swedan 🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕",
+          "review_id": "486d1d7a-d6f6-41ea-81ad-ed875452729c"
+        }
+      ],
+      "issue_id": "other.unclear",
+      "mean_severity": "2.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "486d1d7a-d6f6-41ea-81ad-ed875452729c"
+      ],
+      "naming_status": "model",
+      "priority_score": 4,
+      "rank": 11,
+      "request_id": "pilot-cold-group-i1-000014",
+      "severity_sum": 4,
+      "summary": "Customers reported the app containing meaningless boycott slogans and political statements.",
+      "title": "App contains unrelated boycott and political slogans",
+      "topic": "other"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "low",
+      "complaint_count": 2,
+      "definition": "Layout, redesign, navigation, home feed, cluttered or confusing screens, hard to find things, disliked UI changes (with no premium paywall involved)",
+      "evidence_pack": [
+        {
+          "quote": "Love Spotify.. My music go to..",
+          "review_id": "7e91d976-20e5-40f0-a6f5-7312eadf7e78"
+        },
+        {
+          "quote": "You're not tiktok or Instagram.",
+          "review_id": "94c9f2f9-36fa-4c11-936e-660514fe7a35"
+        }
+      ],
+      "issue_id": "usability.interface",
+      "mean_severity": "2.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "7e91d976-20e5-40f0-a6f5-7312eadf7e78"
+      ],
+      "naming_status": "model",
+      "priority_score": 4,
+      "rank": 12,
+      "request_id": "pilot-cold-group-i1-000015",
+      "severity_sum": 4,
+      "summary": "Customers expressed confusion regarding the interface, noting that the application does not resemble TikTok or Instagram.",
+      "title": "Confusing or Unfamiliar Interface Elements",
+      "topic": "usability"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 1,
+      "definition": "Account recovery, lost/locked/deleted/suspended account, signup or registration, switching or linking accounts (Facebook, Google, phone number), changing email or password",
+      "evidence_pack": [
+        {
+          "quote": "Will not except my password",
+          "review_id": "de0a9cdf-8974-48bc-802f-331228df4619"
+        }
+      ],
+      "issue_id": "access.account",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 13,
+      "request_id": "pilot-cold-group-i1-000016",
+      "severity_sum": 3,
+      "summary": "A customer reported being unable to access their account because they could not accept their password.",
+      "title": "Users Unable to Access Accounts Due to Password Issues",
+      "topic": "access"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "low",
+      "complaint_count": 1,
+      "definition": "Recommendations, autoplay or radio picks, songs suggested or inserted into playlists, the algorithm, smart shuffle, DJ, Wrapped",
+      "evidence_pack": [
+        {
+          "quote": "Thanks 😊",
+          "review_id": "5c9c17d3-9d6a-4fa1-a2a4-ae98eefbbd25"
+        }
+      ],
+      "issue_id": "catalog.recommendations",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 14,
+      "request_id": "pilot-cold-group-i1-000017",
+      "severity_sum": 3,
+      "summary": "One customer provided a brief positive acknowledgment regarding the service.",
+      "title": "Customer feedback on recommendation features",
+      "topic": "catalog"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 1,
+      "definition": "Offline mode or offline playback not working, offline limits",
+      "evidence_pack": [
+        {
+          "quote": "Offline not workjng",
+          "review_id": "dcff57c6-abd6-413b-b255-aec3dc34fcbd"
+        }
+      ],
+      "issue_id": "downloads.offline",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 15,
+      "request_id": "pilot-cold-group-i1-000018",
+      "severity_sum": 3,
+      "summary": "A customer reported that offline mode is not working.",
+      "title": "Offline Mode Not Functioning",
+      "topic": "downloads"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 1,
+      "definition": "Any other playback problem",
+      "evidence_pack": [
+        {
+          "quote": "There is some bugs like music adjustment doesn't work Perporly plz do something about this bug",
+          "review_id": "9c9757da-6b99-4c95-a0e7-0661ee858027"
+        }
+      ],
+      "issue_id": "playback.other",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 16,
+      "request_id": "pilot-cold-group-i1-000019",
+      "severity_sum": 3,
+      "summary": "Customers are reporting bugs where music adjustment does not work correctly.",
+      "title": "Music adjustment bug not working properly",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 1,
+      "definition": "Lag, slow loading, freezing, buffering, unresponsive app",
+      "evidence_pack": [
+        {
+          "quote": "App is stuck on loading/logo screen",
+          "review_id": "66a29b3c-c14d-440e-b722-b23e0c99ae82"
+        }
+      ],
+      "issue_id": "playback.performance",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 17,
+      "request_id": "pilot-cold-group-i1-000020",
+      "severity_sum": 3,
+      "summary": "The application is reported as being stuck on the loading or logo screen.",
+      "title": "App Freezing During Loading Screen",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "low",
+      "complaint_count": 1,
+      "definition": "Battery drain, overheating, storage, mobile data use, app size",
+      "evidence_pack": [
+        {
+          "quote": "I'm sure no one reads these reviews after reading a few of the others.",
+          "review_id": "2ffdf599-a0d5-4c01-bf26-025215d44c06"
+        }
+      ],
+      "issue_id": "playback.resource_use",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [
+        "2ffdf599-a0d5-4c01-bf26-025215d44c06"
+      ],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 18,
+      "request_id": "pilot-cold-group-i1-000021",
+      "severity_sum": 3,
+      "summary": "A customer mentioned that no one reads reviews after reading a few of the others.",
+      "title": "Customer reports general feedback on reviews",
+      "topic": "playback"
+    },
+    {
+      "cache_hit": true,
+      "coherence": "high",
+      "complaint_count": 1,
+      "definition": "Any other support problem",
+      "evidence_pack": [
+        {
+          "quote": "RUDE APP , THIS APP SUPPORT GUYS 🤮🤮🤮🤮🤮🤮🤮🤮🤮🤮. تطبيق سيء ، بدعم المثليين 🤮🤮🤮",
+          "review_id": "33526c6f-7a49-4b3d-bd20-d1bc191c494c"
+        }
+      ],
+      "issue_id": "support.other",
+      "mean_severity": "3.000000",
+      "member_review_ids_file": "membership.csv",
+      "misfit_ids": [],
+      "naming_status": "model",
+      "priority_score": 3,
+      "rank": 19,
+      "request_id": "pilot-cold-group-i1-000022",
+      "severity_sum": 3,
+      "summary": "A customer expressed extreme dissatisfaction with the app and the support staff.",
+      "title": "Customer reports rude and poor app support",
+      "topic": "support"
+    }
+  ],
+  "prompt_fingerprint": "3ce4785124"
+}

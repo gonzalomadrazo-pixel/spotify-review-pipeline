@@ -1,0 +1,10 @@
+claim_id,issue_id,metric,value
+F50,billing.free_tier_limits,complaint_count,38
+F65,usability.interface,complaint_count,20
+F66,usability.interface,severity_sum,42
+F75,playback.crash,complaint_count,9
+F77,playback.crash,mean_severity,4.000000
+F90,usability.controls,complaint_count,8
+F91,usability.controls,severity_sum,21
+F95,access.login,complaint_count,5
+F97,access.login,mean_severity,4.000000

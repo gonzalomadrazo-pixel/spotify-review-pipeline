@@ -58,12 +58,11 @@ def respond(req, n) -> Attempt:
     usage = {"input_tokens": len(req.user) // 4 + 50, "cache_creation_input_tokens": 0,
              "cache_read_input_tokens": len(req.system) // 4, "output_tokens": 0}
     if req.role == "enrich":
-        items = []
+        rows = []
         for r in _reviews(req.user):
-            lab = label(r["text"])
-            q = r["text"].split(".")[0][:120] if r["quote"] else ""
-            items.append({"k": r["k"], "q": q, **lab, "review": False, "why": "none"})
-        text = json.dumps({"items": items})
+            lab = label(r["text"] if "text" in r else " ".join(r["parts"]))
+            rows.append([r["k"], lab["sub"], lab["intent"], lab["sev"], lab["sent"], False, 1 if "parts" in r else 0])
+        text = json.dumps({"r": rows}, separators=(",", ":"))
     elif req.role == "verify":
         items = []
         for r in _reviews(req.user):

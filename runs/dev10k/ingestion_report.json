@@ -1,0 +1,167 @@
+{
+  "accounting": {
+    "distinct_nonempty_texts": 8448,
+    "duplicate_review_id_rows": 0,
+    "duplicate_text_groups": 287,
+    "empty_review_text": 0,
+    "empty_review_text_ids": [],
+    "invalid_rating_rows": 0,
+    "missing_app_version": 2447,
+    "nonempty_to_classify": 10000,
+    "reusable_rows_if_exact_text_cache": 1552,
+    "rows": 10000,
+    "rows_in_duplicate_text_groups": 1839,
+    "unique_review_ids": 10000
+  },
+  "course_manifest_check": {
+    "bytes_match": true,
+    "expected_bytes": 1477793,
+    "expected_sha256": "eaa62ca6d44d717302904a9c922e99b0b4584d174309cb45295ecbc2ba2a91b5",
+    "file": "analysis_10000.csv",
+    "sha256_match": true
+  },
+  "generated_at": "2026-10-07T07:33:26.061+00:00",
+  "input_bytes": 1477793,
+  "input_path": "data/raw/analysis_10000.csv",
+  "notes": [
+    "Exclusion policy: no rows are dropped. Empty/whitespace-only texts are quarantined with reason empty_review_text; missing app_version does not block classification.",
+    "review_timestamp has no timezone in the source; months are taken from the first 7 characters.",
+    "Exact-duplicate texts are classified once per label_config; every original ID keeps its own record with cache_source_id provenance and is counted separately in aggregates."
+  ],
+  "official_profile": {
+    "counts": {
+      "duplicate_review_ids": 0,
+      "empty_review_text": 0,
+      "missing_app_version": 2447,
+      "records": 10000
+    },
+    "file_sha256": "eaa62ca6d44d717302904a9c922e99b0b4584d174309cb45295ecbc2ba2a91b5",
+    "first_review": "2022-05-17 02:29:15",
+    "last_review": "2023-11-15 22:13:05",
+    "parsed_rows_sha256": "3a21df52adbf2ab3185b73e93b30a9539c1806379e097b0f4a904c869ed40e20",
+    "reviews_by_month": {
+      "2022-05": 232,
+      "2022-06": 421,
+      "2022-07": 506,
+      "2022-08": 466,
+      "2022-09": 438,
+      "2022-10": 412,
+      "2022-11": 406,
+      "2022-12": 520,
+      "2023-01": 451,
+      "2023-02": 337,
+      "2023-03": 425,
+      "2023-04": 359,
+      "2023-05": 423,
+      "2023-06": 391,
+      "2023-07": 1246,
+      "2023-08": 459,
+      "2023-09": 625,
+      "2023-10": 1381,
+      "2023-11": 502
+    },
+    "reviews_by_rating": {
+      "1": 3685,
+      "2": 469,
+      "3": 498,
+      "4": 836,
+      "5": 4512
+    }
+  },
+  "scope": {
+    "analysis_rows": 10000,
+    "type": "full_file"
+  },
+  "text_length_chars_distinct": {
+    "max": 615,
+    "p10": 10,
+    "p25": 19,
+    "p50": 44,
+    "p75": 112,
+    "p90": 232,
+    "p99": 495,
+    "total_chars": 739921
+  },
+  "top_duplicate_texts": [
+    {
+      "rows": 214,
+      "text": "Good"
+    },
+    {
+      "rows": 79,
+      "text": "Nice"
+    },
+    {
+      "rows": 60,
+      "text": "Great"
+    },
+    {
+      "rows": 53,
+      "text": "Awesome"
+    },
+    {
+      "rows": 48,
+      "text": "Love it"
+    },
+    {
+      "rows": 48,
+      "text": "Excellent"
+    },
+    {
+      "rows": 37,
+      "text": "Super"
+    },
+    {
+      "rows": 34,
+      "text": "Worst app"
+    },
+    {
+      "rows": 31,
+      "text": "Good app"
+    },
+    {
+      "rows": 30,
+      "text": "Very good"
+    },
+    {
+      "rows": 28,
+      "text": "Nice app"
+    },
+    {
+      "rows": 24,
+      "text": "Best"
+    },
+    {
+      "rows": 23,
+      "text": "Worst"
+    },
+    {
+      "rows": 21,
+      "text": "Amazing"
+    },
+    {
+      "rows": 21,
+      "text": "Very bad"
+    },
+    {
+      "rows": 20,
+      "text": "Bad"
+    },
+    {
+      "rows": 19,
+      "text": "Hate this application"
+    },
+    {
+      "rows": 18,
+      "text": "Hate this application 👎"
+    },
+    {
+      "rows": 18,
+      "text": "Great app"
+    },
+    {
+      "rows": 17,
+      "text": "Very nice"
+    }
+  ]
+}

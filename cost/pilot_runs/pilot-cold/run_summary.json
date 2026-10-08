@@ -1,0 +1,143 @@
+{
+  "budget_usd": 1.0,
+  "calls_by_role_model_tier": {
+    "enrich|gemma4:e2b-it-qat|standard": {
+      "attempts": 2,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 10752,
+      "output_tokens": 2419,
+      "retries": 0,
+      "review_ids_sent": 100,
+      "succeeded": 2,
+      "unknown_charge_calls": 0
+    },
+    "group|gemma4:e2b-it-qat|standard": {
+      "attempts": 19,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 1239,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 8851,
+      "output_tokens": 1437,
+      "retries": 0,
+      "review_ids_sent": 52,
+      "succeeded": 19,
+      "unknown_charge_calls": 0
+    },
+    "memo|gemma4:e2b-it-qat|standard": {
+      "attempts": 1,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 4475,
+      "output_tokens": 532,
+      "retries": 0,
+      "review_ids_sent": 21,
+      "succeeded": 1,
+      "unknown_charge_calls": 0
+    },
+    "verify|gemma4:e2b-it-qat|standard": {
+      "attempts": 1,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "cost_usd": 0.0,
+      "cost_usd_micro": 0,
+      "failed": 0,
+      "input_tokens": 2346,
+      "output_tokens": 1550,
+      "retries": 0,
+      "review_ids_sent": 50,
+      "succeeded": 1,
+      "unknown_charge_calls": 0
+    }
+  },
+  "config_file": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/config/pipeline.json",
+  "coverage": {
+    "cancellations": 0,
+    "complaints": 52,
+    "completed": 100,
+    "pending": 0,
+    "quarantine_reasons": {},
+    "quarantined": 0,
+    "rows": 100
+  },
+  "generated_at": "2026-10-07T07:21:03.410+00:00",
+  "input": {
+    "path": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/cost_100.csv",
+    "sha256": "c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e"
+  },
+  "invocations": [
+    {
+      "command": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/pipeline/__main__.py --state-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_state --runs-dir /Users/gonzalomadrazo/Claude/spotify-review-pipeline/cost/pilot_runs run --run-id pilot-cold --input /Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/cost_100.csv --workers 1 --budget 1.0",
+      "completed_after": 100,
+      "completed_before": 0,
+      "ended_at": "2026-10-07T07:21:03.400+00:00",
+      "n": 1,
+      "phase": "initial",
+      "run_id": "pilot-cold",
+      "started_at": "2026-10-07T07:16:12.047+00:00",
+      "stop_reason": "completed"
+    }
+  ],
+  "needs_review": 24,
+  "notes": "cost_usd is computed from provider-reported usage x config/rates.csv. Calls with unknown_charge (timeouts) have no usage and must be reconciled with the provider dashboard.",
+  "result_sources": {
+    "model_call": 100
+  },
+  "run_id": "pilot-cold",
+  "spend_usd_actual": 0,
+  "stages": [
+    {
+      "ended_at": "2026-10-07T07:16:12.047+00:00",
+      "invocation": null,
+      "stage": "ingest",
+      "started_at": "2026-10-07T07:16:12.043+00:00"
+    },
+    {
+      "ended_at": "2026-10-07T07:18:26.006+00:00",
+      "invocation": 1,
+      "seconds": 133.877,
+      "stage": "enrich",
+      "started_at": "2026-10-07T07:16:12.135+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:19:23.253+00:00",
+      "invocation": 1,
+      "seconds": 57.223,
+      "stage": "verify",
+      "started_at": "2026-10-07T07:18:26.019+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:19:23.264+00:00",
+      "invocation": 1,
+      "seconds": 0.01,
+      "stage": "rank",
+      "started_at": "2026-10-07T07:19:23.254+00:00"
+    },
+    {
+      "ended_at": "2026-10-07T07:20:34.369+00:00",
+      "invocation": 1,
+      "seconds": 71.061,
+      "stage": "group",
+      "started_at": "2026-10-07T07:19:23.312+00:00",
+      "stop_reason": "completed"
+    },
+    {
+      "ended_at": "2026-10-07T07:21:03.399+00:00",
+      "invocation": 1,
+      "seconds": 29.016,
+      "stage": "memo",
+      "started_at": "2026-10-07T07:20:34.384+00:00",
+      "status": "checks_passed"
+    }
+  ]
+}

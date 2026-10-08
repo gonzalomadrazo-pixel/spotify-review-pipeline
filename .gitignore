@@ -15,3 +15,10 @@ cost/pilot_state/
 runs/*/STOP
 local-reference.json
 self-check.json
+# dashboard: local database and build outputs (the deployed database is Postgres)
+dashboard/dashboard.db
+dashboard/frontend/node_modules/
+dashboard/frontend/dist/
+dashboard/.vercel/
+runs/_orchestrator/
+state_evals/

@@ -1,0 +1,5 @@
+claim_id,scope,subject,metric,value,display,formula
+F100,trend,jun_oct_2022:access,complaints_per_100_reviews,1.2%,1.2%,"access complaint records / all reviews in jun_oct_2022, as %"
+F101,trend,jun_oct_2022:usability,complaints_per_100_reviews,11.4%,11.4%,"usability complaint records / all reviews in jun_oct_2022, as %"
+F105,trend,jun_oct_2023:access,complaints_per_100_reviews,2.4%,2.4%,"access complaint records / all reviews in jun_oct_2023, as %"
+F106,trend,jun_oct_2023:usability,complaints_per_100_reviews,14.0%,14.0%,"usability complaint records / all reviews in jun_oct_2023, as %"

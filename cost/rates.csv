@@ -15,3 +15,7 @@ anthropic,claude-sonnet-5-5,batch,input_uncached,token,0.000001,$1 / MTok (Batch
 anthropic,claude-sonnet-5-5,batch,input_cache_write_5m,token,0.00000125,1.25x batch input,https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
 anthropic,claude-sonnet-5-5,batch,input_cache_read,token,0.0000001,0.1x batch input,https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching,2026-10-04
 anthropic,claude-sonnet-5-5,batch,output,token,0.000005,$5 / MTok (Batch API 50%),https://platform.claude.com/docs/en/about-claude/pricing#batch-processing,2026-10-04
+ollama,gemma4:e2b-it-qat,standard,input_uncached,token,0,local inference (no API charge),https://docs.ollama.com/api,2026-10-06
+ollama,gemma4:e2b-it-qat,standard,input_cache_write_5m,token,0,local inference (no API charge),https://docs.ollama.com/api,2026-10-06
+ollama,gemma4:e2b-it-qat,standard,input_cache_read,token,0,local KV-cache reuse (no API charge),https://docs.ollama.com/api,2026-10-06
+ollama,gemma4:e2b-it-qat,standard,output,token,0,local inference (no API charge),https://docs.ollama.com/api,2026-10-06

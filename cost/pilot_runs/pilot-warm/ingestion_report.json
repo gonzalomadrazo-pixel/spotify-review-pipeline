@@ -1,0 +1,85 @@
+{
+  "accounting": {
+    "distinct_nonempty_texts": 100,
+    "duplicate_review_id_rows": 0,
+    "duplicate_text_groups": 0,
+    "empty_review_text": 0,
+    "empty_review_text_ids": [],
+    "invalid_rating_rows": 0,
+    "missing_app_version": 18,
+    "nonempty_to_classify": 100,
+    "reusable_rows_if_exact_text_cache": 0,
+    "rows": 100,
+    "rows_in_duplicate_text_groups": 0,
+    "unique_review_ids": 100
+  },
+  "course_manifest_check": {
+    "bytes_match": true,
+    "expected_bytes": 15466,
+    "expected_sha256": "c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e",
+    "file": "cost_100.csv",
+    "sha256_match": true
+  },
+  "generated_at": "2026-10-07T07:21:03.686+00:00",
+  "input_bytes": 15466,
+  "input_path": "/Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/cost_100.csv",
+  "notes": [
+    "Exclusion policy: no rows are dropped. Empty/whitespace-only texts are quarantined with reason empty_review_text; missing app_version does not block classification.",
+    "review_timestamp has no timezone in the source; months are taken from the first 7 characters.",
+    "Exact-duplicate texts are classified once per label_config; every original ID keeps its own record with cache_source_id provenance and is counted separately in aggregates."
+  ],
+  "official_profile": {
+    "counts": {
+      "duplicate_review_ids": 0,
+      "empty_review_text": 0,
+      "missing_app_version": 18,
+      "records": 100
+    },
+    "file_sha256": "c884ac3b9be5066995d5063f96ad9af6e5e082975788c1684c4f6b6ea661dd0e",
+    "first_review": "2022-06-02 10:30:18",
+    "last_review": "2023-11-13 15:07:19",
+    "parsed_rows_sha256": "23f840350257c058a03a508754384902373a593c09dbac3d1bd0481651fa1733",
+    "reviews_by_month": {
+      "2022-06": 5,
+      "2022-07": 5,
+      "2022-08": 6,
+      "2022-09": 5,
+      "2022-10": 4,
+      "2022-11": 1,
+      "2022-12": 2,
+      "2023-01": 4,
+      "2023-02": 4,
+      "2023-03": 7,
+      "2023-04": 4,
+      "2023-05": 5,
+      "2023-06": 4,
+      "2023-07": 11,
+      "2023-08": 3,
+      "2023-09": 6,
+      "2023-10": 19,
+      "2023-11": 5
+    },
+    "reviews_by_rating": {
+      "1": 33,
+      "2": 8,
+      "3": 6,
+      "4": 10,
+      "5": 43
+    }
+  },
+  "scope": {
+    "analysis_rows": 100,
+    "type": "full_file"
+  },
+  "text_length_chars_distinct": {
+    "max": 486,
+    "p10": 9,
+    "p25": 15,
+    "p50": 43,
+    "p75": 114,
+    "p90": 183,
+    "p99": 435,
+    "total_chars": 8042
+  },
+  "top_duplicate_texts": []
+}

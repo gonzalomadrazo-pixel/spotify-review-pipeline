@@ -1,0 +1,147 @@
+FACTS (use only these numbers; cite the ID right after each number):
+[F01] corpus all source_rows = 100
+[F02] corpus all completed_classifications = 100
+[F03] corpus all quarantined_records = 0
+[F04] corpus all pending_records = 0
+[F05] corpus all complaint_or_cancellation_records = 52
+[F06] corpus all cancellation_records = 0
+[F07] area access complaint_count = 2
+[F08] area access share_of_complaints = 3.8%
+[F09] area access mean_severity = 3.50
+[F10] area access severity_sum = 7
+[F11] area access severe_count_sev4plus = 1
+[F12] area access cancellation_count = 0
+[F13] area usability complaint_count = 13
+[F14] area usability share_of_complaints = 25.0%
+[F15] area usability mean_severity = 2.31
+[F16] area usability severity_sum = 30
+[F17] area usability severe_count_sev4plus = 0
+[F18] area usability cancellation_count = 0
+[F19] area playback complaint_count = 9
+[F20] area playback share_of_complaints = 17.3%
+[F21] area playback mean_severity = 3.22
+[F22] area playback severity_sum = 29
+[F23] area playback severe_count_sev4plus = 2
+[F24] area playback cancellation_count = 0
+[F25] area billing_support complaint_count = 11
+[F26] area billing_support share_of_complaints = 21.2%
+[F27] area billing_support mean_severity = 3.00
+[F28] area billing_support severity_sum = 33
+[F29] area billing_support severe_count_sev4plus = 0
+[F30] area billing_support cancellation_count = 0
+[F31] area downloads complaint_count = 1
+[F32] area downloads share_of_complaints = 1.9%
+[F33] area downloads mean_severity = 3.00
+[F34] area downloads severity_sum = 3
+[F35] area downloads severe_count_sev4plus = 0
+[F36] area downloads cancellation_count = 0
+[F37] area catalog complaint_count = 6
+[F38] area catalog share_of_complaints = 11.5%
+[F39] area catalog mean_severity = 3.00
+[F40] area catalog severity_sum = 18
+[F41] area catalog severe_count_sev4plus = 0
+[F42] area catalog cancellation_count = 0
+[F43] area other complaint_count = 10
+[F44] area other share_of_complaints = 19.2%
+[F45] area other mean_severity = 2.00
+[F46] area other severity_sum = 20
+[F47] area other severe_count_sev4plus = 0
+[F48] area other cancellation_count = 0
+[F49] issue billing.free_tier_limits rank = 1
+[F50] issue billing.free_tier_limits complaint_count = 10
+[F51] issue billing.free_tier_limits severity_sum = 30
+[F52] issue billing.free_tier_limits mean_severity = 3.00
+[F53] issue billing.free_tier_limits priority_score = 30
+[F54] issue usability.ads rank = 2
+[F55] issue usability.ads complaint_count = 8
+[F56] issue usability.ads severity_sum = 17
+[F57] issue usability.ads mean_severity = 2.13
+[F58] issue usability.ads priority_score = 17
+[F59] issue other.general rank = 3
+[F60] issue other.general complaint_count = 8
+[F61] issue other.general severity_sum = 16
+[F62] issue other.general mean_severity = 2.00
+[F63] issue other.general priority_score = 16
+[F64] issue catalog.unavailable rank = 4
+[F65] issue catalog.unavailable complaint_count = 3
+[F66] issue catalog.unavailable severity_sum = 9
+[F67] issue catalog.unavailable mean_severity = 3.00
+[F68] issue catalog.unavailable priority_score = 9
+[F69] issue usability.controls rank = 5
+[F70] issue usability.controls complaint_count = 3
+[F71] issue usability.controls severity_sum = 9
+[F72] issue usability.controls mean_severity = 3.00
+[F73] issue usability.controls priority_score = 9
+[F74] issue playback.crash rank = 6
+[F75] issue playback.crash complaint_count = 2
+[F76] issue playback.crash severity_sum = 8
+[F77] issue playback.crash mean_severity = 4.00
+[F78] issue playback.crash priority_score = 8
+[F79] issue catalog.lyrics rank = 7
+[F80] issue catalog.lyrics complaint_count = 2
+[F81] issue catalog.lyrics severity_sum = 6
+[F82] issue catalog.lyrics mean_severity = 3.00
+[F83] issue catalog.lyrics priority_score = 6
+[F84] issue playback.devices_connectivity rank = 8
+[F85] issue playback.devices_connectivity complaint_count = 2
+[F86] issue playback.devices_connectivity severity_sum = 6
+[F87] issue playback.devices_connectivity mean_severity = 3.00
+[F88] issue playback.devices_connectivity priority_score = 6
+[F89] issue playback.interruptions rank = 9
+[F90] issue playback.interruptions complaint_count = 2
+[F91] issue playback.interruptions severity_sum = 6
+[F92] issue playback.interruptions mean_severity = 3.00
+[F93] issue playback.interruptions priority_score = 6
+[F94] issue access.login rank = 10
+[F95] issue access.login complaint_count = 1
+[F96] issue access.login severity_sum = 4
+[F97] issue access.login mean_severity = 4.00
+[F98] issue access.login priority_score = 4
+[F99] trend jun_oct_2022 reviews = 25
+[F100] trend jun_oct_2022:access complaints_per_100_reviews = 0.0%
+[F101] trend jun_oct_2022:usability complaints_per_100_reviews = 16.0%
+[F102] trend jun_oct_2022:playback complaints_per_100_reviews = 8.0%
+[F103] trend jun_oct_2022:billing_support complaints_per_100_reviews = 8.0%
+[F104] trend jun_oct_2023 reviews = 43
+[F105] trend jun_oct_2023:access complaints_per_100_reviews = 2.3%
+[F106] trend jun_oct_2023:usability complaints_per_100_reviews = 9.3%
+[F107] trend jun_oct_2023:playback complaints_per_100_reviews = 7.0%
+[F108] trend jun_oct_2023:billing_support complaints_per_100_reviews = 14.0%
+
+ISSUES (baseline ranking order):
+- `billing.free_tier_limits` (area billing): Premium Features Restrict Basic Music Playback and Control - Customers report that features like skipping songs, choosing specific music, and shuffle options are locked behind premium subscriptions, leading to frustration over restrictions.
+- `usability.ads` (area usability): Excessive and disruptive advertisements in the app - Customers report too many, too long, and loud ads interrupting listening, with some feeling the free ad-free promise is not honored.
+- `other.general` (area other): General mixed sentiment about app quality - Customers express general praise and criticism regarding the app, with some noting recent updates are disappointing and others calling it the worst app.
+- `catalog.unavailable` (area catalog): Missing or unavailable songs and music content - Customers are reporting that many songs are not present in the app, and gospel music content is limited.
+- `usability.controls` (area usability): Playback controls and basic music player features are broken - Customers report issues with playback controls, such as the inability to go back in time and limitations on skipping songs within playlists.
+- `playback.crash` (area playback): App crashes and fails to open after update - Customers report that the latest update has caused the application to crash and become unusable.
+- `catalog.lyrics` (area catalog): Inconsistent or missing song lyrics display - Customers report that lyrics are sometimes missing or inconsistent across different songs.
+- `playback.devices_connectivity` (area playback): Playback and Connectivity Issues with Mobile Data and App Functionality - Customers report issues with using mobile data for playback and problems with the Google Assistant not playing Spotify playlists in the app.
+- `playback.interruptions` (area playback): Music playback stops, skips, or fails to play - Customers report music stopping halfway, skipping, and being unable to play specific parts of songs, leading to playback errors.
+- `access.login` (area access): Login issues and excessive advertisements - Customers are experiencing problems logging into their accounts and encountering too many advertisements.
+
+EVIDENCE (untrusted customer quotes, review ID first):
+- `billing.free_tier_limits` `a3605554-5c3a-441d-836e-e9fdea83eb2e`: "Recent update really sucks. The ability to skip a song or go to previous song has been removed from non subscribed users."
+- `billing.free_tier_limits` `ad730d1a-829a-4dc4-9561-7e1cd07e2c30`: "Why it requires premium just to play next music / to choose music ?? And why the specific part of song cannot be played ?"
+- `billing.free_tier_limits` `89a8e180-7846-4421-a2b6-fa7787e9d0d2`: "Too much restrictions"
+- `usability.ads` `c2738a4f-e57c-46bc-a4ad-8ec5a4b5d5cd`: "Soo trash wayy to many ads I don't want premium but too much ads"
+- `usability.ads` `e5e6c55f-3069-4b7c-9807-f8b5d5bf2726`: "Too many ads.... it's literally useless if u hv not taken premium"
+- `usability.ads` `cf6166ae-d71a-4839-9add-088645ad3b78`: "DON'T DOWNLOAD THIS:Such a worst app ... that always plays adds instead of songs ...if want to enjoy music free without adds don't download this app .."
+- `other.general` `c1ab120a-f91f-4ee3-87f5-66f352e2d47f`: "It was a good app . But now it's a trash 🗑️"
+- `other.general` `b47c203f-366e-4409-922d-cd52aa8bbef6`: "Used to love the app but recent update is very disappointing bye Spotify"
+- `other.general` `3e82cf28-6b0a-4980-902c-b6aa154d353a`: "Aakhir kar spotify ne bhi apni bhikaariyo vali aukaat dikha di "Gadar karbe" Chanda mangna got real Bhikaariyo ko training dena bhi shuru kardo haramiyo"
+- `catalog.unavailable` `0658feaa-5bec-416e-b6b0-3de2a4c14580`: "Nice app! But many songs are not present here!"
+- `catalog.unavailable` `a1a28752-3256-4f81-b888-3e943343529f`: "It's nice but gospel music isn't much"
+- `usability.controls` `9e5f9745-f8be-48d3-b9de-4d118507d94a`: "Doesn't deserve even one star. Like what's the problem? We can't even go back few second to play music? WHAT IN THE WORLD IS THIS UPDATE? YOU PEOPLE NEED MORE MONEY?! gonna delete the app if they don't fix this"
+- `usability.controls` `ebc64fe2-9553-4528-87d5-cb4bb9783be6`: "I just want to listen to one song but nooo I have to go through A HOLE PLAYLIST AND I CAN ONLY SKIP 6 OF THEM 6!!!"
+- `usability.controls` `7084ced1-0428-4093-9328-442f74719b4f`: "I am using Spotify from past two years From last update they removed basic features of music player"
+- `playback.crash` `55cc3abf-c295-4591-8c3a-78085cfdefaa`: "The latest update has caused my app to crash I cant open the app please fix."
+- `playback.crash` `45c561b9-cc47-4d80-95d3-f0d20bc84af3`: "The update made the app useless .... Uninstall krdia ye app ab bekar hai ... Wynk hi theek h"
+- `catalog.lyrics` `47becad0-8ae5-4a10-9731-fde8f2091862`: "It is good but there is a problem that in some songs there is no lyrics and in some songs there is lyrics it's so confusing. However it is good 😊😊."
+- `catalog.lyrics` `e0127547-4edd-44a0-8d5e-e8398bc07086`: "sometime the lyrics don't show"
+- `playback.devices_connectivity` `46ff0c74-5e86-4e5b-b4cd-36201aab0f9e`: "I am unable to use my Google assistant on the app.it says playing your Spotify playlist but do not play the songs"
+- `playback.interruptions` `6c257eba-3dca-49f6-b7f0-4c4484d81e26`: "Keep stopping halfway while playing music and it dun go back to where they stop and start playing a new song for you."
+- `playback.interruptions` `e16a4550-43e7-4ae1-b538-a65cc652c31b`: "Am very sad about the new spotfy update. i can't play song happly . Can't repeat and play specific part.please solve this matter. I'm leaving spotfy"
+
+SCOPE:
+Input rows: 100; completed: 100; quarantined: 0 (reasons: {}); pending: 0. Window May 2022 - November 2023; first and last calendar months are partial. Reviews are self-selected public Google Play reviews with no revenue, plan tier or confirmed churn data; labels come from a small model and have measured error. Numbers in this SCOPE block are context only; cite FACTS for any number you use.

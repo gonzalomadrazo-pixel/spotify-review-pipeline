@@ -168,6 +168,91 @@ class AnthropicClient:
                        ended_at=now_iso(), duration_s=time.perf_counter() - t0)
 
 
+class OllamaClient:
+    """Local model via Ollama's HTTP API: zero API charge, one attempt per call, schema-constrained JSON.
+
+    Ollama's prompt_eval_count is the whole prompt; prompt_eval_cached_count is the prefix reused from the
+    KV cache. They are split into mutually exclusive uncached/cached input categories; eval_count is output.
+    """
+
+    def __init__(self, host: str | None = None):
+        from dotenv import load_dotenv
+
+        load_dotenv()
+        self.host = (host or os.environ.get("OLLAMA_HOST") or "http://localhost:11434").rstrip("/")
+        if not self.host.startswith("http"):
+            self.host = "http://" + self.host
+
+    def call(self, req: Request) -> Attempt:
+        import urllib.error
+        import urllib.request
+
+        body = {
+            "model": req.model,
+            "messages": [{"role": "system", "content": req.system}, {"role": "user", "content": req.user}],
+            "stream": False,
+            "think": False,
+            "keep_alive": "60m",
+            "options": {"num_predict": req.max_tokens, "num_ctx": 16384, "temperature": req.temperature or 0},
+        }
+        if req.schema is not None:
+            body["format"] = req.schema
+        started, t0 = now_iso(), time.perf_counter()
+        http_req = urllib.request.Request(f"{self.host}/api/chat", data=json.dumps(body).encode("utf-8"),
+                                          headers={"Content-Type": "application/json"}, method="POST")
+        try:
+            with urllib.request.urlopen(http_req, timeout=req.timeout_s) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", "replace")[:300]
+            kind = "transient" if e.code >= 500 else ("fatal" if e.code == 404 else "invalid_request")
+            return self._err(started, t0, f"{e.code} {detail}", kind)
+        except (TimeoutError, urllib.error.URLError, ConnectionError, OSError) as e:
+            return self._err(started, t0, f"connection {e}", "transient")
+        stop = {"length": "max_tokens"}.get(data.get("done_reason"), data.get("done_reason"))
+        prompt_total = int(data.get("prompt_eval_count") or 0)
+        cached = min(prompt_total, int(data.get("prompt_eval_cached_count") or 0))
+        usage = {"input_tokens": prompt_total - cached, "cache_creation_input_tokens": 0,
+                 "cache_read_input_tokens": cached, "output_tokens": int(data.get("eval_count") or 0)}
+        return Attempt(ok=True, text=(data.get("message") or {}).get("content", ""), stop_reason=stop, usage=usage,
+                       message_id=data.get("created_at"), provider_request_id=None, started_at=started,
+                       ended_at=now_iso(), duration_s=time.perf_counter() - t0)
+
+    @staticmethod
+    def _err(started, t0, msg, kind):
+        return Attempt(ok=False, error=msg[:500], error_kind=kind, started_at=started, ended_at=now_iso(),
+                       duration_s=time.perf_counter() - t0)
+
+
+def make_client(provider: str):
+    if provider == "ollama":
+        return OllamaClient()
+    if provider == "anthropic":
+        return AnthropicClient()
+    raise SystemExit(f"Unknown provider {provider!r}; use 'ollama' or 'anthropic'.")
+
+
+class RoutingClient:
+    """Sends each request to the provider that serves its model, so roles can mix local and paid models."""
+
+    def __init__(self, cfg: dict):
+        self.model_provider = {}
+        for role in ("enrich", "verify", "group", "memo", "fallback"):
+            spec = cfg.get(role) or {}
+            if spec.get("model"):
+                self.model_provider[spec["model"]] = spec.get("provider", cfg.get("provider", "anthropic"))
+        self.clients = {}
+
+    def client_for(self, model: str):
+        provider = self.model_provider.get(model, "anthropic")
+        if provider not in self.clients:
+            self.clients[provider] = make_client(provider)
+        return self.clients[provider]
+
+    def call(self, req: Request) -> Attempt:
+        return self.client_for(req.model).call(req)
+
+
 class ScriptedClient:
     """Offline test double. `responder(req, n)` returns an Attempt; used for failure-injection tests."""
 

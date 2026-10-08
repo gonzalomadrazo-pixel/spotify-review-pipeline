@@ -6,7 +6,8 @@ OFFLINE REPLAY (default; no API key, no network, standard library only):
     python3 cost/calculator.py --rate-multiplier 2        # doubles API spend; measured time unchanged
     python3 cost/calculator.py --rows 660622               # change projected volume only
 
-EXPLICIT PAID PILOT (separate command; needs ANTHROPIC_API_KEY in .env):
+EXPLICIT PILOT EXECUTION (separate command; makes real model calls with the configured providers.
+The default config uses a local Ollama model, so API spend is $0; roles set to Anthropic need ANTHROPIC_API_KEY):
     uv run python cost/calculator.py run-pilot --budget 1.00
 
 Inputs (all editable, all in cost/):
@@ -117,89 +118,94 @@ def measured(calls, records, runs, rates):
 
 # ---------------------------------------------------------------- projection
 
-def project(m_cold, a, rates):
+def stage_cost(s, rates, model, tier, scale=1.0, prefix_cacheable=True):
+    """Re-price a measured stage's token counts at another model/tier (used for modeled alternatives)."""
+    if not s:
+        return 0.0
+    cached = s["input_cache_read_tokens"] + s["input_cache_write_5m_tokens"]
+    if prefix_cacheable:
+        usd = (s["input_uncached_tokens"] * rates[(model, tier, "input_uncached")]
+               + s["input_cache_write_5m_tokens"] * rates[(model, tier, "input_cache_write_5m")]
+               + s["input_cache_read_tokens"] * rates[(model, tier, "input_cache_read")])
+    else:
+        usd = (s["input_uncached_tokens"] + cached) * rates[(model, tier, "input_uncached")]
+    return scale * (usd + s["output_tokens"] * rates[(model, tier, "output")])
+
+
+def project(m_cold, a, rates, v):
     """Extrapolate each stage from its own measured work count; fixed overhead (group, memo) once."""
-    e = m_cold["stages"]["enrich"]
+    st = m_cold["stages"]
+    e = st["enrich"]
     n_texts_pilot = m_cold["unique_texts"]
     req_pilot = e["succeeded"] or 1
-    model, tier_std = a["enrich_model"], "standard"
-    # Per-text and per-request token profile from the measured cold pilot.
     prefix_per_req = (e["input_cache_read_tokens"] + e["input_cache_write_5m_tokens"]) / req_pilot
     uncached_per_text = e["input_uncached_tokens"] / n_texts_pilot
     out_per_text = e["output_tokens"] / n_texts_pilot
-    len_ratio = a["corpus_mean_chars_distinct"] / a["pilot_mean_chars"] if a.get("length_adjust") else 1.0
-    out_ratio = (1 + a["quote_share_corpus"]) / (1 + a["quote_share_pilot"]) if a.get("length_adjust") else 1.0
-
-    def enrich_cost(texts, tier, cache_hit_rate, retry_rate):
-        reqs = math.ceil(texts / a["batch_size"])
-        prefix = reqs * prefix_per_req
-        cached, written = prefix * cache_hit_rate, prefix * (1 - cache_hit_rate)
-        if a["prefix_cacheable"] is False:
-            cached, written, uncached_prefix = 0, 0, prefix
-        else:
-            uncached_prefix = 0
-        uncached = texts * uncached_per_text * len_ratio + uncached_prefix
-        output = texts * out_per_text * out_ratio
-        k = 1 + retry_rate
-        usd = k * (uncached * rates[(model, tier, "input_uncached")] + written * rates[(model, tier, "input_cache_write_5m")]
-                   + cached * rates[(model, tier, "input_cache_read")] + output * rates[(model, tier, "output")])
-        return usd, reqs, {"uncached_input": uncached * k, "cache_write": written * k, "cache_read": cached * k,
-                           "output": output * k}
-
-    def per_text_stage_cost(role, texts):
-        s = m_cold["stages"].get(role)
-        if not s or not s["review_ids_sent"]:
-            return None
-        return s["api_usd"] / s["review_ids_sent"] * texts
-
-    def fixed(role):
-        s = m_cold["stages"].get(role)
-        return s["api_usd"] if s else None
-
-    v = a["volume"]
+    len_ratio = v["mean_chars_distinct"] / a["pilot_mean_chars"] if a.get("length_adjust") else 1.0
+    measured_hit = e["input_cache_read_tokens"] / (req_pilot * prefix_per_req) if prefix_per_req else 0.0
     distinct = v["distinct_nonempty_texts"] if a["exact_text_reuse"] else v["nonempty_to_classify"]
-    measured_hit = e["input_cache_read_tokens"] / max(1, e["input_cache_read_tokens"] + e["input_cache_write_5m_tokens"])
+    lc = a["local_compute"]
+
+    def lat(role):
+        s = st.get(role)
+        return (s["duration_s_sum"] / s["requests"]) if s and s["requests"] else 0.0
+
     scenarios = {}
     for name, sc in a["scenarios"].items():
-        tier = sc["tier"]
+        model, tier, provider = sc["model"], sc["tier"], sc.get("provider", "anthropic")
+        cacheable = sc.get("prefix_cacheable", a["prefix_cacheable"])
         hit = measured_hit if sc["cache_hit_rate"] == "measured" else float(sc["cache_hit_rate"])
-        usd_e, reqs, toks = enrich_cost(distinct, tier, hit, sc["retry_rate"])
-        tier_factor = rates[(model, tier, "output")] / rates[(model, tier_std, "output")]
+        reqs = math.ceil(distinct / a["batch_size"])
+        k = 1 + sc["retry_rate"]
+        prefix = reqs * prefix_per_req
+        cached, written = (prefix * hit, prefix * (1 - hit)) if cacheable else (0.0, 0.0)
+        uncached = distinct * uncached_per_text * len_ratio + (0.0 if cacheable else prefix)
+        output = distinct * out_per_text
+        price = lambda item: rates[(model, tier, item)]
+        usd_e = k * (uncached * price("input_uncached") + written * price("input_cache_write_5m")
+                     + cached * price("input_cache_read") + output * price("output"))
         verify_texts = min(a["verify_max"], max(a["verify_min"], round(sc["verify_fraction"] * distinct)))
-        usd_v = (per_text_stage_cost("verify", verify_texts) or 0)
+        v_sent = (st.get("verify") or {}).get("review_ids_sent") or 0
+        usd_v = stage_cost(st.get("verify"), rates, model, tier, verify_texts / v_sent, cacheable) if v_sent else 0.0
         fb_items = math.ceil(sc["fallback_fraction"] * distinct)
-        fb_model = a["fallback_model"]
+        fb_model = a["fallback_model"] if provider == "ollama" else model
         fb_per_item = (prefix_per_req + uncached_per_text * len_ratio) * rates[(fb_model, "standard", "input_uncached")] \
             + out_per_text * a["fallback_output_multiplier"] * rates[(fb_model, "standard", "output")]
         usd_fb = fb_items * fb_per_item
+        g = st.get("group")
         n_issues = a["expected_issue_count"]
-        g = m_cold["stages"].get("group")
-        usd_g = (g["api_usd"] / g["requests"] * n_issues) if g and g["requests"] else 0.0
-        usd_m = (fixed("memo") or 0.0) * (1 + sc["memo_revisions"])
+        usd_g = stage_cost(g, rates, model, tier, n_issues / g["requests"], cacheable) if g and g["requests"] else 0.0
+        usd_m = stage_cost(st.get("memo"), rates, model, tier, 1.0, cacheable) * (1 + sc["memo_revisions"]) / max(
+            1, (st.get("memo") or {}).get("requests", 1))
         total = usd_e + usd_v + usd_fb + usd_g + usd_m
-        # Time: sync uses measured mean enrichment latency / workers, bounded by output-token rate limit.
-        lat = e["duration_s_sum"] / max(1, e["requests"])
-        out_per_req = toks["output"] / max(1, reqs)
-        rpm_cap = min(a["rate_limits"]["rpm"], a["rate_limits"]["otpm"] / max(1.0, out_per_req))
         workers = a["controls"]["max_workers"]
-        if tier == "batch":
-            enrich_hours, time_basis = None, "Batch API turnaround not measured: provider states most batches finish within 1 hour, max 24 hours"
+        if provider == "ollama":
+            secs = {"enrich": k * reqs * lat("enrich") / workers,
+                    "verify": math.ceil(verify_texts / a["batch_size"]) * lat("verify"),
+                    "fallback": fb_items * lat("enrich") / a["batch_size"] * 2,
+                    "group": n_issues * lat("group"), "memo": (1 + sc["memo_revisions"]) * lat("memo")}
+            hours = sum(secs.values()) / 3600
+            kwh = hours * lc["watts_under_load"] / 1000
+            local = {"hours": hours, "kwh": kwh, "usd_estimate": kwh * lc["usd_per_kwh"]}
+            time_basis = (f"{reqs:,} enrich requests x {lat('enrich'):.1f}s measured mean latency x (1+retry) / {workers} "
+                          f"worker(s) + verify/fallback/group/memo at their measured latencies")
         else:
-            per_min = min(workers * 60.0 / max(lat, 1e-9), rpm_cap)
-            enrich_hours = reqs / per_min / 60.0
-            time_basis = f"{reqs} requests / min({workers} workers x 60/{lat:.1f}s, rate-limit cap {rpm_cap:.0f}/min)"
+            hours, local = None, {"hours": None, "kwh": None, "usd_estimate": None}
+            time_basis = "not measured for this provider (modeled alternative)"
         scenarios[name] = {
-            "tier": tier, "distinct_texts_sent": distinct, "enrichment_requests": reqs, "cache_hit_rate": round(hit, 4),
-            "retry_rate": sc["retry_rate"], "verify_texts": verify_texts, "fallback_items": fb_items,
-            "tokens": {k: round(v) for k, v in toks.items()},
+            "provider": provider, "model": model, "tier": tier, "distinct_texts_sent": distinct,
+            "enrichment_requests": reqs, "cache_hit_rate": round(hit, 4), "retry_rate": sc["retry_rate"],
+            "verify_texts": verify_texts, "fallback_items": fb_items,
+            "tokens": {"uncached_input": round(uncached * k), "cache_write": round(written * k),
+                       "cache_read": round(cached * k), "output": round(output * k)},
             "usd": {"enrich": usd_e, "verify": usd_v, "fallback": usd_fb, "group_fixed": usd_g, "memo_fixed": usd_m,
                     "total_api": total},
-            "usd_per_1000_rows": total / v["rows"] * 1000, "enrich_hours": enrich_hours, "time_basis": time_basis,
-            "exceeds_budget": total > a["controls"]["budget_usd"], "tier_output_price_factor": tier_factor,
-        }
+            "usd_per_1000_rows": total / v["rows"] * 1000, "local_hours": hours, "local_compute": local,
+            "time_basis": time_basis, "exceeds_budget": total > a["controls"]["budget_usd"],
+            "note": sc.get("note", "")}
     return scenarios, {"prefix_tokens_per_request": prefix_per_req, "uncached_input_tokens_per_text": uncached_per_text,
-                       "output_tokens_per_text": out_per_text, "length_ratio": len_ratio, "output_ratio": out_ratio,
-                       "measured_cache_hit_rate": measured_hit}
+                       "output_tokens_per_text": out_per_text, "input_length_ratio": len_ratio,
+                       "measured_prefix_cache_hit_rate": measured_hit}
 
 
 # ---------------------------------------------------------------- report
@@ -208,9 +214,9 @@ def money(x):
     return "n/a" if x is None else f"${x:,.4f}"
 
 
-def render(m, scen, profile, a, rate_meta, rate_mult, runs):
+def render(m, projections, a, rate_meta, rate_mult, runs):
     L = []
-    L.append("# 100-review pilot: measured cost and runtime, with full-run projections\n")
+    L.append("# 100-review pilot: measured cost and runtime, with projections\n")
     L.append(f"Generated by `python3 cost/calculator.py` (offline replay). Rate multiplier: {rate_mult}. "
              f"Input `cost_100.csv` sha256 `{runs['input_sha256']}` (manifest match: {runs.get('manifest_match')}). "
              f"Pilot run at {runs.get('pilot_started_at')} with {runs.get('workers')} worker(s), empty result cache for the cold run.\n")
@@ -219,66 +225,77 @@ def render(m, scen, profile, a, rate_meta, rate_mult, runs):
     c, w = m.get("cold", {}), m.get("warm", {})
     rows = [("records / unique texts", lambda x: f"{x['records']} / {x['unique_texts']}"),
             ("status counts", lambda x: json.dumps(x["status_counts"])),
-            ("result-cache hits (texts)", lambda x: str(x["result_cache_hits"])),
+            ("result-cache hits (records)", lambda x: str(x["result_cache_hits"])),
             ("enrichment calls", lambda x: str(x["enrichment_calls"])),
             ("all model calls (attempts)", lambda x: str(int(sum(s["requests"] for s in x["stages"].values())))),
             ("API spend (USD)", lambda x: money(x["api_usd"])),
             ("USD per 1,000 input rows", lambda x: money(x["usd_per_1000_inputs"])),
             ("USD per completed record", lambda x: money(x["usd_per_completed_record"])),
             ("end-to-end wall clock (s)", lambda x: f"{x['wall_clock_s']:.2f}"),
-            ("throughput (records/s)", lambda x: f"{x['records_per_second']:.2f}")]
+            ("throughput (records/s)", lambda x: f"{x['records_per_second']:.3f}")]
     for label, fn in rows:
         L.append(f"| {label} | {fn(c) if c else '-'} | {fn(w) if w else '-'} |")
+    cfg = runs.get("config", {})
     L.append("\n### By stage (cold run)\n")
-    L.append("| role | provider / model / tier | effort | prompt+schema | batch size | requests | ok | failed | retries | "
-             "reviews sent | uncached in | cache write | cache read | output | USD | summed call s |")
+    L.append("| role | provider / model / tier | effort / thinking | prompt+schema | batch size | requests | ok | failed | "
+             "retries | reviews sent | uncached in | cache write | cache read | output | USD | summed call s |")
     L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for role in ("enrich", "verify", "group", "memo"):
         s = c.get("stages", {}).get(role)
         if not s:
             continue
-        info = a["stage_settings"][role]
-        L.append(f"| {role} | anthropic / {info['model']} / {info['tier']} | {info['effort']} | {info['version']} | "
-                 f"{info['batch_size']} | {int(s['requests'])} | {int(s['succeeded'])} | {int(s['failed'])} | "
+        rc = cfg.get(role, {})
+        tiers = sorted({x["tier"] for x in runs.get("_calls", []) if x["role"] == role}) or ["standard"]
+        effort = rc.get("effort") or ("think=false (Ollama)" if rc.get("provider") == "ollama" else "none")
+        version = "+".join(x for x in (rc.get("prompt_version"), rc.get("schema_version")) if x)
+        batch = rc.get("batch_size", "1 issue" if role == "group" else "1 memo")
+        L.append(f"| {role} | {rc.get('provider', '?')} / {rc.get('model', '?')} / {','.join(tiers)} | {effort} | {version} | "
+                 f"{batch} | {int(s['requests'])} | {int(s['succeeded'])} | {int(s['failed'])} | "
                  f"{int(s['retries'])} | {int(s['review_ids_sent'])} | {int(s['input_uncached_tokens']):,} | "
                  f"{int(s['input_cache_write_5m_tokens']):,} | {int(s['input_cache_read_tokens']):,} | "
                  f"{int(s['output_tokens']):,} | {money(s['api_usd'])} | {s['duration_s_sum']:.1f} |")
     L.append("\nStage wall-clock seconds (cold): " + json.dumps(c.get("stage_seconds", {})) +
              "  \nStage wall-clock seconds (warm): " + json.dumps(w.get("stage_seconds", {})))
-    L.append("\nSummed call durations are not wall-clock time; wall clock is measured around the whole pipeline command.")
+    L.append("\nSummed call durations are not wall-clock time; wall clock is measured around the whole pipeline command. "
+             "Cache read = prompt prefix reused from the provider/KV cache (separate from the saved-result cache).")
     L.append("\n## Rates used (editable `cost/rates.csv`)\n")
     L.append("| model | tier | item | USD per token | quote | source | checked |\n|---|---|---|---|---|---|---|")
     for (model, tier, item), r in sorted(rate_meta.items()):
         L.append(f"| {model} | {tier} | {item} | {float(r['price_usd_per_unit']) * rate_mult:.10f} | {r['price_quote']} | "
                  f"[link]({r['source_url']}) | {r['checked_on']} |")
-    L.append("\n## Full-run projection (estimates, not measurements)\n")
-    v = a["volume"]
-    L.append(f"Scope: {v['rows']:,} rows accounted for; {v['nonempty_to_classify']:,} nonempty classifications; "
-             f"{v['empty_text_quarantines']} empty-text quarantines. Exact-text reuse "
-             f"{'ON' if a['exact_text_reuse'] else 'OFF'}: {v['distinct_nonempty_texts']:,} distinct texts sent "
-             f"(no-reuse comparison below). Profile from the cold pilot: {json.dumps({k: round(x, 2) for k, x in profile.items()})}.\n")
-    L.append("| scenario | tier | texts sent | requests | cache hit | retry | verify texts | fallback items | enrich | verify | "
-             "fallback | group (once) | memo (once) | **total API** | per 1k rows | enrich time (h) | budget |")
-    L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
-    for name, s in scen.items():
-        u = s["usd"]
-        L.append(f"| {name} | {s['tier']} | {s['distinct_texts_sent']:,} | {s['enrichment_requests']:,} | {s['cache_hit_rate']} | "
-                 f"{s['retry_rate']} | {s['verify_texts']:,} | {s['fallback_items']:,} | {money(u['enrich'])} | "
-                 f"{money(u['verify'])} | {money(u['fallback'])} | {money(u['group_fixed'])} | {money(u['memo_fixed'])} | "
-                 f"**{money(u['total_api'])}** | {money(s['usd_per_1000_rows'])} | "
-                 f"{'n/a' if s['enrich_hours'] is None else round(s['enrich_hours'], 2)} | "
-                 f"{'EXCEEDS BUDGET' if s['exceeds_budget'] else 'within budget'} |")
-    L.append("\nTime basis per scenario: " + "; ".join(f"{k}: {s['time_basis']}" for k, s in scen.items()))
+    for vname, (v, scen, profile) in projections.items():
+        L.append(f"\n## Projection: {vname} (estimates, not measurements)\n")
+        L.append(f"{v['label']}. {v['rows']:,} rows accounted for; {v['nonempty_to_classify']:,} nonempty classifications; "
+                 f"{v['empty_text_quarantines']} empty-text quarantines. Exact-text reuse "
+                 f"{'ON' if a['exact_text_reuse'] else 'OFF'}: {v['distinct_nonempty_texts']:,} distinct texts sent "
+                 f"(no reuse would send {v['nonempty_to_classify']:,}). Profile from the cold pilot: "
+                 f"{json.dumps({k: round(x, 3) for k, x in profile.items()})}.\n")
+        L.append("| scenario | provider / model / tier | texts sent | requests | prefix cache hit | retry | verify texts | "
+                 "fallback items | enrich | verify | fallback | group (once) | memo (once) | **total API** | per 1k rows | "
+                 "local hours | local electricity (est.) | budget |")
+        L.append("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+        for name, s in scen.items():
+            u, lcx = s["usd"], s["local_compute"]
+            L.append(f"| {name} | {s['provider']} / {s['model']} / {s['tier']} | {s['distinct_texts_sent']:,} | "
+                     f"{s['enrichment_requests']:,} | {s['cache_hit_rate']} | {s['retry_rate']} | {s['verify_texts']:,} | "
+                     f"{s['fallback_items']:,} | {money(u['enrich'])} | {money(u['verify'])} | {money(u['fallback'])} | "
+                     f"{money(u['group_fixed'])} | {money(u['memo_fixed'])} | **{money(u['total_api'])}** | "
+                     f"{money(s['usd_per_1000_rows'])} | {'n/a' if s['local_hours'] is None else round(s['local_hours'], 1)} | "
+                     f"{'n/a' if lcx['usd_estimate'] is None else money(lcx['usd_estimate'])} | "
+                     f"{'EXCEEDS BUDGET' if s['exceeds_budget'] else 'within budget'} |")
+        notes = [f"{k}: {s['time_basis']}" + (f" ({s['note']})" if s["note"] else "") for k, s in scen.items()]
+        L.append("\nBasis: " + "; ".join(notes))
     ctl = a["controls"]
     L.append(f"\n## Controls\n\nBudget cap ${ctl['budget_usd']:.2f} (pipeline `--budget`, enforced by reservations before "
              f"dispatch) · output-token cap {ctl['output_token_cap']} per call · max workers {ctl['max_workers']} · "
              f"max fallback fraction {ctl['max_fallback_fraction']} · invalid-output retries 1 · transient retries 4 with "
-             f"exponential backoff and jitter.")
-    L.append("\n## API spend vs. other costs\n\n" + a["local_compute_note"])
+             f"exponential backoff and jitter.\n\nConcurrency decision: {a.get('worker_decision', '')}")
+    L.append("\n## API spend vs. other costs\n\n" + a["local_compute_note"] + " Local compute assumptions: "
+             + json.dumps(a["local_compute"]))
     L.append("\n## Formulas\n\n`item_cost = billed_units x price_per_unit` per call and billing item (see `usage.csv`); "
              "projections scale each stage by its own work count: enrichment by distinct texts and requests "
              "(ceil(texts/batch_size)), verification by sampled texts, fallback by capped items, group by issue count "
-             "and memo once.")
+             "and memo once. Local electricity = local hours x watts / 1000 x USD per kWh (assumptions).")
     return "\n".join(L) + "\n"
 
 
@@ -314,8 +331,12 @@ def to_html(md):
 
 def replay(args):
     a = json.loads((HERE / "assumptions.json").read_text())
-    if args.rows:
-        a["volume"]["rows"] = args.rows
+    if args.rows:  # scale the primary scope's counts to a different projected volume
+        v = a["volumes"][a["primary_volume"]]
+        f = args.rows / v["rows"]
+        v.update({"rows": args.rows, "nonempty_to_classify": round(v["nonempty_to_classify"] * f),
+                  "distinct_nonempty_texts": round(v["distinct_nonempty_texts"] * f),
+                  "label": v["label"] + f" (scaled to {args.rows:,} rows)"})
     if args.budget is not None:
         a["controls"]["budget_usd"] = args.budget
     rates, meta = load_rates(HERE / "rates.csv", args.rate_multiplier)
@@ -323,21 +344,26 @@ def replay(args):
     records = load_jsonl(HERE / "pilot_records.jsonl")
     runs = json.loads((HERE / "pilot_runs.json").read_text())
     m, usage_rows = measured(calls, records, runs, rates)
-    scen, profile = project(m["cold"], a, rates)
+    runs["_calls"] = calls
+    projections = {name: (v, *project(m["cold"], a, rates, v)) for name, v in a["volumes"].items()}
+    scen = projections[a["primary_volume"]][1]
     with open(HERE / "usage.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(usage_rows[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(usage_rows)
-    md = render(m, scen, profile, a, meta, args.rate_multiplier, runs)
+    md = render(m, projections, a, meta, args.rate_multiplier, runs)
+    runs.pop("_calls", None)
     suffix = "" if args.rate_multiplier == 1 and not args.rows and args.budget is None else "_whatif"
     (HERE / f"report{suffix}.md").write_text(md, encoding="utf-8")
     (HERE / f"report{suffix}.html").write_text(to_html(md), encoding="utf-8")
-    result = {"rate_multiplier": args.rate_multiplier, "measured": m, "projection": scen, "profile": profile}
+    result = {"rate_multiplier": args.rate_multiplier, "measured": m,
+              "projections": {k: {"volume": v, "scenarios": sc, "profile": pr} for k, (v, sc, pr) in projections.items()}}
     (HERE / f"replay_result{suffix}.json").write_text(json.dumps(result, indent=2, default=str), encoding="utf-8")
     print(f"cold API ${m['cold']['api_usd']:.6f}  wall {m['cold']['wall_clock_s']:.2f}s | warm API ${m['warm']['api_usd']:.6f}  "
           f"wall {m['warm']['wall_clock_s']:.2f}s  enrichment calls warm={m['warm']['enrichment_calls']}")
     for k, s in scen.items():
-        print(f"  {k:<28} total ${s['usd']['total_api']:,.2f}  {'EXCEEDS BUDGET' if s['exceeds_budget'] else 'ok'}")
+        hrs = "" if s["local_hours"] is None else f"  local {s['local_hours']:.1f} h"
+        print(f"  {k:<30} API ${s['usd']['total_api']:,.2f}{hrs}  {'EXCEEDS BUDGET' if s['exceeds_budget'] else 'ok'}")
     print(f"wrote cost/report{suffix}.md, cost/report{suffix}.html, cost/usage.csv")
 
 
@@ -356,7 +382,8 @@ def run_pilot(args):
         shutil.rmtree(state)  # the cold run must start with an empty result cache
     if runs_dir.exists() and not args.keep_state:
         shutil.rmtree(runs_dir)
-    meta = {"input": "data/raw/cost_100.csv", "input_sha256": sha, "manifest_match": True, "workers": 1,
+    cfg = json.loads((ROOT / "config" / "pipeline.json").read_text())
+    meta = {"input": "data/raw/cost_100.csv", "input_sha256": sha, "manifest_match": True, "workers": 1, "config": cfg,
             "pilot_started_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "runs": {}}
     for label in ("cold", "warm"):
         cmd = [sys.executable, "-m", "pipeline", "--state-dir", str(state), "--runs-dir", str(runs_dir), "run",
@@ -372,7 +399,7 @@ def run_pilot(args):
                                "command": " ".join(cmd[1:])}
     (HERE / "pilot_runs.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     collect(runs_dir)
-    shutil.copyfile(ROOT / "config" / "rates.csv", HERE / "rates.csv") if not (HERE / "rates.csv").exists() else None
+    shutil.copyfile(ROOT / "config" / "rates.csv", HERE / "rates.csv")
     replay(argparse.Namespace(rate_multiplier=1.0, rows=None, budget=None))
 
 
@@ -410,7 +437,7 @@ def main():
     args = p.parse_args()
     if args.command == "run-pilot":
         if args.budget is None:
-            raise SystemExit("run-pilot is a paid command: pass an explicit --budget (USD cap per pilot run)")
+            raise SystemExit("run-pilot makes model calls: pass an explicit --budget (USD cap per pilot run)")
         run_pilot(args)
     else:
         replay(args)

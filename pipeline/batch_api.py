@@ -95,7 +95,7 @@ def collect_job(ctx, client, disp: EnrichDispatcher, job) -> list[Work]:
 
 
 def run_enrich_batch_api(ctx, client, ecfg, fb_cfg, batches, requests_per_job: int = 500, poll_s: float = 30.0):
-    disp = EnrichDispatcher(ctx, client, ecfg, fb_cfg, fallback_quota(ctx, ctx.cfg) if fb_cfg else 0)
+    disp = EnrichDispatcher(ctx, client, ecfg, fb_cfg, fallback_quota(ctx, ctx.cfg, fb_cfg) if fb_cfg else 0)
     store = ctx.store
     open_jobs = store.q("SELECT * FROM batch_jobs WHERE run_id=? AND status NOT IN ('processed','canceled')", (ctx.run_id,))
     in_jobs = set()

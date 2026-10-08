@@ -64,9 +64,12 @@ def seed_records(ctx, input_sha: str) -> dict:
     return {"seeded": len(rows), "duplicate_id_rows_excluded": len(dup_rows)}
 
 
-def ingestion_report(store, input_path: Path, input_sha: str) -> dict:
-    """Deterministic full-file profile: the course helper's exact profile plus extra quality stats."""
-    official = checker.profile(input_path)  # identical format to grading/ingestion.json
+def ingestion_report(store, input_path: Path, input_sha: str, full_input: Path | None = None) -> dict:
+    """Deterministic full-file profile: the course helper's exact profile plus extra quality stats.
+
+    When `input_path` is a declared analysis subset, `official_profile` profiles the full source file
+    (grading/ingestion.json must match the full-file reference) and `accounting` describes the subset."""
+    official = checker.profile(full_input or input_path)  # identical format to grading/ingestion.json
     rows = store.q("SELECT review_id, review_text, review_rating, app_version, review_timestamp, text_sha "
                    "FROM rows WHERE input_sha=? ORDER BY idx", (input_sha,))
     texts = Counter()
@@ -98,10 +101,17 @@ def ingestion_report(store, input_path: Path, input_sha: str) -> dict:
             manifest_match = {"file": Path(input_path).name, "expected_sha256": f["sha256"],
                               "expected_bytes": f["bytes"], "sha256_match": f["sha256"] == official["file_sha256"],
                               "bytes_match": f["bytes"] == Path(input_path).stat().st_size}
+    scope = {"type": "full_file", "analysis_rows": len(rows)}
+    if full_input:
+        sidecar = Path(input_path).with_name(Path(input_path).stem + "_manifest.json")
+        scope = {"type": "declared_subset", "analysis_rows": len(rows), "full_input": str(full_input),
+                 "full_rows": official["counts"]["records"], "subset_manifest": str(sidecar) if sidecar.exists() else None,
+                 "subset_sha256": input_sha}
     return {
         "generated_at": now_iso(),
         "input_path": str(input_path),
         "input_bytes": Path(input_path).stat().st_size,
+        "scope": scope,
         "official_profile": official,
         "course_manifest_check": manifest_match,
         "accounting": {
@@ -132,7 +142,7 @@ def ingestion_report(store, input_path: Path, input_sha: str) -> dict:
     }
 
 
-def run_ingest(ctx, input_path: Path) -> dict:
+def run_ingest(ctx, input_path: Path, full_input: Path | None = None) -> dict:
     ctx.log("stage_start", stage="ingest", input=str(input_path))
     input_sha, n = load_rows(ctx.store, input_path)
     existing = ctx.store.one("SELECT input_sha FROM runs WHERE run_id=?", (ctx.run_id,))
@@ -145,7 +155,7 @@ def run_ingest(ctx, input_path: Path) -> dict:
     seeded = seed_records(ctx, input_sha)
     report_path = ctx.run_dir / "ingestion_report.json"
     if not report_path.exists():
-        report = ingestion_report(ctx.store, input_path, input_sha)
+        report = ingestion_report(ctx.store, input_path, input_sha, full_input)
         write_json(report_path, report)
         write_json(ctx.run_dir / "ingestion.json", report["official_profile"])
     ctx.log("stage_end", stage="ingest", rows=n, **seeded)

@@ -1,0 +1,118 @@
+{
+  "attempts": [
+    {
+      "check": {
+        "cited_fact_ids": [
+          "F101",
+          "F49",
+          "F50",
+          "F65",
+          "F66",
+          "F75",
+          "F77",
+          "F90",
+          "F91",
+          "F94",
+          "F95",
+          "F97"
+        ],
+        "errors": [
+          "unsupported business claim: 'churn rate'"
+        ],
+        "ok": false
+      },
+      "request_id": "dev500-memo-i1-000040",
+      "revision": 0
+    },
+    {
+      "check": {
+        "cited_fact_ids": [
+          "F101",
+          "F49",
+          "F50",
+          "F65",
+          "F66",
+          "F75",
+          "F77",
+          "F90",
+          "F91",
+          "F94",
+          "F95",
+          "F97"
+        ],
+        "errors": [
+          "unsupported business claim: 'churn rate'"
+        ],
+        "ok": false
+      },
+      "request_id": "dev500-memo-i1-000041",
+      "revision": 1
+    }
+  ],
+  "cache_hit": false,
+  "check": {
+    "cited_fact_ids": [
+      "F101",
+      "F49",
+      "F50",
+      "F65",
+      "F66",
+      "F75",
+      "F77",
+      "F90",
+      "F91",
+      "F94",
+      "F95",
+      "F97"
+    ],
+    "errors": [
+      "unsupported business claim: 'churn rate'"
+    ],
+    "ok": false
+  },
+  "evidence_review_ids": [
+    "0d9c62d1-2b53-4887-8156-a28eeac86e82",
+    "12efd15d-4d4f-4a71-8e71-69d03b6f983a",
+    "16929558-ce1e-4b87-8738-a1de3f557f66",
+    "179d79f7-d052-490f-a9d6-f97525b32642",
+    "39e472ad-2038-4978-a559-d052e3844e59",
+    "45c561b9-cc47-4d80-95d3-f0d20bc84af3",
+    "4d7c1b3b-b7f8-417e-a984-6ae27c3acef5",
+    "509915ba-cf86-4baa-9bea-a73af229ca48",
+    "55cc3abf-c295-4591-8c3a-78085cfdefaa",
+    "5d5e08d1-1686-4c86-b9bd-cb0f3a719e0b",
+    "651e6e7b-f93e-4369-9631-15c73ddcd4ad",
+    "686fa8a8-f220-4ddd-b283-d61dd242051a",
+    "6c257eba-3dca-49f6-b7f0-4c4484d81e26",
+    "7f057d48-0855-4325-950b-44f9e6fc2ee1",
+    "802f3b48-4008-4261-938f-912a703a860d",
+    "84acb6b0-dd91-4330-944f-2686cbd15ce0",
+    "9e5f9745-f8be-48d3-b9de-4d118507d94a",
+    "a3605554-5c3a-441d-836e-e9fdea83eb2e",
+    "a7b7539a-c8d3-4f4e-9edd-d46cd1b1fd12",
+    "b03d6dc9-449a-4647-b112-559186656759",
+    "bc1c4825-00c5-458d-ac00-098ce729c76d",
+    "bcdf315e-c82d-41f0-9fcd-ba5933dfe77e",
+    "be84cf74-541f-49c8-8262-fe6e9faedfb8",
+    "c1726764-f0ce-4abc-ad9e-6cd143e1b2c7",
+    "c1ab120a-f91f-4ee3-87f5-66f352e2d47f",
+    "c2738a4f-e57c-46bc-a4ad-8ec5a4b5d5cd",
+    "c64af4d8-ac17-48fe-ae38-fd54b41b16b1",
+    "d635d6c8-460e-452f-8d53-6cd1ea804e98",
+    "e393cec1-67e8-4f58-a484-8d9d76dc8fd6",
+    "f8a85378-c4dd-40e2-b548-beebcdf3b991"
+  ],
+  "status": "checks_failed",
+  "supplied_issue_ids": [
+    "access.login",
+    "billing.entitlement",
+    "billing.free_tier_limits",
+    "other.general",
+    "playback.crash",
+    "playback.devices_connectivity",
+    "playback.interruptions",
+    "usability.ads",
+    "usability.controls",
+    "usability.interface"
+  ]
+}

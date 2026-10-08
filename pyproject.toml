@@ -10,6 +10,12 @@ dependencies = [
 ]
 
 [dependency-groups]
+dashboard = [
+    "fastapi>=0.115",
+    "psycopg[binary]>=3.2",
+    "sqlalchemy>=2.0",
+    "uvicorn>=0.30",
+]
 dev = [
     "pytest>=9.1.1",
 ]

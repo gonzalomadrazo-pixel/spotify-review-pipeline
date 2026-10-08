@@ -1,0 +1,28 @@
+review_id,enrich_topic,verify_topic,enrich_subtopic,enrich_intent,verify_intent,enrich_severity,verify_severity,enrich_needs_review,verify_confident,text
+da627078-9daf-408c-aa08-2ef002ca6b13,usability,playback,usability.controls,complaint,request,2,1,False,True,haad hoti hai bhai aab kya mei gaane bhi tumahare marzi se sunu?
+bf3f0ecf-4e28-46af-b4d9-18e4ca99b1aa,other,other,other.unclear,unclear,cancellation,1,1,False,True,Ban karo
+55405a60-0436-4401-b47e-05cb125a4209,usability,other,usability.interface,praise,praise,1,1,False,True,Nice aap
+78ecdeca-6ac7-42ba-adfc-5150063564fb,other,other,other.general,praise,complaint,1,2,True,True,A very good move; by removing all the basic operations on a music player
+527b0251-907d-40da-9d02-b7fb2d799a89,usability,billing,usability.ads,complaint,request,2,1,False,True,Good app I just wish it didn't have ads but hey pay a fee and it will be as free
+183b6a7b-5bd9-4ee7-8f2b-539e3083fca1,other,other,other.unclear,unclear,cancellation,1,1,False,True,Ban all over world
+c790f859-7343-487f-a3e1-c75b4a4ccb66,catalog,catalog,catalog.lyrics,complaint,request,3,1,True,True,But have not some music lyrics
+6ea569fb-4d91-4fea-bbcc-c61cda5791be,catalog,playback,catalog.recommendations,praise,praise,1,1,True,True,I love to listen songs and i don't have particular song type. Its depends on my mood. Spotify makes this very easy. Its understand my mood and play ▶️ by according. I loved it so far.
+c3a7fe51-0a12-4878-9083-b174b5e20d4a,usability,playback,usability.controls,complaint,complaint,3,3,False,True,"I have been enjoying this app since last year. But unfortunately, everything has ruined my mood by this app. If I skip the song, this shows a 'listen again to this song tomorrow'. This is not good. It always shows an option for premium. Please try to make a change everything like before"
+2c3e287d-5521-4186-8dc6-f81de36473f8,usability,billing,usability.ads,request,request,1,1,False,True,More ad free music ty
+c04ee7e6-5805-4f28-9818-14af82a9f55c,playback,other,playback.crash,complaint,complaint,4,2,False,True,Worst update. Pls fix it. U are just making yourself the worst
+78ad389a-3bff-4717-b006-507cb396aa18,usability,playback,usability.controls,complaint,complaint,3,3,False,True,worst.. the new update is worst.. we can't play songs in loop ..can't play a specific part ..i have been using spotify from years.. i didn't expect this from spotify... dissapointed.. i guess it's time to switch the app if not fixed soon:/
+ef60a9e6-21e1-48c4-8896-f88d9730b5f1,other,downloads,other.general,praise,request,1,1,True,True,Good but if it has downloading option it will be wonderful.
+7c0fd444-be2d-48dc-b7f0-89f6ae3c3022,catalog,other,catalog.recommendations,praise,praise,1,1,False,True,Best music app i've ever seen
+a8b49cc2-3c58-4e2c-b0cb-080f3c146f4d,billing,usability,billing.free_tier_limits,complaint,complaint,3,3,True,True,"I was fine with the ads occasionally playing, interrupting my listeing of my favorite track in a playlist of mine. I can understand that running Spotify requires money. What I do not accept, is the fact that not only is there no option to play the playlist like I prefer, the option to have a single "
+15a9d710-afbd-4535-86fa-16019f6aa0d1,billing,usability,billing.free_tier_limits,complaint,complaint,3,2,False,True,"Not Good Can't Turn off the shuffle option, neither skip songs for few seconds"
+7793cd6e-4eef-47f4-b4dd-5c018b1d3782,usability,other,usability.other,complaint,complaint,2,2,True,True,This is totally a wasteage ot time .. and this is idle app
+c2789573-3170-4365-a18d-1a5688baeba1,usability,usability,usability.interface,complaint,request,2,1,True,True,"Who ever decided the main page should be overtaken by single albums for an entire phone screen was stupid there needs to be away to remove music, albums, and artists who we dont like off our main page"
+b4c2ae3a-efe3-4c7f-a231-d4c6e0b10a4f,catalog,other,catalog.other,praise,praise,1,1,False,True,BTS army
+4c3175b5-2499-42b8-964d-34267995b30d,catalog,usability,catalog.recommendations,complaint,complaint,3,2,False,True,I like Spotify but not their recommendations. I can't delete them. I don't like that even if we pay premium when I'm listening to podcast you have some announcements.
+3a140235-8639-4f22-832d-ad82adf987a7,playback,other,playback.performance,complaint,complaint,2,2,True,True,worst update ever
+8b47204e-3313-4cf3-9f94-928c80a26ea8,other,other,other.general,praise,unclear,1,1,True,True,Funkyou
+62ad2462-7b07-4238-9025-8cdcaf4e7c8d,other,other,other.general,praise,unclear,1,1,False,True,It's aight
+38d17f88-2a0c-4a38-bea4-4f3062b6e027,usability,playback,usability.controls,praise,praise,1,1,False,True,I love being able to hear any song at any time.
+b33a2fcc-dc40-4a26-85a3-7021a265fed0,usability,other,usability.interface,request,request,1,1,False,True,SPOTIFY NEEDS A COMMENT SECTION UNDER THE SONGS LIKE YOUTUBE VIDEOS OR TIKTOK ETC
+7c29d830-3960-46c7-93e7-24f8abcc2206,other,billing,other.general,praise,praise,1,1,False,True,Very good app for music and with premium this is very good
+39c8b8f7-50dc-486b-a591-6fbbffe96c7e,usability,usability,usability.interface,praise,request,1,1,False,True,Excellent app all round. Only bit of criticism is that it would be great if they made it simpler to navigate or find certain features . But not enough an annoyance to knock down a star.

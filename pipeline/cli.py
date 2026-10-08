@@ -1,8 +1,9 @@
 """Command line entry point: `uv run python -m pipeline <command> ...`
 
-Offline commands (no API key, no model calls): status, rank, rerank, export-run, export-grading,
-eval-golden, planted-errors, check.
-Paid commands (explicit; need ANTHROPIC_API_KEY): run, enrich, verify, group-memo, smoke.
+Offline commands (no API key, no model calls): status, make-subset, rank, rerank, export-run,
+export-grading, eval-golden, injection-check, planted-errors.
+Model commands (explicit): run, smoke. Each role calls the provider set in config/pipeline.json; the
+default is a local Ollama model (no API charge). Roles switched to "anthropic" need ANTHROPIC_API_KEY.
 """
 
 from __future__ import annotations
@@ -28,8 +29,8 @@ def get_client(args):
     if getattr(args, "fake_model", False):
         from tests.fake_model import fake_client
         return fake_client()
-    from .llm import AnthropicClient
-    return AnthropicClient()
+    from .llm import RoutingClient
+    return RoutingClient(load_config(args.config))
 
 
 def cmd_run(args):
@@ -41,7 +42,7 @@ def cmd_run(args):
     stages = args.stages.split(",") if args.stages else list(STAGES)
     ctx = make_ctx(args, " ".join(sys.argv))
     client = get_client(args) if set(stages) & {"enrich", "verify", "group", "memo"} else None
-    run_ingest(ctx, Path(args.input))
+    run_ingest(ctx, Path(args.input), Path(args.full_input) if args.full_input else None)
     ctx.begin_invocation()
     stop = "completed"
     try:
@@ -61,10 +62,16 @@ def cmd_run(args):
                 if "group" in stages:
                     stage_group_and_memo(ctx, client, ranked, run_memo_stage="memo" in stages)
     finally:
-        summary = export_run(ctx)
         ctx.end_invocation(stop)
+        summary = export_run(ctx)
     print(json.dumps({"run_id": ctx.run_id, "stop_reason": stop, "coverage": summary["coverage"],
                       "spend_usd_actual": summary["spend_usd_actual"]}, indent=2))
+
+
+def cmd_make_subset(args):
+    from .subset import build_subset
+    m = build_subset(Path(args.full), Path(args.out), args.n)
+    print(json.dumps({"subset": m["subset"], "nested_course_files": m["nested_course_files"]}, indent=2))
 
 
 def cmd_status(args):
@@ -171,8 +178,16 @@ def main(argv=None):
         sp.add_argument("--max-minutes", type=float, default=None)
         sp.add_argument("--fake-model", action="store_true", help="offline deterministic stand-in (tests only)")
 
-    sp = sub.add_parser("run", help="PAID: run stages on an input CSV (resumable)")
+    sp = sub.add_parser("make-subset", help="offline: seeded analysis subset that nests the course samples")
+    sp.add_argument("--full", default=str(ROOT / "data" / "raw" / "spotify_reviews_18months.csv"))
+    sp.add_argument("--out", default=str(ROOT / "data" / "subset_100k.csv"))
+    sp.add_argument("--n", type=int, default=100050, help="nonempty reviews to sample (empty texts are added)")
+    sp.set_defaults(func=cmd_make_subset)
+
+    sp = sub.add_parser("run", help="MODEL CALLS: run stages on an input CSV (resumable)")
     run_args(sp)
+    sp.add_argument("--full-input", default=None,
+                    help="full source CSV to profile for ingestion.json when --input is a declared subset")
     sp.add_argument("--stages", default=None, help=f"comma list from {','.join(STAGES)} (default all)")
     sp.add_argument("--mode", choices=("sync", "batch"), default="sync", help="enrichment transport")
     sp.add_argument("--limit-requests", type=int, default=None, help="cap enrichment requests this invocation")

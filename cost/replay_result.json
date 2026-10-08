@@ -1,0 +1,446 @@
+{
+  "rate_multiplier": 1.0,
+  "measured": {
+    "cold": {
+      "wall_clock_s": 291.567,
+      "stage_seconds": {
+        "ingest": 0,
+        "enrich": 133.877,
+        "verify": 57.223,
+        "rank": 0.01,
+        "group": 71.061,
+        "memo": 29.016
+      },
+      "records": 100,
+      "status_counts": {
+        "completed": 100
+      },
+      "unique_texts": 100,
+      "result_cache_hits": 0,
+      "enrichment_calls": 2,
+      "stages": {
+        "enrich": {
+          "requests": 2.0,
+          "succeeded": 2.0,
+          "failed": 0.0,
+          "retries": 0.0,
+          "review_ids_sent": 100.0,
+          "unknown_usage": 0.0,
+          "duration_s_sum": 133.802,
+          "input_uncached_tokens": 10752.0,
+          "input_uncached_usd": 0.0,
+          "input_cache_write_5m_tokens": 0.0,
+          "input_cache_write_5m_usd": 0.0,
+          "input_cache_read_tokens": 0.0,
+          "input_cache_read_usd": 0.0,
+          "output_tokens": 2419.0,
+          "output_usd": 0.0,
+          "api_usd": 0.0
+        },
+        "verify": {
+          "requests": 1.0,
+          "succeeded": 1.0,
+          "failed": 0.0,
+          "retries": 0.0,
+          "review_ids_sent": 50.0,
+          "unknown_usage": 0.0,
+          "duration_s_sum": 57.2,
+          "input_uncached_tokens": 2346.0,
+          "input_uncached_usd": 0.0,
+          "input_cache_write_5m_tokens": 0.0,
+          "input_cache_write_5m_usd": 0.0,
+          "input_cache_read_tokens": 0.0,
+          "input_cache_read_usd": 0.0,
+          "output_tokens": 1550.0,
+          "output_usd": 0.0,
+          "api_usd": 0.0
+        },
+        "group": {
+          "requests": 19.0,
+          "succeeded": 19.0,
+          "failed": 0.0,
+          "retries": 0.0,
+          "review_ids_sent": 52.0,
+          "unknown_usage": 0.0,
+          "duration_s_sum": 70.95399999999998,
+          "input_uncached_tokens": 8851.0,
+          "input_uncached_usd": 0.0,
+          "input_cache_write_5m_tokens": 0.0,
+          "input_cache_write_5m_usd": 0.0,
+          "input_cache_read_tokens": 1239.0,
+          "input_cache_read_usd": 0.0,
+          "output_tokens": 1437.0,
+          "output_usd": 0.0,
+          "api_usd": 0.0
+        },
+        "memo": {
+          "requests": 1.0,
+          "succeeded": 1.0,
+          "failed": 0.0,
+          "retries": 0.0,
+          "review_ids_sent": 21.0,
+          "unknown_usage": 0.0,
+          "duration_s_sum": 28.998,
+          "input_uncached_tokens": 4475.0,
+          "input_uncached_usd": 0.0,
+          "input_cache_write_5m_tokens": 0.0,
+          "input_cache_write_5m_usd": 0.0,
+          "input_cache_read_tokens": 0.0,
+          "input_cache_read_usd": 0.0,
+          "output_tokens": 532.0,
+          "output_usd": 0.0,
+          "api_usd": 0.0
+        }
+      },
+      "api_usd": 0.0,
+      "usd_per_1000_inputs": 0.0,
+      "usd_per_completed_record": 0.0,
+      "records_per_second": 0.34297434208946825
+    },
+    "warm": {
+      "wall_clock_s": 0.303,
+      "stage_seconds": {
+        "ingest": 0,
+        "enrich": 0.002,
+        "verify": 0.001,
+        "rank": 0.002,
+        "group": 0.001,
+        "memo": 0.001
+      },
+      "records": 100,
+      "status_counts": {
+        "completed": 100
+      },
+      "unique_texts": 100,
+      "result_cache_hits": 100,
+      "enrichment_calls": 0,
+      "stages": {},
+      "api_usd": 0,
+      "usd_per_1000_inputs": 0.0,
+      "usd_per_completed_record": 0.0,
+      "records_per_second": 330.03300330033005
+    }
+  },
+  "projections": {
+    "declared_100k_subset": {
+      "volume": {
+        "label": "Declared final scope: data/subset_100k.csv (course sampler rule + seed extended to 100,050 nonempty rows, plus all 13 empty texts)",
+        "rows": 100063,
+        "nonempty_to_classify": 100050,
+        "empty_text_quarantines": 13,
+        "distinct_nonempty_texts": 78137,
+        "mean_chars_distinct": 93.23,
+        "quote_share": 0.1818
+      },
+      "scenarios": {
+        "local_base": {
+          "provider": "ollama",
+          "model": "gemma4:e2b-it-qat",
+          "tier": "standard",
+          "distinct_texts_sent": 78137,
+          "enrichment_requests": 1563,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 781,
+          "fallback_items": 157,
+          "tokens": {
+            "uncached_input": 9934312,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 1927937
+          },
+          "usd": {
+            "enrich": 0.0,
+            "verify": 0.0,
+            "fallback": 0.0,
+            "group_fixed": 0.0,
+            "memo_fixed": 0.0,
+            "total_api": 0.0
+          },
+          "usd_per_1000_rows": 0.0,
+          "local_hours": 30.0525266997076,
+          "local_compute": {
+            "hours": 30.0525266997076,
+            "kwh": 0.7513131674926901,
+            "usd_estimate": 0.2629596086224415
+          },
+          "time_basis": "1,563 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
+          "exceeds_budget": false,
+          "note": ""
+        },
+        "local_conservative": {
+          "provider": "ollama",
+          "model": "gemma4:e2b-it-qat",
+          "tier": "standard",
+          "distinct_texts_sent": 78137,
+          "enrichment_requests": 1563,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.1,
+          "verify_texts": 781,
+          "fallback_items": 782,
+          "tokens": {
+            "uncached_input": 10713473,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 2079147
+          },
+          "usd": {
+            "enrich": 0.0,
+            "verify": 0.0,
+            "fallback": 0.0,
+            "group_fixed": 0.0,
+            "memo_fixed": 0.0,
+            "total_api": 0.0
+          },
+          "usd_per_1000_rows": 0.0,
+          "local_hours": 32.84081171081871,
+          "local_compute": {
+            "hours": 32.84081171081871,
+            "kwh": 0.8210202927704678,
+            "usd_estimate": 0.2873571024696637
+          },
+          "time_basis": "1,563 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
+          "exceeds_budget": false,
+          "note": ""
+        },
+        "modeled_alt_haiku_batch_api": {
+          "provider": "anthropic",
+          "model": "claude-haiku-4-5",
+          "tier": "batch",
+          "distinct_texts_sent": 78137,
+          "enrichment_requests": 1563,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 781,
+          "fallback_items": 157,
+          "tokens": {
+            "uncached_input": 9934312,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 1927937
+          },
+          "usd": {
+            "enrich": 9.786997551535466,
+            "verify": 0.07884976,
+            "fallback": 0.038558685777169865,
+            "group_fixed": 0.015734639473684208,
+            "memo_fixed": 0.007135,
+            "total_api": 9.927275636786321
+          },
+          "usd_per_1000_rows": 0.09921025390790124,
+          "local_hours": null,
+          "local_compute": {
+            "hours": null,
+            "kwh": null,
+            "usd_estimate": null
+          },
+          "time_basis": "not measured for this provider (modeled alternative)",
+          "exceeds_budget": true,
+          "note": "MODELED, not run: applies Haiku 4.5 Batch rates to the local pilot's token profile (tokenizers differ). Cache hit 0 because Batch prompt caching is best-effort."
+        },
+        "modeled_alt_haiku_standard": {
+          "provider": "anthropic",
+          "model": "claude-haiku-4-5",
+          "tier": "standard",
+          "distinct_texts_sent": 78137,
+          "enrichment_requests": 1563,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 781,
+          "fallback_items": 157,
+          "tokens": {
+            "uncached_input": 9934312,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 1927937
+          },
+          "usd": {
+            "enrich": 19.57399510307093,
+            "verify": 0.15769952,
+            "fallback": 0.038558685777169865,
+            "group_fixed": 0.031469278947368416,
+            "memo_fixed": 0.01427,
+            "total_api": 19.81599258779547
+          },
+          "usd_per_1000_rows": 0.19803516372480806,
+          "local_hours": null,
+          "local_compute": {
+            "hours": null,
+            "kwh": null,
+            "usd_estimate": null
+          },
+          "time_basis": "not measured for this provider (modeled alternative)",
+          "exceeds_budget": true,
+          "note": "MODELED, not run: Haiku 4.5 standard rates on the local pilot's token profile, no prompt-cache savings assumed."
+        }
+      },
+      "profile": {
+        "prefix_tokens_per_request": 0.0,
+        "uncached_input_tokens_per_text": 107.52,
+        "output_tokens_per_text": 24.19,
+        "input_length_ratio": 1.159288734145735,
+        "measured_prefix_cache_hit_rate": 0.0
+      }
+    },
+    "full_corpus": {
+      "volume": {
+        "label": "Comparison only: all of spotify_reviews_18months.csv",
+        "rows": 660622,
+        "nonempty_to_classify": 660609,
+        "empty_text_quarantines": 13,
+        "distinct_nonempty_texts": 484189,
+        "mean_chars_distinct": 98.57,
+        "quote_share": 0.194
+      },
+      "scenarios": {
+        "local_base": {
+          "provider": "ollama",
+          "model": "gemma4:e2b-it-qat",
+          "tier": "standard",
+          "distinct_texts_sent": 484189,
+          "enrichment_requests": 9684,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 2000,
+          "fallback_items": 969,
+          "tokens": {
+            "uncached_input": 65085618,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 11946783
+          },
+          "usd": {
+            "enrich": 0.0,
+            "verify": 0.0,
+            "fallback": 0.0,
+            "group_fixed": 0.0,
+            "memo_fixed": 0.0,
+            "total_api": 0.0
+          },
+          "usd_per_1000_rows": 0.0,
+          "local_hours": 184.97331167192982,
+          "local_compute": {
+            "hours": 184.97331167192982,
+            "kwh": 4.6243327917982455,
+            "usd_estimate": 1.6185164771293858
+          },
+          "time_basis": "9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
+          "exceeds_budget": false,
+          "note": ""
+        },
+        "local_conservative": {
+          "provider": "ollama",
+          "model": "gemma4:e2b-it-qat",
+          "tier": "standard",
+          "distinct_texts_sent": 484189,
+          "enrichment_requests": 9684,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.1,
+          "verify_texts": 2000,
+          "fallback_items": 4842,
+          "tokens": {
+            "uncached_input": 70190373,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 12883785
+          },
+          "usd": {
+            "enrich": 0.0,
+            "verify": 0.0,
+            "fallback": 0.0,
+            "group_fixed": 0.0,
+            "memo_fixed": 0.0,
+            "total_api": 0.0
+          },
+          "usd_per_1000_rows": 0.0,
+          "local_hours": 202.2493799052632,
+          "local_compute": {
+            "hours": 202.2493799052632,
+            "kwh": 5.05623449763158,
+            "usd_estimate": 1.769682074171053
+          },
+          "time_basis": "9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
+          "exceeds_budget": false,
+          "note": ""
+        },
+        "modeled_alt_haiku_batch_api": {
+          "provider": "anthropic",
+          "model": "claude-haiku-4-5",
+          "tier": "batch",
+          "distinct_texts_sent": 484189,
+          "enrichment_requests": 9684,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 2000,
+          "fallback_items": 969,
+          "tokens": {
+            "uncached_input": 65085618,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 11946783
+          },
+          "usd": {
+            "enrich": 62.40976545215253,
+            "verify": 0.20192000000000002,
+            "fallback": 0.24490138016165128,
+            "group_fixed": 0.015734639473684208,
+            "memo_fixed": 0.007135,
+            "total_api": 62.87945647178786
+          },
+          "usd_per_1000_rows": 0.09518220173077473,
+          "local_hours": null,
+          "local_compute": {
+            "hours": null,
+            "kwh": null,
+            "usd_estimate": null
+          },
+          "time_basis": "not measured for this provider (modeled alternative)",
+          "exceeds_budget": true,
+          "note": "MODELED, not run: applies Haiku 4.5 Batch rates to the local pilot's token profile (tokenizers differ). Cache hit 0 because Batch prompt caching is best-effort."
+        },
+        "modeled_alt_haiku_standard": {
+          "provider": "anthropic",
+          "model": "claude-haiku-4-5",
+          "tier": "standard",
+          "distinct_texts_sent": 484189,
+          "enrichment_requests": 9684,
+          "cache_hit_rate": 0.0,
+          "retry_rate": 0.02,
+          "verify_texts": 2000,
+          "fallback_items": 969,
+          "tokens": {
+            "uncached_input": 65085618,
+            "cache_write": 0,
+            "cache_read": 0,
+            "output": 11946783
+          },
+          "usd": {
+            "enrich": 124.81953090430505,
+            "verify": 0.40384000000000003,
+            "fallback": 0.24490138016165128,
+            "group_fixed": 0.031469278947368416,
+            "memo_fixed": 0.01427,
+            "total_api": 125.51401156341407
+          },
+          "usd_per_1000_rows": 0.18999369013356213,
+          "local_hours": null,
+          "local_compute": {
+            "hours": null,
+            "kwh": null,
+            "usd_estimate": null
+          },
+          "time_basis": "not measured for this provider (modeled alternative)",
+          "exceeds_budget": true,
+          "note": "MODELED, not run: Haiku 4.5 standard rates on the local pilot's token profile, no prompt-cache savings assumed."
+        }
+      },
+      "profile": {
+        "prefix_tokens_per_request": 0.0,
+        "uncached_input_tokens_per_text": 107.52,
+        "output_tokens_per_text": 24.19,
+        "input_length_ratio": 1.2256901268341207,
+        "measured_prefix_cache_hit_rate": 0.0
+      }
+    }
+  }
+}

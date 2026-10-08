@@ -10,7 +10,7 @@ import pytest
 
 from pipeline.common import ROOT, load_config
 from pipeline.context import RunContext
-from pipeline.enrich import Item, run_enrich, validate_output
+from pipeline.enrich import Item, resolve_part_quote, run_enrich, split_parts, validate_output
 from pipeline.extract import extract_entities, resolve_quote
 from pipeline.ingest import run_ingest
 from pipeline.llm import Attempt
@@ -21,8 +21,10 @@ PILOT = ROOT / "data" / "raw" / "cost_100.csv"
 pytestmark = pytest.mark.skipif(not PILOT.exists(), reason="dataset not unpacked into data/raw/")
 
 
-def make_ctx(tmp_path, run_id="t", budget=1.0, **limits):
+def make_ctx(tmp_path, run_id="t", budget=1.0, model=None, **limits):
     cfg = load_config()
+    if model:
+        cfg["enrich"]["model"] = model
     cfg["limits"].update({"backoff_base_s": 0.01, "backoff_max_s": 0.05, "requests_per_minute": 100000, **limits})
     ctx = RunContext(cfg, run_id, tmp_path / "state", tmp_path / "runs", budget_usd=budget, workers=1)
     run_ingest(ctx, PILOT)
@@ -67,7 +69,7 @@ def test_persistently_invalid_items_are_quarantined_with_reason(tmp_path):
     ctx.cfg["fallback"]["enabled"] = False
 
     def faults(req, n):
-        return Attempt(ok=True, text='{"items": []}', stop_reason="end_turn", usage={"input_tokens": 1, "output_tokens": 1})
+        return Attempt(ok=True, text='{"r": []}', stop_reason="end_turn", usage={"input_tokens": 1, "output_tokens": 1})
     run_enrich(ctx, fake_client(faults))
     st = statuses(ctx)
     assert st.get("completed", 0) == 0 and st["quarantined"] == 100
@@ -90,12 +92,13 @@ def test_transient_errors_back_off_and_recover(tmp_path):
 
 
 def test_budget_cap_stops_admitting_work_and_saves_progress(tmp_path):
-    ctx = make_ctx(tmp_path, budget=0.03)  # room for one worst-case reservation (~$0.024), not two
+    # A priced model is needed here: the default local model costs $0, so it can never hit the cap.
+    ctx = make_ctx(tmp_path, budget=0.02, model="claude-haiku-4-5")  # one worst-case reservation, not two
     out = run_enrich(ctx, fake_client())
     assert out["stop_reason"] == "budget_cap"
     st = statuses(ctx)
     assert st["completed"] > 0 and st["pending"] > 0
-    assert ctx.ledger.spent() <= 0.03
+    assert ctx.ledger.spent() <= 0.02
     assert any(json.loads(l)["kind"] == "budget_stop" for l in (ctx.run_dir / "run_log.jsonl").read_text().splitlines())
 
 
@@ -121,13 +124,27 @@ def test_resume_makes_no_calls_for_completed_ids(tmp_path):
     assert statuses(ctx) == {"completed": 100}
 
 
-def test_validator_rejects_foreign_and_duplicate_keys():
+def test_validator_rejects_misnumbered_and_foreign_rows():
     items = [Item("a", "id1", "x", False), Item("b", "id2", "y", False)]
-    good = {"q": "", "sub": "other.general", "intent": "praise", "sev": 1, "sent": 1, "review": False, "why": "none"}
-    text = json.dumps({"items": [{"k": 1, **good}, {"k": 1, **good}, {"k": 7, **good}]})
+    good = ["other.general", "praise", 1, 1, False, 0]
+    text = json.dumps({"r": [[1, *good], [1, *good], [7, *good]]})
     valid, problems, err = validate_output(text, items, "end_turn")
-    assert err is None and valid == {} and problems == {1: "duplicate_key", 2: "missing_key"}
+    assert err is None and set(valid) == {1} and problems == {2: "key_position_mismatch"}
+    assert validate_output(json.dumps({"r": [[1, *good]]}), items, "end_turn")[1] == {2: "missing_key"}
     assert validate_output("{}", items, "max_tokens")[2] == "max_tokens_truncated"
+    assert validate_output(json.dumps({"items": []}), items, "end_turn")[2] == "schema_mismatch"
+
+
+def test_part_quotes_are_exact_substrings():
+    text = "I love the playlists.\nBut the app  keeps CRASHING when I open it!   Every single time?? Fix it"
+    parts = split_parts(text)
+    assert len(parts) >= 3 and all(p and p in text for p in parts)
+    long_item = Item("s", "id", text, True)
+    for part in range(-1, len(parts) + 3):
+        q, method = resolve_part_quote(long_item, part)
+        assert q and q in text
+        assert method == ("model_part" if 1 <= part <= len(parts) else "fallback_full_text")
+    assert resolve_part_quote(Item("s", "id", "  Good  ", False), 0) == ("Good", "full_text_short_review")
 
 
 def test_quotes_are_always_exact_substrings():
@@ -156,7 +173,7 @@ def test_ranking_matches_contract_arithmetic():
 def test_batch_api_transport_resumes_submitted_jobs_without_resubmitting(tmp_path):
     from pipeline import batch_api
     from tests.fake_model import FakeBatchClient
-    ctx = make_ctx(tmp_path)
+    ctx = make_ctx(tmp_path, model="claude-haiku-4-5")  # Message Batches is an Anthropic transport
     client = FakeBatchClient(polls_until_end=3)
     ctx.stop.reason = None
     # First invocation: submit, then "interrupt" before the job ends.

@@ -1,0 +1,8 @@
+area,complaint_count,severity_sum,mean_severity,share_of_complaints,severe_count_sev4plus,cancellation_count,total_complaints_all_areas
+access,195,679,3.482051,4.5%,119,21,4335
+usability,1348,3132,2.323442,31.1%,1,0,4335
+playback,710,2274,3.202817,16.4%,184,1,4335
+billing_support,809,2383,2.945612,18.7%,20,7,4335
+downloads,36,107,2.972222,0.8%,3,0,4335
+catalog,258,688,2.666667,6.0%,2,0,4335
+other,979,1960,2.002043,22.6%,0,21,4335
