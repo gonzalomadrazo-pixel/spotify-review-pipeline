@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Area, Issue } from "../api";
 import { Card, fmt, IssueLink, Sev, Stat, Status, Tag, useApi } from "../components";
+import Trends from "../Trends";
 
 type Overview = {
   run: { run_id: string; generated_at: string; label_config: string; spend_usd_actual: number; budget_usd: number;
@@ -105,6 +106,8 @@ export default function OverviewPage() {
           <p className="muted">1 = no problem · 2 = annoyance · 3 = degraded · 4 = blocked · 5 = financial/privacy/data harm</p>
         </Card>
       </div>
+
+      <Trends />
 
       <Card title="Top issues (baseline ranking)" actions={<Link to="/issues">All issues →</Link>}>
         <div className="table-wrap">
