@@ -15,11 +15,12 @@ cost/pilot_state/
 runs/*/STOP
 local-reference.json
 self-check.json
-# dashboard: local database and build outputs (the deployed database is Postgres)
+# dashboard: build outputs (dashboard.db is rebuilt by load_db.py and shipped by `vercel deploy`)
 dashboard/dashboard.db
 dashboard/frontend/node_modules/
 dashboard/frontend/dist/
 dashboard/.vercel/
-runs/_orchestrator/
+# orchestrator: keep the run logs and terminal recording as interruption/resume evidence, not the PID files
+runs/_orchestrator/*.pid
 state_evals/
 dashboard/frontend/tsconfig.tsbuildinfo

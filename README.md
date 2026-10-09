@@ -262,7 +262,7 @@ Deployment (Vercel, free Hobby plan): `dashboard/vercel.json` builds the static 
 | D4 recommendation, alternatives, limitations | `runs/final100k/memo.md`, dashboard Recommendation page — *pending* |
 | T1 golden 50, per-field comparison, error analysis | `evals/golden_50_labeled.csv`, `evals/golden/` — *pending human labels* |
 | T2 independent verification, planted errors, injection | `runs/final100k/verify/`, `evals/planted_errors.json`, `evals/injection/results.json` — *pending* |
-| T3 real cold/warm pilot, calculator, controls | `cost/` (measured pilot, offline replay), `tests/test_pipeline.py` (13 offline tests: retries, budget cap, spend-limit stop, resume, validation) |
+| T3 real cold/warm pilot, calculator, controls | `cost/` (measured pilot, offline replay), `tests/test_pipeline.py` (14 offline tests: retries, budget cap, spend-limit stop, resume, validation, injection flag) |
 | W1 ingestion, coverage, classification | `grading/ingestion.json` (full file), `runs/final100k/ingestion_report.json`, self-check — *pending* |
 | W2 staged program, bounded calls, resume | `pipeline/`, `runs/final100k/checkpoints/`, `grading/checkpoint_*.json`, `runs/_orchestrator/terminal_recording.typescript` — *pending* |
 | W3 reproducible ranking, deployed dashboard, grounded output | `rerank` command, `runs/final100k/ranking.csv`, live dashboard — *pending* |
