@@ -91,6 +91,7 @@ Each row re-runs the same projection for the declared scope (100,063 rows, 78,13
 | pilot (100) | cost/pilot_calls.jsonl, cold run | 100 | 100 | 2 | 0 | 66.9 | 24.2 | $0.0000 | 30.1 | $9.9273 |
 | dev500 | runs/dev500/calls.jsonl (checkpoint_500.csv) | 500 | 479 | 10 | 0 | 50.9 | 24.0 | $0.0000 | 22.9 | $9.3351 |
 | dev10k | runs/dev10k/calls.jsonl (analysis_10000.csv) | 10,000 | 7,969 | 161 | 1 | 65.3 | 24.3 | $0.0000 | 29.4 | $9.3262 |
+| final100k | runs/final100k/calls.jsonl (data/subset_100k.csv) | 100,063 | 69,689 | 1,401 | 0 | 64.6 | 24.3 | $0.0000 | 29.1 | $10.3553 |
 
 ## Controls
 

@@ -203,3 +203,14 @@ def test_batch_api_transport_resumes_submitted_jobs_without_resubmitting(tmp_pat
     assert statuses(ctx) == {"completed": 100}
     cs = calls(ctx)
     assert all(c["tier"] == "batch" and c["phase"] == "initial" for c in cs) and ctx.ledger.external_reserved() == 0
+
+
+def test_memo_checker_rejects_wrong_comparison():
+    from pipeline.memo import check_memo
+    facts = [{"fact_id": "F01", "value": "2.96", "display": "2.96"}, {"fact_id": "F02", "value": "2.36", "display": "2.36"},
+             {"fact_id": "F03", "value": "3.01", "display": "3.01"}]
+    wrong = "Billing has 2.96 [F01], which is lower than usability (2.36 [F02]) and playback (3.01 [F03])."
+    right = "Billing has 2.96 [F01], which is higher than usability (2.36 [F02]) but below playback."
+    errs = check_memo(wrong, facts, set(), set())["errors"]
+    assert errs == ["wrong comparison: [F01] 2.96 is not lower than [F02] 2.36"]
+    assert check_memo(right, facts, set(), set())["ok"]

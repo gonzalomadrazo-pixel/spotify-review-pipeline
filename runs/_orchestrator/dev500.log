@@ -1,0 +1,29 @@
+[07:21:04] stage_start {"stage": "ingest", "input": "data/raw/checkpoint_500.csv"}
+[07:21:04] stage_end {"stage": "ingest", "rows": 500, "seeded": 500, "duplicate_id_rows_excluded": 0}
+[07:21:04] invocation_start {"phase": "initial", "completed_before": 0, "budget_usd": 5.0, "workers": 1}
+[07:21:04] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[07:21:04] progress {"stage": "enrich", "pending_records": 500, "pending_distinct_texts": 479, "result_cache_hits": 0, "result_cache_hit_records": 0, "requests_planned": 10}
+[07:29:33] stage_end {"stage": "enrich", "stop_reason": "completed", "seconds": 509.243, "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "record_status_counts": {"completed": 500}, "pending_records": 500, "pending_distinct_texts": 479, "result_cache_hits": 0, "result_cache_hit_records": 0, "requests_
+[07:29:33] stage_start {"stage": "verify", "label_config": "gemma4:e2b-it-qat+verify-v1+vschema-v1+3ad8f1e4f8"}
+[07:30:25] stage_end {"stage": "verify", "sample_size": 50, "verified": 50, "errors": 0, "topic_agree": 43, "intent_agree": 46, "severity_exact": 42, "severity_within_1": 48, "disagreements": 12, "topic_agree_rate": 0.86, "intent_agree_rate": 0.92, "severity_exact_rate": 0.84, "severity_within_1_rate": 0.96, "disagreeme
+[07:30:25] stage_start {"stage": "rank"}
+[07:30:25] stage_end {"stage": "rank", "issues": 28, "seconds": 0.018}
+[07:30:25] stage_start {"stage": "group", "issues": 28}
+[07:32:39] stage_end {"stage": "group", "issues": 28, "calls": 28, "stop_reason": "completed", "seconds": 134.509}
+[07:32:39] stage_start {"stage": "memo"}
+[07:33:25] stage_end {"stage": "memo", "status": "checks_failed", "claims": 9, "extra_claims": 3, "seconds": 45.591}
+[07:33:25] invocation_end {"stop_reason": "completed", "completed_after": 500, "spent_usd": 0.0}
+{
+  "run_id": "dev500",
+  "stop_reason": "completed",
+  "coverage": {
+    "rows": 500,
+    "completed": 500,
+    "quarantined": 0,
+    "pending": 0,
+    "complaints": 236,
+    "cancellations": 6,
+    "quarantine_reasons": {}
+  },
+  "spend_usd_actual": 0
+}

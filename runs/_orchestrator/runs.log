@@ -1,0 +1,13 @@
+[12:45:18] dev500 already complete: {'cancellations': 6, 'complaints': 236, 'completed': 500, 'pending': 0, 'quarantine_reasons': {}, 'quarantined': 0, 'rows': 500}
+[12:45:18] start dev10k: caffeinate -i /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline run --run-id dev10k --input data/raw/analysis_10000.csv
+[15:28:29] dev10k exited rc=0 stop=completed coverage={'cancellations': 50, 'complaints': 4335, 'completed': 10000, 'pending': 0, 'quarantine_reasons': {}, 'quarantined': 0, 'rows': 10000}
+[15:28:29] start final100k: caffeinate -i /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline run --run-id final100k --input data/subset_100k.csv --full-input data/raw/spotify_reviews_18months.csv
+[15:48:32] final100k: requesting a graceful stop (STOP file) to demonstrate interruption/resume
+[15:48:43] final100k exited rc=0 stop=stop_file coverage={'cancellations': 58, 'complaints': 7936, 'completed': 27337, 'pending': 72713, 'quarantine_reasons': {'empty_review_text': 13}, 'quarantined': 13, 'rows': 100063}
+[15:48:43] final100k: resuming after the saved checkpoint
+[15:48:43] start final100k: caffeinate -i /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline run --run-id final100k --input data/subset_100k.csv --full-input data/raw/spotify_reviews_18months.csv
+[10:32:33] dev500 already complete: {'cancellations': 6, 'complaints': 236, 'completed': 500, 'pending': 0, 'quarantine_reasons': {}, 'quarantined': 0, 'rows': 500}
+[10:32:33] dev10k already complete: {'cancellations': 50, 'complaints': 4335, 'completed': 10000, 'pending': 0, 'quarantine_reasons': {}, 'quarantined': 0, 'rows': 10000}
+[10:32:33] start final100k: caffeinate -i /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline run --run-id final100k --input data/subset_100k.csv --full-input data/raw/spotify_reviews_18months.csv
+[21:12:42] final100k exited rc=0 stop=completed coverage={'cancellations': 699, 'complaints': 43038, 'completed': 100050, 'pending': 0, 'quarantine_reasons': {'empty_review_text': 13}, 'quarantined': 13, 'rows': 100063}
+[21:12:42] sequence done

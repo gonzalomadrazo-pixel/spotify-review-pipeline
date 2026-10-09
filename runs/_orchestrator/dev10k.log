@@ -1,0 +1,34 @@
+[07:33:25] stage_start {"stage": "ingest", "input": "data/raw/analysis_10000.csv"}
+[07:33:26] stage_end {"stage": "ingest", "rows": 10000, "seeded": 10000, "duplicate_id_rows_excluded": 0}
+[07:33:26] invocation_start {"phase": "initial", "completed_before": 0, "budget_usd": 5.0, "workers": 1}
+[07:33:26] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[07:33:26] progress {"stage": "enrich", "pending_records": 10000, "pending_distinct_texts": 8448, "result_cache_hits": 479, "result_cache_hit_records": 1437, "requests_planned": 160}
+[19:45:19] stage_start {"stage": "ingest", "input": "data/raw/analysis_10000.csv"}
+[19:45:19] stage_end {"stage": "ingest", "rows": 10000, "seeded": 0, "existing": 10000}
+[19:45:19] invocation_start {"phase": "resume", "completed_before": 7339, "budget_usd": 5.0, "workers": 1}
+[19:45:19] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[19:45:19] progress {"stage": "enrich", "pending_records": 2661, "pending_distinct_texts": 2637, "result_cache_hits": 0, "result_cache_hit_records": 0, "requests_planned": 53}
+[22:18:38] stage_end {"stage": "enrich", "stop_reason": "completed", "seconds": 3541.146, "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "record_status_counts": {"completed": 10000}, "pending_records": 2661, "pending_distinct_texts": 2637, "result_cache_hits": 0, "result_cache_hit_records": 0, "requ
+[22:18:38] stage_start {"stage": "verify", "label_config": "gemma4:e2b-it-qat+verify-v1+vschema-v1+3ad8f1e4f8"}
+[22:20:36] stage_end {"stage": "verify", "sample_size": 84, "verified": 84, "errors": 0, "topic_agree": 65, "intent_agree": 73, "severity_exact": 72, "severity_within_1": 82, "disagreements": 27, "topic_agree_rate": 0.7738, "intent_agree_rate": 0.869, "severity_exact_rate": 0.8571, "severity_within_1_rate": 0.9762, "dis
+[22:20:36] stage_start {"stage": "rank"}
+[22:20:36] stage_end {"stage": "rank", "issues": 34, "seconds": 0.328}
+[22:20:36] stage_start {"stage": "group", "issues": 34}
+[22:27:27] stage_end {"stage": "group", "issues": 34, "calls": 34, "stop_reason": "completed", "seconds": 410.834}
+[22:27:27] stage_start {"stage": "memo"}
+[22:28:28] stage_end {"stage": "memo", "status": "checks_passed", "claims": 6, "extra_claims": 4, "seconds": 61.173}
+[22:28:28] invocation_end {"stop_reason": "completed", "completed_after": 10000, "spent_usd": 0.0}
+{
+  "run_id": "dev10k",
+  "stop_reason": "completed",
+  "coverage": {
+    "rows": 10000,
+    "completed": 10000,
+    "quarantined": 0,
+    "pending": 0,
+    "complaints": 4335,
+    "cancellations": 50,
+    "quarantine_reasons": {}
+  },
+  "spend_usd_actual": 0
+}

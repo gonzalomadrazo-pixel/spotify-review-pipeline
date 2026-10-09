@@ -1,0 +1,26 @@
+[04:24:07] stage_start {"stage": "ingest", "input": "data/subset_100k.csv"}
+[04:24:08] stage_end {"stage": "ingest", "rows": 100063, "seeded": 0, "existing": 100063}
+[04:24:08] invocation_start {"phase": "resume", "completed_before": 100050, "budget_usd": 5.0, "workers": 1}
+[04:24:08] stage_start {"stage": "rank"}
+[04:24:14] stage_end {"stage": "rank", "issues": 37, "seconds": 6.481}
+[04:24:14] stage_start {"stage": "group", "issues": 37}
+[04:24:14] stage_end {"stage": "group", "issues": 37, "calls": 0, "stop_reason": "completed", "seconds": 0.087}
+[04:24:14] stage_start {"stage": "memo"}
+[04:25:04] stage_end {"stage": "memo", "status": "checks_passed", "claims": 2, "extra_claims": 14, "seconds": 49.173}
+[04:25:04] invocation_end {"stop_reason": "completed", "completed_after": 100050, "spent_usd": 0.0}
+{
+  "run_id": "final100k",
+  "stop_reason": "completed",
+  "coverage": {
+    "rows": 100063,
+    "completed": 100050,
+    "quarantined": 13,
+    "pending": 0,
+    "complaints": 43038,
+    "cancellations": 699,
+    "quarantine_reasons": {
+      "empty_review_text": 13
+    }
+  },
+  "spend_usd_actual": 0
+}

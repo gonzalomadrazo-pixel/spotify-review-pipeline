@@ -24,3 +24,8 @@ dashboard/.vercel/
 runs/_orchestrator/*.pid
 state_evals/
 dashboard/frontend/tsconfig.tsbuildinfo
+# final run: the two large JSONL files are committed as .jsonl.gz (finalize writes them; readers fall back to .gz)
+runs/final100k/enriched.jsonl
+runs/final100k/records.jsonl
+# checkpoints of the memo-only re-runs (invocations 4-8) repeat inv03 record states; run_summary.json records them
+runs/final100k/checkpoints/inv0[4-8]_*.json

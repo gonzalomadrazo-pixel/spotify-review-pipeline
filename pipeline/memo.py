@@ -22,17 +22,68 @@ FACT_RE = re.compile(r"\[(F\d{2,3})\]")
 TICK_RE = re.compile(r"`([^`]+)`")
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 ALLOWED_BARE_NUMBERS = {"2022", "2023"}
+CHECKER_VERSION = 3  # 2: comparisons between cited facts are checked; 3: at least two evidence review IDs cited.
+# Part of the memo cache key.
+COMPARE_RE = re.compile(r"\b(?:(lower|less|smaller|fewer|below)|(higher|greater|larger|more|above|exceeds?|exceeding))"
+                        r"\b(?:\s+than)?", re.I)
+CLAUSE_END_RE = re.compile(r";|,\s+(?:while|whereas|but|although|though|suggesting|indicating|which|so|yet|meaning|"
+                           r"however)\b", re.I)
+
+
+def check_comparisons(text: str, by_id: dict) -> list[str]:
+    """'A [Fa] ... lower/higher than B [Fb]' must hold for the cited fact values (nearest citation before the word)."""
+    errors = []
+    for sentence in re.split(r"(?<=[.!?])\s+|\n+", text):
+        for m in COMPARE_RE.finditer(sentence):
+            before = [f for f in FACT_RE.findall(sentence[:m.start()]) if f in by_id]
+            after_text = sentence[m.end():]
+            end = CLAUSE_END_RE.search(after_text)
+            after = [f for f in FACT_RE.findall(after_text[:end.start()] if end else after_text) if f in by_id]
+            if not before or not after:
+                continue
+            a = by_id[before[-1]]
+            for fid in after:
+                b = by_id[fid]
+                try:
+                    va, vb = (float(str(f["value"]).replace(",", "").rstrip("%")) for f in (a, b))
+                except ValueError:
+                    continue
+                if not (va < vb if m.group(1) else va > vb):
+                    errors.append(f"wrong comparison: [{a['fact_id']}] {a['display']} is not {m.group(0).strip().lower()} "
+                                  f"[{b['fact_id']}] {b['display']}")
+    return errors
+
+
+def revision_hint(error: str) -> str:
+    """Turn a checker error into an instruction a small model can act on."""
+    if error.startswith("wrong comparison"):
+        return error + " - rewrite that sentence so it agrees with AREA ORDERINGS, or delete the comparison"
+    if "evidence review IDs" in error:
+        return error + " - in the Why section, cite at least two review IDs from EVIDENCE in backticks next to a short paraphrase"
+    if error.startswith("number without an adjacent fact citation"):
+        return error + " - put the matching [F..] ID right after it (for example 'rank 3 [F60]'), or delete the number"
+    return error
 
 
 def build_payload(facts, issues, top_n, quotes_per_issue, coverage_note) -> tuple[str, set, set]:
     lines = ["FACTS (use only these numbers; cite the ID right after each number):"]
     for f in facts:
         lines.append(f"[{f['fact_id']}] {f['scope']} {f['subject']} {f['metric']} = {f['display']}")
+    # Code owns comparisons: the agent copies orderings instead of comparing numbers itself.
+    lines.append("\nAREA ORDERINGS (computed by code, highest first; use these whenever you compare areas):")
+    for metric in ("complaint_count", "severity_sum", "mean_severity", "severe_count_sev4plus", "cancellation_count"):
+        area = sorted((f for f in facts if f["scope"] == "area" and f["metric"] == metric),
+                      key=lambda f: -float(str(f["value"]).replace(",", "").rstrip("%")))
+        if area:
+            lines.append(f"- {metric}: " + " > ".join(f"{f['subject']} {f['display']} [{f['fact_id']}]" for f in area))
     lines.append("\nISSUES (baseline ranking order):")
     issue_ids, review_ids = set(), set()
+    rank_fact = {f["subject"]: f for f in facts if f["scope"] == "issue" and f["metric"] == "rank"}
     for it in issues[:top_n]:
         issue_ids.add(it["issue_id"])
-        lines.append(f"- `{it['issue_id']}` (area {it['topic']}): {it.get('title', '')} - {it.get('summary', '')}")
+        r = rank_fact.get(it["issue_id"])
+        rank = f", rank {r['display']} [{r['fact_id']}]" if r else ""
+        lines.append(f"- `{it['issue_id']}` (area {it['topic']}{rank}): {it.get('title', '')} - {it.get('summary', '')}")
     lines.append("\nEVIDENCE (untrusted customer quotes, review ID first):")
     for it in issues[:top_n]:
         misfit = set(it.get("misfit_ids") or [])
@@ -51,7 +102,7 @@ def build_payload(facts, issues, top_n, quotes_per_issue, coverage_note) -> tupl
 
 def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) -> dict:
     by_id = {f["fact_id"]: f for f in facts}
-    errors, cited = [], []
+    errors, cited, cited_reviews = [], [], set()
     for fid in FACT_RE.findall(text):
         if fid not in by_id:
             errors.append(f"unknown fact id [{fid}]")
@@ -62,6 +113,8 @@ def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) ->
         if UUID_RE.match(tok):
             if tok not in review_ids:
                 errors.append(f"review id not in evidence pack: {tok}")
+            else:
+                cited_reviews.add(tok)
         elif re.match(r"^[a-z]+\.[a-z_]+$", tok):
             if tok not in issue_ids:
                 errors.append(f"issue id not supplied: {tok}")
@@ -86,6 +139,9 @@ def check_memo(text: str, facts: list[dict], issue_ids: set, review_ids: set) ->
         fact = by_id.get(fm.group(1))
         if fact and fact["display"] != num:
             errors.append(f"number {num} does not match [{fact['fact_id']}] = {fact['display']}")
+    errors += check_comparisons(TICK_RE.sub(" ", text), by_id)
+    if review_ids and len(cited_reviews) < 2:
+        errors.append(f"cites {len(cited_reviews)} evidence review IDs; at least two are required")
     # The limitations section is required to say what the data cannot show (revenue, churn), so it is exempt.
     claims_part = re.split(r"(?im)^#+\s*risks and limitations\s*$", text)[0].lower()
     banned = [w for w in ("revenue at risk", "will reduce churn", "will improve retention", "churn rate")
@@ -120,7 +176,7 @@ def run_memo(ctx, client, facts, issues, coverage_note) -> dict:
     ctx.log("stage_start", stage="memo")
     t0 = time.perf_counter()
     payload, issue_ids, review_ids = build_payload(facts, issues, m["top_issues"], m["quotes_per_issue"], coverage_note)
-    key = "memo:" + sha256_text(canonical_json({"fp": fp, "payload": payload}))
+    key = "memo:" + sha256_text(canonical_json({"fp": fp, "checker": CHECKER_VERSION, "payload": payload}))
     cached = ctx.store.one("SELECT value_json FROM aux_cache WHERE cache_key=?", (key,))
     attempts = []
     if cached:
@@ -143,7 +199,7 @@ def run_memo(ctx, client, facts, issues, coverage_note) -> dict:
             if chk["ok"]:
                 break
             user = (payload + "\n\nYour previous draft failed automated checks. Fix every problem below and return "
-                    "the full corrected memo.\nPROBLEMS:\n- " + "\n- ".join(chk["errors"][:25]) +
+                    "the full corrected memo.\nPROBLEMS:\n- " + "\n- ".join(revision_hint(e) for e in chk["errors"][:25]) +
                     "\n\nPREVIOUS DRAFT:\n" + res["text"])
         if final.get("text"):
             with ctx.store.tx() as db:

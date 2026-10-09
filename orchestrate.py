@@ -19,8 +19,10 @@ new model work for completed reviews. Logs go to runs/_orchestrator/.
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import os
+import shutil
 import signal
 import socket
 import subprocess
@@ -217,6 +219,12 @@ def cmd_finalize(args) -> int:
     step("README results block", [PY, "-m", "pipeline", "results", "--run-id", run_id, "--readme", "README.md"])
     step("load dashboard database", ["uv", "run", "--group", "dashboard", "python", "dashboard/load_db.py",
                                      "--run-id", run_id, "--input", inp])
+    for name in ("enriched.jsonl", "records.jsonl"):  # 40-70 MB raw: committed gzipped, readers fall back to .gz
+        src = ROOT / "runs" / run_id / name
+        with src.open("rb") as fi, open(src.with_name(name + ".gz"), "wb") as raw_out, \
+                gzip.GzipFile(fileobj=raw_out, mode="wb", compresslevel=9, mtime=0) as fo:
+            shutil.copyfileobj(fi, fo)
+    say(f"compressed runs/{run_id}/enriched.jsonl and records.jsonl to .gz for the repository")
     if args.deploy:
         step("deploy dashboard (Vercel, free plan)", ["vercel", "deploy", "--prod", "--yes"], cwd=ROOT / "dashboard")
     say("finalize done")

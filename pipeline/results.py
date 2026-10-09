@@ -56,6 +56,9 @@ def build_results(run_dir: Path) -> str:
     invocations = s.get("invocations", [])
     elapsed = _hours(invocations)
     unfinished = sum(1 for inv in invocations if not inv.get("ended_at"))
+    labeling = sum(1 for inv in invocations if (inv.get("completed_after") or 0) > (inv.get("completed_before") or 0))
+    rerun_note = (f" ({labeling} that classified reviews, {len(invocations) - labeling} that only re-ran downstream stages "
+                  "such as the memo)" if labeling < len(invocations) else "")
     lc = (_json(ROOT / "cost" / "assumptions.json") or {}).get("local_compute", {})
     kwh = (call_hours if call_hours is not None else elapsed) * lc.get("watts_under_load", 0) / 1000
     with (run_dir / "ranking.csv").open(encoding="utf-8", newline="") as f:
@@ -76,7 +79,7 @@ def build_results(run_dir: Path) -> str:
          f"| model calls (attempts, incl. failures) | {attempts:,} attempts, {failed:,} failed |",
          f"| tokens (input incl. cached / output) | {in_tok:,} / {out_tok:,} |",
          f"| API spend | **${s.get('spend_usd_actual', 0):.2f}** (local model; budget cap ${s.get('budget_usd', 0):.2f}) |",
-         f"| elapsed time across invocations | {elapsed:.1f} h over {len(invocations)} invocation(s)"
+         f"| elapsed time across invocations | {elapsed:.1f} h over {len(invocations)} invocation(s){rerun_note}"
          f"{f', {unfinished} ended without a clean stop (process killed) and is not timed' if unfinished else ''}; "
          f"includes laptop sleep pauses. Summed model-call time "
          f"{'n/a' if call_hours is None else f'{call_hours:.1f} h'} (sleep excluded) |",

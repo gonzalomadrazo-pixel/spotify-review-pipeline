@@ -53,8 +53,8 @@
   },
   "memo": {
     "model": "gemma4:e2b-it-qat",
-    "prompt_file": "prompts/memo_v1.md",
-    "prompt_version": "memo-v1",
+    "prompt_file": "prompts/memo_v2.md",
+    "prompt_version": "memo-v2",
     "temperature": 0,
     "top_issues": 10,
     "quotes_per_issue": 3,

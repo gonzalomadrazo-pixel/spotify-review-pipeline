@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gzip
 import html
 import json
 import math
@@ -56,7 +57,10 @@ def load_rates(path, multiplier=1.0):
 
 
 def load_jsonl(path):
-    with open(path, encoding="utf-8") as f:
+    path = Path(path)
+    if not path.exists() and path.with_name(path.name + ".gz").exists():
+        path = path.with_name(path.name + ".gz")  # large run files are committed gzipped
+    with (gzip.open if path.suffix == ".gz" else open)(path, "rt", encoding="utf-8") as f:
         return [json.loads(l) for l in f if l.strip()]
 
 

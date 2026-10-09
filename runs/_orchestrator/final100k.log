@@ -1,0 +1,79 @@
+[22:28:29] stage_start {"stage": "ingest", "input": "data/subset_100k.csv"}
+[22:28:37] stage_end {"stage": "ingest", "rows": 100063, "seeded": 100063, "duplicate_id_rows_excluded": 0}
+[22:28:37] invocation_start {"phase": "initial", "completed_before": 0, "budget_usd": 5.0, "workers": 1}
+[22:28:37] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[22:28:38] progress {"stage": "enrich", "pending_records": 100050, "pending_distinct_texts": 78137, "result_cache_hits": 8448, "result_cache_hit_records": 26649, "requests_planned": 1394}
+[22:48:37] stage_end {"stage": "enrich", "stop_reason": "stop_file", "seconds": 1200.29, "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "record_status_counts": {"completed": 27337, "pending": 72713, "quarantined": 13}, "pending_records": 100050, "pending_distinct_texts": 78137, "result_cache_hits": 
+[22:48:38] stage_skipped {"stage": "downstream", "reason": "enrichment incomplete (stop=stop_file, pending=72713); rerun the same command to resume"}
+[22:48:38] invocation_end {"stop_reason": "stop_file", "completed_after": 27337, "spent_usd": 0.0}
+{
+  "run_id": "final100k",
+  "stop_reason": "stop_file",
+  "coverage": {
+    "rows": 100063,
+    "completed": 27337,
+    "quarantined": 13,
+    "pending": 72713,
+    "complaints": 7936,
+    "cancellations": 58,
+    "quarantine_reasons": {
+      "empty_review_text": 13
+    }
+  },
+  "spend_usd_actual": 0
+}
+[22:48:43] stage_start {"stage": "ingest", "input": "data/subset_100k.csv"}
+[22:48:43] stage_end {"stage": "ingest", "rows": 100063, "seeded": 0, "existing": 100063}
+[22:48:43] invocation_start {"phase": "resume", "completed_before": 27337, "budget_usd": 5.0, "workers": 1}
+[22:48:43] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[22:48:44] progress {"stage": "enrich", "pending_records": 72713, "pending_distinct_texts": 69189, "result_cache_hits": 0, "result_cache_hit_records": 0, "requests_planned": 1384}
+[17:31:43] stage_end {"stage": "enrich", "stop_reason": "stop_file", "seconds": 66490.827, "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "record_status_counts": {"completed": 81377, "pending": 18673, "quarantined": 13}, "pending_records": 72713, "pending_distinct_texts": 69189, "result_cache_hits":
+[17:31:44] stage_skipped {"stage": "downstream", "reason": "enrichment incomplete (stop=stop_file, pending=18673); rerun the same command to resume"}
+[17:31:45] invocation_end {"stop_reason": "stop_file", "completed_after": 81377, "spent_usd": 0.0}
+{
+  "run_id": "final100k",
+  "stop_reason": "stop_file",
+  "coverage": {
+    "rows": 100063,
+    "completed": 81377,
+    "quarantined": 13,
+    "pending": 18673,
+    "complaints": 29555,
+    "cancellations": 242,
+    "quarantine_reasons": {
+      "empty_review_text": 13
+    }
+  },
+  "spend_usd_actual": 0
+}
+[17:32:33] stage_start {"stage": "ingest", "input": "data/subset_100k.csv"}
+[17:32:33] stage_end {"stage": "ingest", "rows": 100063, "seeded": 0, "existing": 100063}
+[17:32:34] invocation_start {"phase": "resume", "completed_before": 81377, "budget_usd": 5.0, "workers": 1}
+[17:32:34] stage_start {"stage": "enrich", "mode": "sync", "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "workers": 1}
+[17:32:34] progress {"stage": "enrich", "pending_records": 18673, "pending_distinct_texts": 18540, "result_cache_hits": 0, "result_cache_hit_records": 0, "requests_planned": 371}
+[03:52:12] stage_end {"stage": "enrich", "stop_reason": "completed", "seconds": 23086.88, "label_config": "gemma4:e2b-it-qat+enrich-v2+schema-v2+563118972d", "record_status_counts": {"completed": 100050, "quarantined": 13}, "pending_records": 18673, "pending_distinct_texts": 18540, "result_cache_hits": 0, "result_cache_
+[03:52:12] stage_start {"stage": "verify", "label_config": "gemma4:e2b-it-qat+verify-v1+vschema-v1+3ad8f1e4f8"}
+[04:06:11] stage_end {"stage": "verify", "sample_size": 781, "verified": 781, "errors": 0, "topic_agree": 601, "intent_agree": 681, "severity_exact": 615, "severity_within_1": 758, "disagreements": 266, "topic_agree_rate": 0.7695, "intent_agree_rate": 0.872, "severity_exact_rate": 0.7875, "severity_within_1_rate": 0.970
+[04:06:11] stage_start {"stage": "rank"}
+[04:06:20] stage_end {"stage": "rank", "issues": 37, "seconds": 9.542}
+[04:06:20] stage_start {"stage": "group", "issues": 37}
+[04:11:52] stage_end {"stage": "group", "issues": 37, "calls": 37, "stop_reason": "completed", "seconds": 331.878}
+[04:11:54] stage_start {"stage": "memo"}
+[04:12:29] stage_end {"stage": "memo", "status": "checks_passed", "claims": 5, "extra_claims": 6, "seconds": 35.669}
+[04:12:30] invocation_end {"stop_reason": "completed", "completed_after": 100050, "spent_usd": 0.0}
+{
+  "run_id": "final100k",
+  "stop_reason": "completed",
+  "coverage": {
+    "rows": 100063,
+    "completed": 100050,
+    "quarantined": 13,
+    "pending": 0,
+    "complaints": 43038,
+    "cancellations": 699,
+    "quarantine_reasons": {
+      "empty_review_text": 13
+    }
+  },
+  "spend_usd_actual": 0
+}

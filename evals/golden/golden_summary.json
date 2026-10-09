@@ -1,0 +1,114 @@
+{
+  "agreement": {
+    "intent": 0.8,
+    "joint": 0.38,
+    "severity": 0.7,
+    "topic": 0.5
+  },
+  "ambiguous_cases": 0,
+  "cases": 50,
+  "entities_all_supported_rate": 1.0,
+  "evidence_quote_exact_substring_rate": 1.0,
+  "intent_macro_f1": 0.5591,
+  "intent_per_class": {
+    "cancellation": {
+      "f1": 0.0,
+      "precision": null,
+      "predicted": 0,
+      "recall": 0.0,
+      "support": 1
+    },
+    "complaint": {
+      "f1": 0.8205,
+      "precision": 0.7619,
+      "predicted": 21,
+      "recall": 0.8889,
+      "support": 18
+    },
+    "praise": {
+      "f1": 0.9545,
+      "precision": 1.0,
+      "predicted": 21,
+      "recall": 0.913,
+      "support": 23
+    },
+    "request": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "predicted": 3,
+      "recall": null,
+      "support": 0
+    },
+    "unclear": {
+      "f1": 0.4615,
+      "precision": 0.6,
+      "predicted": 5,
+      "recall": 0.375,
+      "support": 8
+    }
+  },
+  "missing_or_quarantined_predictions": 0,
+  "needs_review_as_prediction": {
+    "fn": 0,
+    "fp": 14,
+    "tp": 0
+  },
+  "note": "Agreement denominators include missing/quarantined predictions. Fifty cases are a small diagnostic sample, not a population accuracy estimate.",
+  "sentiment_mae": 0.45,
+  "sentiment_tolerance": 0.5,
+  "sentiment_within_tolerance": 0.74,
+  "severity_mae": 0.44,
+  "severity_within_1": 0.88,
+  "topic_macro_f1": 0.3256,
+  "topic_per_class": {
+    "billing": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "predicted": 3,
+      "recall": null,
+      "support": 0
+    },
+    "catalog": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "predicted": 5,
+      "recall": null,
+      "support": 0
+    },
+    "downloads": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "predicted": 1,
+      "recall": null,
+      "support": 0
+    },
+    "other": {
+      "f1": 0.6769,
+      "precision": 0.8462,
+      "predicted": 26,
+      "recall": 0.5641,
+      "support": 39
+    },
+    "playback": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "predicted": 5,
+      "recall": null,
+      "support": 0
+    },
+    "support": {
+      "f1": 0.0,
+      "precision": null,
+      "predicted": 0,
+      "recall": 0.0,
+      "support": 1
+    },
+    "usability": {
+      "f1": 0.3,
+      "precision": 0.3,
+      "predicted": 10,
+      "recall": 0.3,
+      "support": 10
+    }
+  }
+}

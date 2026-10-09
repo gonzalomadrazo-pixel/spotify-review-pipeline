@@ -78,6 +78,8 @@ def write_csv(path: Path, fieldnames, rows) -> int:
 def read_jsonl(path: Path):
     import gzip
     path = Path(path)
+    if not path.exists() and path.with_name(path.name + ".gz").exists():
+        path = path.with_name(path.name + ".gz")  # large run files are committed gzipped
     opener = gzip.open if path.suffix == ".gz" else open
     with opener(path, "rt", encoding="utf-8") as f:
         for line in f:

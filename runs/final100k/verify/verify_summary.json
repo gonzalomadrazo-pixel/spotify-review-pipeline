@@ -1,0 +1,19 @@
+{
+  "disagreements": 266,
+  "disagreements_rate": 0.3406,
+  "errors": 0,
+  "intent_agree": 681,
+  "intent_agree_rate": 0.872,
+  "label_config": "gemma4:e2b-it-qat+verify-v1+vschema-v1+3ad8f1e4f8",
+  "sample_rule": "lowest sha256('verify-sample-v1:'+review_id) among directly labeled distinct texts; fraction=0.01, min=50, max=2000",
+  "sample_size": 781,
+  "seconds": 838.439,
+  "severity_exact": 615,
+  "severity_exact_rate": 0.7875,
+  "severity_within_1": 758,
+  "severity_within_1_rate": 0.9706,
+  "stop_reason": "completed",
+  "topic_agree": 601,
+  "topic_agree_rate": 0.7695,
+  "verified": 781
+}

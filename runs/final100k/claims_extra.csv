@@ -1,0 +1,15 @@
+claim_id,scope,subject,metric,value,display,formula
+F07,area,access,complaint_count,1896,"1,896",complaint+cancellation records whose topic maps to area
+F101,trend,jun_oct_2022:usability,complaints_per_100_reviews,12.0%,12.0%,"usability complaint records / all reviews in jun_oct_2022, as %"
+F106,trend,jun_oct_2023:usability,complaints_per_100_reviews,14.6%,14.6%,"usability complaint records / all reviews in jun_oct_2023, as %"
+F13,area,usability,complaint_count,13815,"13,815",complaint+cancellation records whose topic maps to area
+F16,area,usability,severity_sum,32581,"32,581",sum of member severities
+F19,area,playback,complaint_count,6627,"6,627",complaint+cancellation records whose topic maps to area
+F22,area,playback,severity_sum,21121,"21,121",sum of member severities
+F23,area,playback,severe_count_sev4plus,1733,"1,733",complaints with severity >= 4
+F25,area,billing_support,complaint_count,7695,"7,695",complaint+cancellation records whose topic maps to area
+F28,area,billing_support,severity_sum,22741,"22,741",sum of member severities
+F54,issue,billing.free_tier_limits,rank,2,2,"baseline rank (desc priority_score, asc issue_id)"
+F59,issue,usability.ads,rank,3,3,"baseline rank (desc priority_score, asc issue_id)"
+F64,issue,usability.interface,rank,4,4,"baseline rank (desc priority_score, asc issue_id)"
+F69,issue,playback.interruptions,rank,5,5,"baseline rank (desc priority_score, asc issue_id)"

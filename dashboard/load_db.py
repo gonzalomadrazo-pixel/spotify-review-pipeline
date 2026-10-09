@@ -182,7 +182,7 @@ def main():
                    or f"sqlite:///{(Path(__file__).parent / 'dashboard.db').as_posix()}")
     args = p.parse_args()
     run_dir = Path(args.runs_dir) / args.run_id
-    if not (run_dir / "records.jsonl").exists():
+    if not any((run_dir / n).exists() for n in ("records.jsonl", "records.jsonl.gz")):
         raise SystemExit(f"No saved run at {run_dir}")
     counts = load(args.database_url, build_rows(run_dir, Path(args.input)))
     target = args.database_url.split("@")[-1] if "@" in args.database_url else args.database_url

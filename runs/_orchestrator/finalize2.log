@@ -1,0 +1,157 @@
+[21:25:29] planted-error test: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline planted-errors --run-id final100k --n 12
+planted 12 synthetic label errors; flagged by verifier comparison: 12
+[21:25:29] end-to-end trace: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline trace --run-id final100k --out evals/trace.md
+wrote evals/trace.md
+[21:25:48] golden-set evaluation: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline eval-golden --run-id final100k
+{
+  "cases": 50,
+  "ambiguous_cases": 0,
+  "missing_or_quarantined_predictions": 0,
+  "agreement": {
+    "topic": 0.5,
+    "intent": 0.8,
+    "severity": 0.7,
+    "joint": 0.38
+  },
+  "severity_within_1": 0.88,
+  "severity_mae": 0.44,
+  "sentiment_mae": 0.45,
+  "sentiment_within_tolerance": 0.74,
+  "sentiment_tolerance": 0.5,
+  "evidence_quote_exact_substring_rate": 1.0,
+  "entities_all_supported_rate": 1.0,
+  "needs_review_as_prediction": {
+    "tp": 0,
+    "fp": 14,
+    "fn": 0
+  },
+  "topic_macro_f1": 0.3256,
+  "intent_macro_f1": 0.5591,
+  "note": "Agreement denominators include missing/quarantined predictions. Fifty cases are a small diagnostic sample, not a population accuracy estimate."
+}
+[21:25:53] grading export: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline export-grading --run-id final100k --input data/subset_100k.csv --out grading --before /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/final100k/checkpoints/inv01_stop_file.json --after /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/final100k/checkpoints/inv03_completed.json
+{
+  "records": 100063,
+  "calls_own": 1460,
+  "calls_reused_from_other_runs": 170
+}
+[21:26:03] checker reference: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python /Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/check_submission.py reference --full data/raw/spotify_reviews_18months.csv --analysis data/subset_100k.csv --out /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/_orchestrator/local-reference.json
+Saved deterministic audit output to /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/_orchestrator/local-reference.json
+[21:26:10] checker self-check: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python /Users/gonzalomadrazo/Claude/spotify-review-pipeline/data/raw/check_submission.py check --reference /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/_orchestrator/local-reference.json --submission grading --out /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/_orchestrator/self-check.json
+Saved deterministic audit output to /Users/gonzalomadrazo/Claude/spotify-review-pipeline/runs/_orchestrator/self-check.json
+[21:26:11] self-check: status=pass issues={} coverage_point_candidate=1.0
+[21:26:11] cost report with the final run's measured row: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python cost/calculator.py
+cold API $0.000000  wall 291.57s | warm API $0.000000  wall 0.30s  enrichment calls warm=0
+  local_base                     API $0.00  local 30.1 h  ok
+  local_conservative             API $0.00  local 32.8 h  ok
+  modeled_alt_haiku_batch_api    API $9.93  EXCEEDS BUDGET
+  modeled_alt_haiku_standard     API $19.82  EXCEEDS BUDGET
+wrote cost/report.md, cost/report.html, cost/usage.csv
+[21:26:12] README results block: /Users/gonzalomadrazo/Claude/spotify-review-pipeline/.venv/bin/python -m pipeline results --run-id final100k --readme README.md
+updated the results block in README.md
+[21:26:12] load dashboard database: uv run --group dashboard python dashboard/load_db.py --run-id final100k --input data/subset_100k.csv
+{
+  "database": "sqlite:////Users/gonzalomadrazo/Claude/spotify-review-pipeline/dashboard/dashboard.db",
+  "rows": {
+    "run_info": 1,
+    "reviews": 100063,
+    "issues": 37,
+    "membership": 43038,
+    "area_rollup": 7,
+    "trend_monthly": 152,
+    "facts": 108,
+    "claims": 2,
+    "memo": 1,
+    "verification": 781,
+    "evidence_docs": 6
+  }
+}
+[21:26:19] compressed runs/final100k/enriched.jsonl and records.jsonl to .gz for the repository
+[21:26:19] deploy dashboard (Vercel, free plan): vercel deploy --prod --yes
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 59.11.2 (Node.js 24.20.0)
+Deploying spotify-review-insights
+Uploading [--------------------] (0.0B/59.4MB)
+Uploading [=====---------------] (14.9MB/59.4MB)
+Uploading [==========----------] (29.7MB/59.4MB)
+Uploading [===============-----] (44.5MB/59.4MB)
+Uploading [====================] (59.4MB/59.4MB)
+  Inspect         https://vercel.com/personal-workspace9/spotify-review-insights/Ghbafv4aXNzGpeXpgkWJcbTE3MxB
+  Production      https://spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app
+Building…
+Building…
+Running build in Washington, D.C., USA (East) – iad1
+Build machine configuration: 2 cores, 8 GB
+Retrieving list of deployment files...
+Downloading 25 deployment files...
+Restored build cache from previous deployment (75M175ToVjKA2eMCdZePkoD39jqf)
+Running "vercel build"
+Vercel CLI 62.1.0
+Running "install" command: `cd frontend && npm ci`...
+npm warn deprecated recharts@2.15.4: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
+added 109 packages, and audited 110 packages in 4s
+7 packages are looking for funding
+run `npm fund` for details
+4 vulnerabilities (3 moderate, 1 high)
+To address all issues (including breaking changes), run:
+npm audit fix --force
+Run `npm audit` for details.
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+npm warn install-scripts   esbuild@0.21.5 (postinstall: node install.js)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+> spotify-review-dashboard@1.0.0 build
+> tsc -b && vite build
+vite v5.4.21 building for production...
+transforming...
+✓ 842 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:   0.27 kB
+dist/assets/index-KbKHf03C.css    5.80 kB │ gzip:   1.88 kB
+dist/assets/index-IcEXSzgn.js   584.54 kB │ gzip: 168.97 kB
+✓ built in 11.96s
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+No Python version specified in .python-version, pyproject.toml, or Pipfile.lock. Using python version: 3.12
+Using uv 0.10.11
+Installing required dependencies from requirements.txt...
+Compiling Python bytecode...
+Build Completed in /vercel/output [23s]
+Deploying outputs...
+[2K[1A[2K[G  Production      https://spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app
+Completing…
+▲ Aliased         https://spotify-review-insights-beta.vercel.app
+{
+  "status": "ok",
+  "deployment": {
+    "id": "dpl_Ghbafv4aXNzGpeXpgkWJcbTE3MxB",
+    "url": "https://spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app",
+    "inspectorUrl": "https://vercel.com/personal-workspace9/spotify-review-insights/Ghbafv4aXNzGpeXpgkWJcbTE3MxB",
+    "readyState": "READY",
+    "target": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_Ghbafv4aXNzGpeXpgkWJcbTE3MxB"
+  },
+  "message": "Deployment spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app ready.",
+  "next": [
+    {
+      "command": "vercel git connect",
+      "when": "Automatically deploy changes on every push"
+    },
+    {
+      "command": "vercel curl https://spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app",
+      "when": "Verify deployment, including when Deployment Protection is enabled"
+    },
+    {
+      "command": "vercel inspect spotify-review-insights-2jddei9t7-personal-workspace9.vercel.app",
+      "when": "Inspect deployment"
+    },
+    {
+      "command": "vercel deploy --prod",
+      "when": "Promote to production"
+    }
+  ]
+}
+[21:27:14] finalize done

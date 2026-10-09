@@ -145,7 +145,7 @@
       "mean_enrich_latency_s": 50.908100000000005,
       "output_tokens_per_text": 24.045929018789145,
       "api_usd": 0.0,
-      "projected_local_hours": 22.92617210785714,
+      "projected_local_hours": 22.926172107857145,
       "projected_haiku_batch_usd": 9.33508727457575
     },
     {
@@ -160,6 +160,19 @@
       "api_usd": 0.0,
       "projected_local_hours": 29.437312205782895,
       "projected_haiku_batch_usd": 9.326216346330853
+    },
+    {
+      "checkpoint": "final100k",
+      "source": "runs/final100k/calls.jsonl (data/subset_100k.csv)",
+      "records": 100063,
+      "texts_labeled_by_model": 69689,
+      "enrich_requests": 1401,
+      "failed_or_unknown_calls": 0,
+      "mean_enrich_latency_s": 64.63002926481094,
+      "output_tokens_per_text": 24.291695963494956,
+      "api_usd": 0.0,
+      "projected_local_hours": 29.10482589390887,
+      "projected_haiku_batch_usd": 10.35525657745123
     }
   ],
   "projections": {
@@ -394,11 +407,11 @@
             "total_api": 0.0
           },
           "usd_per_1000_rows": 0.0,
-          "local_hours": 202.24937990526317,
+          "local_hours": 202.2493799052632,
           "local_compute": {
-            "hours": 202.24937990526317,
-            "kwh": 5.056234497631579,
-            "usd_estimate": 1.7696820741710526
+            "hours": 202.2493799052632,
+            "kwh": 5.05623449763158,
+            "usd_estimate": 1.769682074171053
           },
           "time_basis": "9,684 enrich requests x 66.9s measured mean latency x (1+retry) / 1 worker(s) + verify/fallback/group/memo at their measured latencies",
           "exceeds_budget": false,

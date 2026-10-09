@@ -1,0 +1,160 @@
+FACTS (use only these numbers; cite the ID right after each number):
+[F01] corpus all source_rows = 100,063
+[F02] corpus all completed_classifications = 100,050
+[F03] corpus all quarantined_records = 13
+[F04] corpus all pending_records = 0
+[F05] corpus all complaint_or_cancellation_records = 43,038
+[F06] corpus all cancellation_records = 699
+[F07] area access complaint_count = 1,896
+[F08] area access share_of_complaints = 4.4%
+[F09] area access mean_severity = 3.46
+[F10] area access severity_sum = 6,551
+[F11] area access severe_count_sev4plus = 1,140
+[F12] area access cancellation_count = 232
+[F13] area usability complaint_count = 13,815
+[F14] area usability share_of_complaints = 32.1%
+[F15] area usability mean_severity = 2.36
+[F16] area usability severity_sum = 32,581
+[F17] area usability severe_count_sev4plus = 32
+[F18] area usability cancellation_count = 33
+[F19] area playback complaint_count = 6,627
+[F20] area playback share_of_complaints = 15.4%
+[F21] area playback mean_severity = 3.19
+[F22] area playback severity_sum = 21,121
+[F23] area playback severe_count_sev4plus = 1,733
+[F24] area playback cancellation_count = 3
+[F25] area billing_support complaint_count = 7,695
+[F26] area billing_support share_of_complaints = 17.9%
+[F27] area billing_support mean_severity = 2.96
+[F28] area billing_support severity_sum = 22,741
+[F29] area billing_support severe_count_sev4plus = 281
+[F30] area billing_support cancellation_count = 121
+[F31] area downloads complaint_count = 423
+[F32] area downloads share_of_complaints = 1.0%
+[F33] area downloads mean_severity = 3.01
+[F34] area downloads severity_sum = 1,273
+[F35] area downloads severe_count_sev4plus = 33
+[F36] area downloads cancellation_count = 0
+[F37] area catalog complaint_count = 2,811
+[F38] area catalog share_of_complaints = 6.5%
+[F39] area catalog mean_severity = 2.69
+[F40] area catalog severity_sum = 7,557
+[F41] area catalog severe_count_sev4plus = 19
+[F42] area catalog cancellation_count = 28
+[F43] area other complaint_count = 9,771
+[F44] area other share_of_complaints = 22.7%
+[F45] area other mean_severity = 2.00
+[F46] area other severity_sum = 19,588
+[F47] area other severe_count_sev4plus = 10
+[F48] area other cancellation_count = 282
+[F49] issue other.general rank = 1
+[F50] issue other.general complaint_count = 9,346
+[F51] issue other.general severity_sum = 18,733
+[F52] issue other.general mean_severity = 2.00
+[F53] issue other.general priority_score = 18,733
+[F54] issue billing.free_tier_limits rank = 2
+[F55] issue billing.free_tier_limits complaint_count = 5,908
+[F56] issue billing.free_tier_limits severity_sum = 17,680
+[F57] issue billing.free_tier_limits mean_severity = 2.99
+[F58] issue billing.free_tier_limits priority_score = 17,680
+[F59] issue usability.ads rank = 3
+[F60] issue usability.ads complaint_count = 5,847
+[F61] issue usability.ads severity_sum = 12,892
+[F62] issue usability.ads mean_severity = 2.20
+[F63] issue usability.ads priority_score = 12,892
+[F64] issue usability.interface rank = 4
+[F65] issue usability.interface complaint_count = 3,945
+[F66] issue usability.interface severity_sum = 8,487
+[F67] issue usability.interface mean_severity = 2.15
+[F68] issue usability.interface priority_score = 8,487
+[F69] issue playback.interruptions rank = 5
+[F70] issue playback.interruptions complaint_count = 2,109
+[F71] issue playback.interruptions severity_sum = 6,349
+[F72] issue playback.interruptions mean_severity = 3.01
+[F73] issue playback.interruptions priority_score = 6,349
+[F74] issue playback.crash rank = 6
+[F75] issue playback.crash complaint_count = 1,528
+[F76] issue playback.crash severity_sum = 6,020
+[F77] issue playback.crash mean_severity = 3.94
+[F78] issue playback.crash priority_score = 6,020
+[F79] issue usability.controls rank = 7
+[F80] issue usability.controls complaint_count = 2,081
+[F81] issue usability.controls severity_sum = 5,848
+[F82] issue usability.controls mean_severity = 2.81
+[F83] issue usability.controls priority_score = 5,848
+[F84] issue usability.library_queue rank = 8
+[F85] issue usability.library_queue complaint_count = 1,869
+[F86] issue usability.library_queue severity_sum = 5,202
+[F87] issue usability.library_queue mean_severity = 2.78
+[F88] issue usability.library_queue priority_score = 5,202
+[F89] issue access.login rank = 9
+[F90] issue access.login complaint_count = 957
+[F91] issue access.login severity_sum = 3,716
+[F92] issue access.login mean_severity = 3.88
+[F93] issue access.login priority_score = 3,716
+[F94] issue playback.performance rank = 10
+[F95] issue playback.performance complaint_count = 1,196
+[F96] issue playback.performance severity_sum = 3,532
+[F97] issue playback.performance mean_severity = 2.95
+[F98] issue playback.performance priority_score = 3,532
+[F99] trend jun_oct_2022 reviews = 22,426
+[F100] trend jun_oct_2022:access complaints_per_100_reviews = 1.0%
+[F101] trend jun_oct_2022:usability complaints_per_100_reviews = 12.0%
+[F102] trend jun_oct_2022:playback complaints_per_100_reviews = 8.4%
+[F103] trend jun_oct_2022:billing_support complaints_per_100_reviews = 3.4%
+[F104] trend jun_oct_2023 reviews = 41,482
+[F105] trend jun_oct_2023:access complaints_per_100_reviews = 2.6%
+[F106] trend jun_oct_2023:usability complaints_per_100_reviews = 14.6%
+[F107] trend jun_oct_2023:playback complaints_per_100_reviews = 5.0%
+[F108] trend jun_oct_2023:billing_support complaints_per_100_reviews = 11.7%
+
+AREA ORDERINGS (computed by code, highest first; use these whenever you compare areas):
+- complaint_count: usability 13,815 [F13] > other 9,771 [F43] > billing_support 7,695 [F25] > playback 6,627 [F19] > catalog 2,811 [F37] > access 1,896 [F07] > downloads 423 [F31]
+- severity_sum: usability 32,581 [F16] > billing_support 22,741 [F28] > playback 21,121 [F22] > other 19,588 [F46] > catalog 7,557 [F40] > access 6,551 [F10] > downloads 1,273 [F34]
+- mean_severity: access 3.46 [F09] > playback 3.19 [F21] > downloads 3.01 [F33] > billing_support 2.96 [F27] > catalog 2.69 [F39] > usability 2.36 [F15] > other 2.00 [F45]
+- severe_count_sev4plus: playback 1,733 [F23] > access 1,140 [F11] > billing_support 281 [F29] > downloads 33 [F35] > usability 32 [F17] > catalog 19 [F41] > other 10 [F47]
+- cancellation_count: other 282 [F48] > access 232 [F12] > billing_support 121 [F30] > usability 33 [F18] > catalog 28 [F42] > playback 3 [F24] > downloads 0 [F36]
+
+ISSUES (baseline ranking order):
+- `other.general` (area other, rank 1 [F49]): Strong Negative Reactions to Recent App Updates - Customers express strong negative feelings about recent updates, with some calling the app the worst and others expressing intense dislike.
+- `billing.free_tier_limits` (area billing, rank 2 [F54]): Premium Features Locked Behind Free Tier - Customers report that features like song selection, skip limits, and lyrics are restricted to Premium users, making the free experience unusable.
+- `usability.ads` (area usability, rank 3 [F59]): Excessive and disruptive advertisements interrupt listening - Customers report too many, too long, or repeated ads, including unskippable ads, which interrupt listening and violate promises regarding ad-free listening time.
+- `usability.interface` (area usability, rank 4 [F64]): Frustration with Recent App Updates and Interface Changes - Customers are reporting frustration with recent app updates, including changes to features, layout, and the home screen, leading to a cluttered and confusing experience.
+- `playback.interruptions` (area playback, rank 5 [F69]): Music playback stops, skips, or pauses unexpectedly - Customers report music stopping randomly, skipping songs, or pausing permanently, along with playback errors and incorrect track information.
+- `playback.crash` (area playback, rank 6 [F74]): App crashes, black screens, and playback issues - Customers report the app crashing, black screens when opening albums, and issues with playback functionality after recent updates.
+- `usability.controls` (area usability, rank 7 [F79]): Issues with playback controls, shuffle, and skipping - Customers report issues with button removal, limitations on song skipping, and problems with shuffle and playback settings.
+- `usability.library_queue` (area usability, rank 8 [F84]): Issues with playlist management and playback features - Customers report issues with deleting playlists, shuffle functionality, and the inability to edit or find hidden songs within their library.
+- `access.login` (area access, rank 9 [F89]): Multiple Issues with App Login and Access Problems - Customers are reporting various login failures, including incorrect verification messages, inability to log in with different methods, and general access issues within the application.
+- `playback.performance` (area playback, rank 10 [F94]): App experiencing lag, glitches, and performance issues - Customers report various glitches, lags, and slow loading times following recent updates, with some mentioning skipping music and connectivity problems.
+
+EVIDENCE (untrusted customer quotes, review ID first):
+- `other.general` `bd05e14d-b49f-484a-9438-62bd473997b5`: "The new update is horrible"
+- `other.general` `8617cac8-7775-4948-835b-dfd198ad326f`: "Spotify worst and worst after every update 🫤"
+- `other.general` `311b68cc-ce39-46e2-8b17-529044fb5799`: "Wrost music app that i ever seen .."
+- `billing.free_tier_limits` `6b6b178b-7912-4217-a77e-de5739462457`: "Δεν πεζει της μουσικες που θελω, δεν με αφήνει να ελενξω την μουσικη να παει μπρος ή πίσω γιαφτο και του δίνω 0/5(απλα δεν με αφήνει να βαλω 0 εβαλα 1)"
+- `billing.free_tier_limits` `07fd04a1-47db-456a-9d13-cd44f0f4dd09`: "With the latest update the lyrics won't come without getting premium like what the ?? Why and where is the repeat 🔁 option"
+- `billing.free_tier_limits` `0d1ee3ae-41f2-49d3-a105-3a3fc4b35d5c`: "Since new update the app became pathetic, if you don't have premium then it's of no use, you can't even turn off shuffle play , well deserved rating . 😶"
+- `usability.ads` `044b0128-b99d-44d3-8dab-bfe34cb21dee`: "My experience is *advertisement*"
+- `usability.ads` `97bdab89-c104-4d72-9b0d-89bc018a26dd`: "More ads than Hulu and YouTube combined. Going back to the pirates. ☠️"
+- `usability.ads` `7f82f0b1-d559-421a-9335-f84faf880901`: "There is too much ads"
+- `usability.interface` `b3cb3197-9d26-498a-b2e7-9cf6da4937c9`: "Never thought I'd rate an app like Spotify so low but the recent update sucks so I had to 🥲"
+- `usability.interface` `59e97983-d38b-407e-8f25-b2b6984a9c64`: "New update is the worst update of spotify ever"
+- `usability.interface` `7bcf2db2-75f8-4d0a-9912-f8616af0b336`: "Stupid update! Hateeeeeee it"
+- `playback.interruptions` `53aae806-e542-469a-8355-7155a8c71370`: "The new literally so disgusting and disappointing. I can't even listen to my favourite song part and can't even play the goes song . Totally they made this app only suitable for purchase people's . Pls atleast left some "
+- `playback.interruptions` `2d9a0f91-17b3-4bc9-8ab2-747449ed802c`: "When I try to choose a song it plays a different song. Rly annoying"
+- `playback.interruptions` `7f93a458-4af4-4bb5-8524-f7c1e6d72439`: "Pauses music permanently at random times in the song. I can switch to a different song, but it will not play the paused song again. Ever. Tried uninstalling-reinstalling, clearing cache, connected/unconnected to wifi, an"
+- `usability.controls` `9b2e793e-6f94-40ac-9abe-6e8d62632801`: "So many button remove"
+- `usability.controls` `47c1a94b-d9f0-4070-ae53-45f51c3fb4be`: "Wicked annoying, there needs to be a way to permanently disable the feature on an otherwise great app"
+- `usability.controls` `fe708b93-76be-493a-b452-aa20ad4b1428`: "This is great but they removed the auto replay and it makes me sad, because I cannot hear it forever when I am studying or sleeping or just reading I hope they review this and undo the thing"
+- `usability.library_queue` `80f880a8-b100-46d3-a741-d1f77ed9183b`: "My experience has always been enjoyable for the exceptional of someone deleting all of Playlist"
+- `usability.library_queue` `848c1068-dbee-45fc-ab71-09800c977803`: "I like the shuffle feature but i don't like the way it plays the same songs over and over again."
+- `usability.library_queue` `7ddb43ef-4778-4f6f-a1a1-dcf338b80f48`: "This app just removed some of the collabs and song what is wrong with it , if y'all can't do anything better then the least you can do is delete all the updates"
+- `access.login` `0e27dbc0-a7d6-4a1f-8559-bce3da4e859c`: "Whenever try to login it is showing enter valid number on my every numbers 😂"
+- `access.login` `db320dce-d5bf-4369-8f8a-d30bedb10d94`: "Doesn't let me log into my account. It says, "Something went wrong." This is horrible service! Please fix this ASAP or else imma switch to another music brand!"
+- `access.login` `38680270-92d9-48ec-ad82-cdd3342dc329`: "Wrost app ever , ruined my day , while login with gmail in browser it opened my account but in app didn't worked and with phone no. Login in app works but not in browser , i had redeem code from flipkart wich also didn't"
+- `playback.performance` `88ee5255-3c2c-4f86-8c2a-7a6370b162bc`: "Um....it's ok but has lot of glitches and lags a lottt"
+- `playback.performance` `d01f89d5-1663-432e-89ce-850898733599`: "Before this update Spotify was the music streaming platform but now,i give 1 star for this update a lot of bugs that 6 skipping for an hour ,are you serious"
+- `playback.performance` `f2fed463-cdbf-4b59-b90a-42fe4cfdfe4c`: "The latest update is the worst"
+
+SCOPE:
+Input rows: 100063; completed: 100050; quarantined: 13 (reasons: {'empty_review_text': 13}); pending: 0. Window May 2022 - November 2023; first and last calendar months are partial. Reviews are self-selected public Google Play reviews with no revenue, plan tier or confirmed churn data; labels come from a small model and have measured error. Numbers in this SCOPE block are context only; cite FACTS for any number you use.

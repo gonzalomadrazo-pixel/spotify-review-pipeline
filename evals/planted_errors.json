@@ -1,0 +1,200 @@
+{
+  "cases": [
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 2,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "complaint",
+        "severity": 2,
+        "topic": "usability"
+      },
+      "planted_field": "topic",
+      "review_id": "14cb0051-0f37-4114-b65c-1e551d54197f",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "request",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted_field": "intent",
+      "review_id": "219cd49f-25de-488d-b5e7-3f41dad90154",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "praise",
+        "severity": 5,
+        "topic": "other"
+      },
+      "planted_field": "severity",
+      "review_id": "746fef26-fa6f-45d3-a8db-fc19323aa2c5",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 2,
+        "topic": "usability"
+      },
+      "planted": {
+        "intent": "complaint",
+        "severity": 2,
+        "topic": "downloads"
+      },
+      "planted_field": "topic",
+      "review_id": "f44771cd-7b95-489a-a9a9-0ea52a3486db",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 4,
+        "topic": "playback"
+      },
+      "planted": {
+        "intent": "request",
+        "severity": 4,
+        "topic": "playback"
+      },
+      "planted_field": "intent",
+      "review_id": "b31ffbd6-ec5e-4e86-9c9a-f4db381cc03e",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "praise",
+        "severity": 5,
+        "topic": "other"
+      },
+      "planted_field": "severity",
+      "review_id": "a9ebf7d2-324e-4373-b3c6-c8b9ae17765e",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 3,
+        "topic": "usability"
+      },
+      "planted": {
+        "intent": "complaint",
+        "severity": 3,
+        "topic": "catalog"
+      },
+      "planted_field": "topic",
+      "review_id": "62204191-5744-4870-b3f1-d4fb9e29eb49",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "complaint",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted_field": "intent",
+      "review_id": "ac6a0b98-6114-4b5c-bf56-bf0d545ae724",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "playback"
+      },
+      "planted": {
+        "intent": "praise",
+        "severity": 5,
+        "topic": "playback"
+      },
+      "planted_field": "severity",
+      "review_id": "25151119-5ca7-487a-b74f-dd89ff08fd5c",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 3,
+        "topic": "usability"
+      },
+      "planted": {
+        "intent": "complaint",
+        "severity": 3,
+        "topic": "other"
+      },
+      "planted_field": "topic",
+      "review_id": "203cf321-d4ca-4d44-b979-972b7a0856f6",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "complaint",
+        "severity": 4,
+        "topic": "access"
+      },
+      "planted": {
+        "intent": "request",
+        "severity": 4,
+        "topic": "access"
+      },
+      "planted_field": "intent",
+      "review_id": "58411aab-57c0-4c53-89f4-b9369c377656",
+      "synthetic": true
+    },
+    {
+      "flagged_by_comparison": true,
+      "original": {
+        "intent": "praise",
+        "severity": 1,
+        "topic": "other"
+      },
+      "planted": {
+        "intent": "praise",
+        "severity": 5,
+        "topic": "other"
+      },
+      "planted_field": "severity",
+      "review_id": "e2abb842-e3eb-4cf3-a78a-acb18d717bb3",
+      "synthetic": true
+    }
+  ],
+  "flagged": 12,
+  "note": "Test copy only; excluded from business aggregates.",
+  "planted": 12,
+  "synthetic": true
+}
