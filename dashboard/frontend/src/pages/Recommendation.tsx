@@ -18,6 +18,7 @@ export default function Recommendation() {
   const ok = data.checks.status === "checks_passed";
   return (
     <>
+      <div className="eyebrow">AI-generated memo</div>
       <h1>AI-generated recommendation</h1>
       <p className="lede">
         The memo agent (<code>{data.memo.model}</code>) received only code-computed aggregates (the FACTS table), the top issues and a
@@ -28,7 +29,7 @@ export default function Recommendation() {
       {!ok && data.checks.check && (
         <div className="notice error">Automated check problems: {data.checks.check.errors.join("; ")}</div>
       )}
-      <Card>
+      <Card className="callout">
         <Markdown source={data.memo.markdown} facts={facts} issueIds={issueIds} />
       </Card>
       <Card title={`Cited facts (${cited.length})`}>

@@ -33,6 +33,7 @@ export default function Method() {
   const pilot = data.cost_replay?.measured;
   return (
     <>
+      <div className="eyebrow">Method · how every number was made</div>
       <h1>Method & evidence</h1>
       <p className="lede">How the numbers were produced, and the checks that back them. Code owns record accounting and arithmetic; models only read language.</p>
       <Card title="Pipeline (six stages)">

@@ -15,7 +15,8 @@ export default function ReviewDetail() {
   return (
     <>
       <p><Link to="/reviews">← Reviews</Link></p>
-      <h1>Review <span className="mono" style={{ fontSize: 15 }}>{r.review_id}</span></h1>
+      <div className="eyebrow">Review · full provenance</div>
+      <h1>Review <span className="mono muted" style={{ fontSize: 14 }}>{r.review_id}</span></h1>
       <Card title="Original text (source value, unchanged)">
         <p className="review-text" style={{ fontSize: 15 }}><Highlight text={r.review_text || "(empty review text)"} quote={r.evidence_quote} /></p>
         <p className="muted">

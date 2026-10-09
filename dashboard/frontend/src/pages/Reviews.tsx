@@ -35,6 +35,7 @@ export default function Reviews() {
 
   return (
     <>
+      <div className="eyebrow">Explorer</div>
       <h1>Reviews</h1>
       <p className="lede">Every review in scope with its saved labels. Filters run as database queries in the backend.</p>
       <div className="filters">

@@ -24,13 +24,13 @@ export function useApi<T>(path: string | null) {
 
 export function Status({ loading, error }: { loading: boolean; error: string | null }) {
   if (error) return <div className="notice error">Could not load data from the backend ({error}).</div>;
-  if (loading) return <div className="notice">Loading…</div>;
+  if (loading) return <div className="notice loading">Loading…</div>;
   return null;
 }
 
-export function Card({ title, children, actions }: { title?: ReactNode; children: ReactNode; actions?: ReactNode }) {
+export function Card({ title, children, actions, className }: { title?: ReactNode; children: ReactNode; actions?: ReactNode; className?: string }) {
   return (
-    <section className="card">
+    <section className={`card ${className ?? ""}`}>
       {(title || actions) && (
         <header className="card-head">
           {title && <h2>{title}</h2>}
@@ -39,6 +39,43 @@ export function Card({ title, children, actions }: { title?: ReactNode; children
       )}
       {children}
     </section>
+  );
+}
+
+/** Report-style numbered section: kicker with number, a statement headline, optional dek, content, source line. */
+export function Section({ id, n, kicker, headline, dek, source, children }: {
+  id?: string; n: number; kicker: string; headline: ReactNode; dek?: ReactNode; source?: ReactNode; children: ReactNode;
+}) {
+  return (
+    <section className="section" id={id}>
+      <header className="section-head">
+        <div className="sec-kicker"><span className="n">{String(n).padStart(2, "0")}</span>{kicker}</div>
+        <h2 className="headline">{headline}</h2>
+        {dek && <p className="dek">{dek}</p>}
+      </header>
+      {children}
+      {source && <p className="source"><b>Source:</b> {source}</p>}
+    </section>
+  );
+}
+
+/** Sticky table of contents that marks the section currently in view. */
+export function Contents({ items }: { items: [string, string][] }) {
+  const [on, setOn] = useState(items[0]?.[0]);
+  useEffect(() => {
+    const els = items.map(([id]) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (vis[0]) setOn(vis[0].target.id);
+    }, { rootMargin: "-20% 0px -65% 0px" });
+    els.forEach((e) => io.observe(e));
+    return () => io.disconnect();
+  }, [items]);
+  return (
+    <nav className="toc" aria-label="On this page">
+      <div className="toc-title">On this page</div>
+      {items.map(([id, label]) => <a key={id} href={`#${id}`} className={on === id ? "on" : ""}>{label}</a>)}
+    </nav>
   );
 }
 

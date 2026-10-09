@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Issue } from "../api";
 import { Card, fmt, IssueLink, Status, useApi } from "../components";
+import { areaColor } from "../theme";
 
 type SortKey = "rank" | "complaint_count" | "mean_severity" | "severe_count" | "cancellation_count";
 
@@ -21,6 +22,7 @@ export default function Issues() {
 
   return (
     <>
+      <div className="eyebrow">Baseline ranking</div>
       <h1>Issue ranking</h1>
       <p className="lede">
         Required baseline: one issue per complaint or cancellation record (issue = subtopic), <code>priority = complaint_count ×
@@ -60,15 +62,15 @@ export default function Issues() {
             <tbody>
               {shown.map((i) => (
                 <tr key={i.issue_id} className="clickable" onClick={() => nav(`/issues/${encodeURIComponent(i.issue_id)}`)}>
-                  <td>{i.rank}</td>
-                  <td><IssueLink id={i.issue_id} /></td>
+                  <td className="mono">{String(i.rank).padStart(2, "0")}</td>
+                  <td style={{ whiteSpace: "nowrap" }}><span className="dot" style={{ background: areaColor(i.topic), color: areaColor(i.topic) }} /><IssueLink id={i.issue_id} /></td>
                   <td>{i.title}</td>
                   <td className="num">{fmt(i.complaint_count)}</td>
                   <td className="num"><b>{fmt(i.severity_sum)}</b></td>
                   <td className="num">{Number(i.mean_severity).toFixed(2)}</td>
                   <td className="num">{fmt(i.severe_count)}</td>
                   <td className="num">{fmt(i.cancellation_count)}</td>
-                  <td><div className="bar-track"><div className="bar-fill" style={{ width: `${(i.priority_score / max) * 100}%` }} /></div></td>
+                  <td><div className="bar-track"><div className="bar-fill" style={{ width: `${(i.priority_score / max) * 100}%`, background: `linear-gradient(90deg, ${areaColor(i.topic)}40, ${areaColor(i.topic)})`, boxShadow: `0 0 10px ${areaColor(i.topic)}80` }} /></div></td>
                 </tr>
               ))}
             </tbody>

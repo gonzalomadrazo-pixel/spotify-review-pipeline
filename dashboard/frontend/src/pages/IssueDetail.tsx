@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Claim, Issue, Review } from "../api";
 import { Card, fmt, Highlight, Pager, ReviewLink, Sev, Stat, Status, Tag, useApi } from "../components";
+import { areaColor, areaLabel, chart, SEV_COLORS } from "../theme";
 
 type Detail = {
   issue: Issue;
@@ -23,8 +24,9 @@ export default function IssueDetail() {
   const i = data.issue;
   return (
     <>
-      <p><Link to="/issues">← Issue ranking</Link></p>
-      <h1>{i.title} <span className="muted mono" style={{ fontSize: 14 }}>{i.issue_id}</span></h1>
+      <p style={{ fontSize: 13, margin: "0 0 18px" }}><Link to="/issues">← Issue ranking</Link></p>
+      <div className="eyebrow"><span className="dot" style={{ background: areaColor(i.topic), marginRight: 0 }} />{areaLabel(i.topic)} · rank #{i.rank} · <span className="mono" style={{ textTransform: "none", letterSpacing: 0 }}>{i.issue_id}</span></div>
+      <h1 className="hero" style={{ fontSize: "clamp(28px, 4vw, 44px)" }}>{i.title}</h1>
       <p className="lede">{i.summary}</p>
       <div className="grid kpis">
         <Stat label="Baseline rank" value={`#${i.rank}`} />
@@ -38,22 +40,24 @@ export default function IssueDetail() {
         <Card title="Severity of member reviews">
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={data.severity_distribution}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
-              <XAxis dataKey="severity" stroke="var(--muted)" />
-              <YAxis stroke="var(--muted)" width={50} />
-              <Tooltip contentStyle={{ background: "var(--panel)", border: "1px solid var(--line)" }} />
-              <Bar dataKey="n" fill="var(--bar2)" name="reviews" />
+              <CartesianGrid {...chart.grid} />
+              <XAxis dataKey="severity" {...chart.axis} tickLine={false} />
+              <YAxis {...chart.axis} width={50} tickLine={false} axisLine={false} />
+              <Tooltip {...chart.tooltip} formatter={(v: number) => [fmt(v), "reviews"]} labelFormatter={(s: number) => `severity ${s}`} />
+              <Bar dataKey="n" name="reviews" radius={[4, 4, 0, 0]} maxBarSize={48}>
+                {data.severity_distribution.map((d) => <Cell key={d.severity} fill={SEV_COLORS[d.severity] || "#6b7394"} />)}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </Card>
         <Card title="Complaints per month">
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={data.monthly}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
-              <XAxis dataKey="month" stroke="var(--muted)" tick={{ fontSize: 11 }} />
-              <YAxis stroke="var(--muted)" width={50} />
-              <Tooltip contentStyle={{ background: "var(--panel)", border: "1px solid var(--line)" }} />
-              <Bar dataKey="n" fill="var(--bar)" name="complaints" />
+              <CartesianGrid {...chart.grid} />
+              <XAxis dataKey="month" {...chart.axis} tickLine={false} minTickGap={14} />
+              <YAxis {...chart.axis} width={50} tickLine={false} axisLine={false} />
+              <Tooltip {...chart.tooltip} formatter={(v: number) => [fmt(v), "complaints"]} />
+              <Bar dataKey="n" fill={areaColor(i.topic)} name="complaints" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
           <p className="muted">Counts in the sample; first and last months are partial.</p>
