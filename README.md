@@ -290,7 +290,15 @@ The dashboard code lives in [`dashboard/`](dashboard/):
 
 - **`load_db.py`** loads one run's saved artifacts into a SQLite database, which is deployed read-only with the backend. A Postgres `DATABASE_URL` also works.
 - **`api/index.py`** is a read-only FastAPI backend that serves them.
-- **`frontend/`** is a React dashboard showing overall metrics, product-area comparison, the issue ranking with member evidence, a review explorer with provenance, and the AI-generated recommendation. Every cited number in the recommendation links to its fact and formula.
+- **`frontend/`** is a React dashboard. Every cited number in the recommendation links to its fact and formula. Its pages:
+  - **Overview:** overall metrics, computed key takeaways, the issue network and the product-area comparison.
+  - **Recommendation:** the AI memo with its cited facts.
+  - **Issues:** the ranking with member evidence.
+  - **Reviews:** an explorer with per-review provenance.
+  - **How it works:** an interactive pipeline, a flight recorder of all 1,460 model calls including the planned interruption and resume, one review traced from raw text to the memo, and inference economics.
+  - **Evals:** a system card with golden-set confusion heatmaps, verifier agreement, red-team cases and planted errors.
+  - **Build log:** the problems hit during the build and how each was worked around, with links to evidence.
+- **Charts:** area and severity colors were checked for colorblind separation and contrast on the page background. Decorative motion stops when the viewer prefers reduced motion.
 
 Browsing never calls a model. Run it locally:
 

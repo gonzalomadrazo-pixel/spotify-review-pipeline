@@ -183,5 +183,14 @@ def trends():
 def evidence():
     run = one("SELECT summary_json FROM run_info")
     return {"run_summary": json.loads(run["summary_json"]) if run else None,
-            **{d["name"]: json.loads(d["json"]) for d in rows("SELECT name, json FROM evidence_docs")},
+            **{d["name"]: json.loads(d["json"]) for d in rows("SELECT name, json FROM evidence_docs WHERE name != 'telemetry'")},
             "verification_rows": rows("SELECT * FROM verification WHERE disagreement = 1 ORDER BY review_id LIMIT 200")}
+
+
+@app.get("/api/telemetry")
+def telemetry():
+    """Flight recorder for the run: one compact row per model call, plus invocations, stages and cache statistics."""
+    t = doc("telemetry")
+    if t is None:
+        raise HTTPException(404, "no telemetry in this database")
+    return t

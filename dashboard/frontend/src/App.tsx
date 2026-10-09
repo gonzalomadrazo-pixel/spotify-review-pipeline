@@ -8,13 +8,19 @@ import Reviews from "./pages/Reviews";
 import ReviewDetail from "./pages/ReviewDetail";
 import Recommendation from "./pages/Recommendation";
 import Method from "./pages/Method";
+import How from "./pages/How";
+import Evals from "./pages/Evals";
+import Story from "./pages/Story";
 
 const NAV = [
   ["/", "Overview"],
   ["/recommendation", "Recommendation"],
-  ["/issues", "Issue ranking"],
+  ["/issues", "Issues"],
   ["/reviews", "Reviews"],
-  ["/method", "Method & evidence"],
+  ["/how", "How it works"],
+  ["/evals", "Evals"],
+  ["/story", "Build log"],
+  ["/method", "Method"],
 ] as const;
 
 /** A tiny neural graph: four product-area nodes wired to one core. */
@@ -54,6 +60,9 @@ export default function App() {
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/reviews/:id" element={<ReviewDetail />} />
             <Route path="/method" element={<Method />} />
+            <Route path="/how" element={<How />} />
+            <Route path="/evals" element={<Evals />} />
+            <Route path="/story" element={<Story />} />
             <Route path="*" element={<p>Page not found.</p>} />
           </Routes>
         </main>

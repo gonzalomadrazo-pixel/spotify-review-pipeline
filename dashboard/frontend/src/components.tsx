@@ -114,6 +114,10 @@ export function ReviewLink({ id }: { id: string }) {
   return <Link className="mono" to={`/reviews/${encodeURIComponent(id)}`}>{id.slice(0, 8)}…</Link>;
 }
 
+/** Link to a file (blob) or folder (tree) in the public repository. */
+export const gh = (path: string) =>
+  `https://github.com/gonzalomadrazo-pixel/spotify-review-pipeline/${/\.[a-z0-9]+$/i.test(path) ? "blob" : "tree"}/main/${path}`;
+
 export const fmt = (n: number | null | undefined) => (n == null ? "–" : n.toLocaleString("en-US"));
 
 export function Pager({ page, pageSize, total, onPage }: { page: number; pageSize: number; total: number; onPage: (p: number) => void }) {

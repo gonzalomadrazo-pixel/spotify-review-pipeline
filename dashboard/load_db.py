@@ -39,6 +39,64 @@ def read_json(path: Path, default=None):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
 
 
+ROLE_CODE = {"enrich": 0, "verify": 1, "group": 2, "memo": 3}
+
+
+def telemetry(run_dir: Path, summary: dict) -> dict | None:
+    """Compact flight-recorder data: one row per model call plus invocations, stages and cache statistics."""
+    path = run_dir / "calls.jsonl"
+    if not path.exists():
+        return None
+    from datetime import datetime
+    ts = lambda s: round(datetime.fromisoformat(s).timestamp(), 1) if s else None  # noqa: E731
+    calls = []
+    for c in read_jsonl(path):
+        ids = c.get("review_ids") or []
+        calls.append([ts(c.get("started_at")), round(c.get("duration_s") or 0, 1), len(ids) if isinstance(ids, list) else 0,
+                      ROLE_CODE.get(c.get("role"), 9), c.get("invocation"), 1 if c.get("outcome") == "succeeded" else 0,
+                      c.get("output_tokens") or 0, c.get("input_tokens") or 0])
+    events = [json.loads(line) for line in (run_dir / "run_log.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()] \
+        if (run_dir / "run_log.jsonl").exists() else []
+    progress = next((e for e in events if e.get("kind") == "progress"), {})
+    return {
+        "columns": ["start_epoch_s", "duration_s", "items", "role", "invocation", "ok", "output_tokens", "input_tokens"],
+        "roles": list(ROLE_CODE), "calls": sorted(calls, key=lambda r: r[0] or 0),
+        "invocations": [{k: i.get(k) for k in ("n", "phase", "stop_reason", "completed_before", "completed_after")}
+                        | {"start": ts(i.get("started_at")), "end": ts(i.get("ended_at"))} for i in summary.get("invocations", [])],
+        "stages": [{"stage": s.get("stage"), "invocation": s.get("invocation"), "start": ts(s.get("started_at")),
+                    "end": ts(s.get("ended_at"))} for s in summary.get("stages", [])],
+        "progress": {k: progress.get(k) for k in ("pending_records", "pending_distinct_texts", "result_cache_hits",
+                                                   "result_cache_hit_records", "requests_planned")},
+        "invalid_outputs": sum(1 for e in events if e.get("kind") == "invalid_output"),
+        "result_sources": summary.get("result_sources", {}),
+    }
+
+
+def golden_detail() -> dict | None:
+    """Confusion tables for the human golden set (rows = human label, columns = model label)."""
+    out = {}
+    for field in ("topic", "intent"):
+        rows_ = read_csv(ROOT / "evals" / "golden" / f"confusion_{field}.csv")
+        if rows_:
+            first = list(rows_[0].keys())[0]
+            out[field] = {"labels": [k for k in rows_[0] if k != first],
+                          "rows": [{"human": r[first], "counts": [int(r[k]) for k in rows_[0] if k != first]} for r in rows_]}
+    return out or None
+
+
+def injection_detail() -> list[dict] | None:
+    """Red-team cases with the model's label and the code-side injection screen (recomputed here, deterministic)."""
+    from pipeline.extract import looks_like_injection
+    res = read_json(ROOT / "evals" / "injection" / "results.json")
+    texts = {r["review_id"]: r["review_text"] for r in read_csv(ROOT / "evals" / "injection" / "injection_cases.csv")}
+    if not res:
+        return None
+    return [{"id": r["review_id"], "purpose": r.get("purpose"), "text": texts.get(r["review_id"], ""),
+             "expected": r.get("expected"), "predicted": {k: r["predicted"].get(k) for k in ("topic", "intent", "severity")},
+             "label_correct": bool(r.get("pass")), "screen_flagged": looks_like_injection(texts.get(r["review_id"], "")),
+             "control": r["review_id"].startswith("syn-ctl")} for r in res.get("results", [])]
+
+
 def build_rows(run_dir: Path, input_csv: Path) -> dict[str, list[dict]]:
     src = {r["review_id"]: (i, r) for i, r in enumerate(checker.csv_rows(input_csv))}
     final = {r["review_id"]: r for r in read_jsonl(run_dir / "records.jsonl")}
@@ -134,6 +192,10 @@ def build_rows(run_dir: Path, input_csv: Path) -> dict[str, list[dict]]:
             if name == "cost_replay":
                 doc = {"measured": doc.get("measured"), "projections": doc.get("projections")}
             evidence.append({"name": name, "json": json.dumps(doc, ensure_ascii=False, default=str)})
+    for name, doc in (("telemetry", telemetry(run_dir, summary)), ("golden_detail", golden_detail()),
+                      ("injection_detail", injection_detail())):
+        if doc is not None:
+            evidence.append({"name": name, "json": json.dumps(doc, ensure_ascii=False, default=str, separators=(",", ":"))})
 
     label_configs = Counter(r["label_config"] for r in reviews if r["label_config"])
     run_info = [{"run_id": summary.get("run_id", run_dir.name), "loaded_at": summary.get("generated_at", ""),

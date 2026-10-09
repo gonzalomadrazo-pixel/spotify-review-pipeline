@@ -119,6 +119,12 @@ export default function OverviewPage() {
           <div className="d">{verdict ? firstSentence(verdict) : "Loading…"}</div></li>
       </ol>
 
+      <div className="explore">
+        <Link to="/how"><span className="ex-k">How it works</span><span className="ex-t">The pipeline, a flight recorder of the run, and one review traced end to end.</span><span className="ex-go">Explore →</span></Link>
+        <Link to="/evals"><span className="ex-k">Evals</span><span className="ex-t">How much to trust the labels: human golden set, verifier, red team.</span><span className="ex-go">See the system card →</span></Link>
+        <Link to="/story"><span className="ex-k">Build log</span><span className="ex-t">Ten problems we hit, what we tried, and what we threw away.</span><span className="ex-go">Read the story →</span></Link>
+      </div>
+
       <div className="report">
         <Contents items={TOC} />
         <div>
