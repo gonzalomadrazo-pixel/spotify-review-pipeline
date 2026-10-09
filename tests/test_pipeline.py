@@ -6,8 +6,6 @@ Run: uv run pytest -q
 import json
 from pathlib import Path
 
-import pytest
-
 from pipeline.common import ROOT, load_config
 from pipeline.context import RunContext
 from pipeline.enrich import Item, resolve_part_quote, run_enrich, split_parts, validate_output
@@ -17,8 +15,9 @@ from pipeline.llm import Attempt
 from pipeline.rank import compute_ranking, mean_string
 from tests.fake_model import fake_client
 
-PILOT = ROOT / "data" / "raw" / "cost_100.csv"
-pytestmark = pytest.mark.skipif(not PILOT.exists(), reason="dataset not unpacked into data/raw/")
+# The course's cost_100.csv; a byte-identical copy (same SHA-256) is committed so tests run on a fresh clone.
+PILOT = next(p for p in (ROOT / "data" / "raw" / "cost_100.csv", ROOT / "tests" / "fixtures" / "cost_100.csv")
+             if p.exists())
 
 
 def make_ctx(tmp_path, run_id="t", budget=1.0, model=None, **limits):

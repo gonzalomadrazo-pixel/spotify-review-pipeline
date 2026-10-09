@@ -89,7 +89,7 @@ Source: BwandoWando, [3.4 Million Spotify Google Store Reviews](https://www.kagg
 
 ## Run it
 
-**Offline** (no model, no key):
+**Offline** (no model, no key). The 15 tests run on a fresh clone; they use the committed copy of `cost_100.csv` in `tests/fixtures/`, which has the same SHA-256 as the course file:
 
 ```bash
 uv run pytest -q
@@ -310,7 +310,7 @@ Deployment (Vercel, free Hobby plan): `dashboard/vercel.json` builds the static 
 | D4 recommendation, alternatives, limitations | [`runs/final100k/memo.md`](runs/final100k/memo.md), dashboard Recommendation page |
 | T1 golden 50, per-field comparison, error analysis | `evals/golden_50_labeled.csv`, [`evals/golden/`](evals/golden/), [Evaluation](#evaluation) |
 | T2 independent verification, planted errors, injection | `runs/final100k/verify/`, `evals/planted_errors.json`, `evals/injection/results.json` |
-| T3 real cold/warm pilot, calculator, controls | `cost/` (measured pilot, offline replay), `tests/test_pipeline.py` (14 offline tests: retries, budget cap, spend-limit stop, resume, validation, injection flag) |
+| T3 real cold/warm pilot, calculator, controls | `cost/` (measured pilot, offline replay), `tests/test_pipeline.py` (15 offline tests: retries, budget cap, spend-limit stop, resume, validation, injection flag, memo comparison check) |
 | W1 ingestion, coverage, classification | `grading/ingestion.json` (full file), `runs/final100k/ingestion_report.json`, course self-check `pass` ([Results](#results-final-run)) |
 | W2 staged program, bounded calls, resume | `pipeline/`, `runs/final100k/checkpoints/` (planned STOP-file interruption at 27,337 reviews, then resumes), `grading/checkpoint_before.json` / `checkpoint_after.json`, `runs/_orchestrator/runs.log`, `terminal_recording.typescript` |
 | W3 reproducible ranking, deployed dashboard, grounded output | `rerank` command, `runs/final100k/ranking.csv`, [live dashboard](https://spotify-review-insights-beta.vercel.app) |
