@@ -322,3 +322,4 @@ Deployment (Vercel, free Hobby plan): `dashboard/vercel.json` builds the static 
 - **Scope:** the analysis covers a declared seeded sample of 100,063 of the 660,622 reviews. All rows are ingested and profiled.
 - **Labels:** they come from a small local model and are measured against 50 human labels and an independent verifier, so they are not ground truth.
 - **Cache:** exact-text reuse assumes identical text deserves an identical label.
+- **Catch-all issue:** `other.general` (9,346 generic complaints such as "bad app") ranks first under the baseline formula because of volume. It names no product change, so the memo compares product areas and specific issues instead.
